@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+get "/profile", to: "students#profile"
 get "/students/scan", to: "admin#scan_qr"
   resources :attendances
    resources :students do

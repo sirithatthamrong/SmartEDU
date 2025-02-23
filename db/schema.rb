@@ -94,6 +94,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_17_050338) do
   end
 
   create_table "users", force: :cascade do |t|
+#       maybe change email_address to be personal_email or school_email instead because right now it's rly
+#       confusing which is which
     t.string "email_address", null: false
     t.string "password_digest", null: false
     t.boolean "is_active", default: true
