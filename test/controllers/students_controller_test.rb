@@ -2,9 +2,50 @@ require "test_helper"
 
 class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @classroom = Classroom.create!(grade_level: 5, class_id: "MATH101")
+    @school = School.create!(name: 'Test School', address: '123 Main St')
+
+    @admin = User.create!(
+      first_name: 'Admin',
+      last_name: 'Test',
+      personal_email: "admin_#{SecureRandom.hex(4)}@gmail.com",
+      role: 'admin',
+      password: 'securepassword',
+      school_id: @school.id
+    )
+
+    @classroom = Classroom.create!(
+      grade_level: 5,
+      class_id: "MATH101", # We are using class_id (string)
+      school_id: @school.id
+    )
+
+    sign_in(@admin) # Sign in as admin
+
     @student = Student.first
-    sign_in
+  end
+
+  test "should create student" do
+    user = User.create!(
+      first_name: 'John',
+      last_name: 'Doe',
+      personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com",
+      role: 'student',
+      password: 'securepassword',
+      school_id: @school.id
+    )
+
+    assert_difference('Student.count') do
+      post students_url, params: { student: {
+        first_name: user.first_name,
+        last_name: user.last_name,
+        grade: @classroom.grade_level,
+        classroom_id: @classroom.class_id,  # Pass class_id (not id)
+        student_email_address: user.email_address,
+        parent_email_address: 'parent.doe@example.com'
+      }}
+    end
+
+    assert_redirected_to student_url(Student.last)
   end
 
   test "should show student" do
@@ -17,38 +58,21 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-test "should create student" do
-  user = User.create!(
-    first_name: 'John',
-    last_name: 'Doe',
-    personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com", # Ensure unique personal email
-    role: 'student',
-    password: 'securepassword'
-  )
-
-  assert_difference('Student.count') do
-    post students_url, params: { student: {
-      first_name: user.first_name,
-      last_name: user.last_name,
-      grade: 5,
-      classroom_id: @classroom.id,
-      student_email_address: user.email_address, # Backend will generate this
-      parent_email_address: 'parent.doe@example.com'
-    }}
-  end
-
-  assert_redirected_to student_url(Student.last)
-end
 
   test "should get edit" do
     get edit_student_url(@student)
     assert_response :success
   end
 
-  test "should update student" do
-    patch student_url(@student), params: { student: { name: "newname", is_active: 1, grade: @student.grade, classroom_id: @student.classroom_id, student_email_address: @student.student_email_address, parent_email_address: @student.parent_email_address } }
-    assert_redirected_to student_url(@student)
-  end
+test "should update student" do
+  visit edit_student_path(@student)
+
+  fill_in "First name", with: "Jane"
+  fill_in "Last name", with: "Doe"
+  click_button "Update Student"
+
+  assert_text "Student was successfully updated."
+end
 
   test "archive student after deletion" do
     delete student_url(@student)
