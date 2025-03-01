@@ -31,7 +31,7 @@ Rails.application.routes.draw do
   resources :users, only: %i[index] do
     member do
       patch :approve
-      delete :cancel
+      # delete :destroy
     end
   end
 
@@ -57,4 +57,5 @@ Rails.application.routes.draw do
   get "grades/:grade", to: "classrooms#by_grade", as: :grade
 
   resources :teachers, only: [ :index, :destroy ]
+  resources :users, only: [ :index, :destroy ]
 end
