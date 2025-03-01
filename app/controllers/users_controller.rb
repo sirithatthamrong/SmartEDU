@@ -4,6 +4,7 @@ class UsersController < ApplicationController
 
   def index
     @pending_users = User.pending_in_school(current_user.school_id)
+                         .select(:id, :role, :first_name, :last_name, :email_address, :personal_email)
     respond_to do |format|
       format.html
       format.js
