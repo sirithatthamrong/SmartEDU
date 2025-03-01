@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     end
     resources :students, only: [ :index, :show ]
   end
+  resources :attendances
 
   get "/students/scan", to: "admin#scan_qr"
   resources :attendances
@@ -32,6 +33,7 @@ Rails.application.routes.draw do
 
   get "home/index"
   resource :session
+  # resources :sessions
   resources :passwords, param: :token
   resources :signup, only: %i[new create]
   resources :users, only: %i[index] do
@@ -41,7 +43,9 @@ Rails.application.routes.draw do
     end
   end
 
-get "login", to: "sessions#new", as: "login"
+  get "login", to: "sessions#new", as: "login"
+  # post "sessions", to: "sessions#create"
+  # delete "sessions", to: "sessions#destroy"
 
   get "/admin/scan_qr", to: "admin#scan_qr"
   post "/admin/checkin", to: "admin#checkin"

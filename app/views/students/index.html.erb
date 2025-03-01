@@ -2,10 +2,6 @@
 
 <% content_for :title, "Students" %>
 
-<!--<div class="flex justify-end px-2">-->
-  <%#= link_to "New student", new_student_path, class: "btn btn-primary" %>
-<!--</div>-->
-
 <div class="flex justify-end items-center space-x-4 px-4 mb-4">
   <div>
     <%= form_with(url: students_path, method: :get, local: true, class: "inline-block") do %>
@@ -21,18 +17,11 @@
   </div>
 
   <!--only allow the admin to see the new student button-->
-    <% if current_user&.can_manage_teachers? %>
-      <%= link_to "New student", new_student_path, class: "btn btn-primary" %>
-    <% end %>
+  <% if current_user&.can_manage_teachers? %>
+    <%= link_to "New student", new_student_path, class: "btn btn-primary" %>
+  <% end %>
 
 </div>
-
-
-<!-- Currently removing the pagy nav bars in top, since it's already built in with data table -->
-<!-- But can change later for sure -->
-<!-- <div class="flex justify-center items-center"> -->
-<%#== pagy_nav(@pagy) %>
-<!-- </div> -->
 
 <div class="overflow-x-auto m-2">
   <table id="students-table" class="w-full text-left border-separate border-spacing-0 bg-white shadow-md rounded-2xl overflow-hidden hover" data-turbo="false">
@@ -66,7 +55,7 @@
             <span class="text-red-600 font-bold">Archived</span>
           <% end %>
         </td>
-        <td><%= student.grade %></td> <!-- Display grade -->
+        <td><%= student.grade %></td>
         <td><%= student.classroom_id %></td>
         <td><%= student.student_email_address %></td>
         <td><%= student.parent_email_address %></td>
@@ -79,7 +68,7 @@
             <% if current_user&.can_manage_teachers? %>
               <%= link_to edit_student_path(student), class: "hover:text-yellow-500 text-yellow-700" do %>
                 <i class="fas fa-edit" title="Edit"></i> Edit
-              <%end %>
+              <% end %>
             <% end %>
           </div>
         </td>
@@ -90,36 +79,4 @@
   </table>
 </div>
 
-<!-- Currently removing the pagy nav bars in top, since it's already built in with data table -->
-<!-- <div class="flex justify-center items-center"> -->
-<%#== pagy_nav(@pagy) %>
-<!-- </div> -->
-
-<script>
-    document.addEventListener("turbo:load", function () {
-        const tableId = "#students-table";
-
-        if ($.fn.DataTable.isDataTable(tableId)) {
-            $(tableId).DataTable().destroy();
-        }
-
-        $(tableId).DataTable({
-            responsive: true,
-            pageLength: 10,
-            language: {
-                search: "",
-                searchPlaceholder: "Search students...",
-            },
-        });
-
-        // ------ Feature: Filter by Grade change auto ------
-        // filter when click + but it seems weird, but might be useful for future
-        // auto-submit filter on change
-        // document.getElementById("grade").addEventListener("change", function () {
-        //     this.form.submit();
-        // });
-        // -------------------------------------------------
-
-
-    });
-</script>
+<%= javascript_include_tag "controllers/students_table_controller" %>

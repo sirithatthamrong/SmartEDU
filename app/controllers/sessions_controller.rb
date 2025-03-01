@@ -5,13 +5,16 @@ class SessionsController < ApplicationController
   def new
   end
 
+  def show
+    redirect_to new_session_path
+  end
+
   def create
     user = User.find_by(email_address: params[:email_address])
 
     if user&.authenticate(params[:password])
       if user.approved?
         start_new_session_for(user)
-
         redirect_to after_authentication_url
       else
         flash[:alert] = "Your account is pending approval."

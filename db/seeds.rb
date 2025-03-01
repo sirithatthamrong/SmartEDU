@@ -34,7 +34,8 @@ admin = User.create!(
   password: "password123",
   password_confirmation: "password123",
   role: "admin",
-  approved: true
+  approved: true,
+  school_id: school1.id
 )
 
 # Create Principals
