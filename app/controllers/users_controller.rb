@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :authenticate_admin!
+  before_action :set_user, only: [ :destroy ]
 
   def index
     @pending_users = User.pending_in_school(current_user.school_id)
@@ -43,7 +44,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def cancel
+  def destroy
     @user = User.find(params[:id])
 
     if @user.destroy
@@ -61,6 +62,10 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
 
   def authenticate_admin!
     redirect_to root_path, alert: "Not authorized" unless current_user&.can_manage_teachers?

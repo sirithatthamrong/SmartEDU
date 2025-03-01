@@ -1,3 +1,5 @@
+<%= render "shared/confirmation_modal" %>
+
 <% if @pending_users.any? %>
   <div class="overflow-x-auto">
     <table class="w-full border border-gray-300 shadow-lg rounded-lg text-gray-800">
@@ -14,17 +16,16 @@
           <td class="py-4 px-6 border-b border-gray-300 text-center"><%= user.email_address %></td>
           <td class="py-4 px-6 border-b border-gray-300 text-center"><%= user.role.capitalize %></td>
           <td class="py-4 px-6 text-center border-b border-gray-300 flex gap-4 justify-center">
-            <%= button_to "✔ Approve", approve_user_path(user),
-                        method: :patch,
-                        remote: true,
-                        data: { turbo: true, confirm: "Approve this user?" },
-                        class: "approve-btn bg-green-500 py-2 px-4 rounded-md hover:bg-green-600 transition" %>
+            <%= button_to "Approve", approve_user_path(user),
+                          method: :patch,
+                          remote: true,
+                          data: { turbo: true, confirm: "Approve this user?" },
+                          class: "approve-btn bg-green-500 py-2 px-4 rounded-md hover:bg-green-600 transition" %>
 
-            <%= button_to "✖ Cancel", cancel_user_path(user),
-                        method: :delete,
-                        remote: true,
-                        data: { turbo: true, confirm: "Are you sure you want to remove this user?" },
-                        class: "cancel-btn bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 transition" %>
+            <button class="btn btn-error"
+                    onclick="confirmDelete(<%= user.id %>, '<%= user.email_address %>', '/users')">
+              Cancel
+            </button>
           </td>
         </tr>
       <% end %>

@@ -1,4 +1,6 @@
 <%= render "shared/notice" %>
+<%= render "shared/confirmation_modal" %>
+
 <% content_for :title, "Manage Users" %>
 
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg">
@@ -6,3 +8,5 @@
     <%= render "users/user_table", pending_users: @pending_users %>
   </div>
 </div>
+
+<%= javascript_include_tag "controllers/delete_entity_controller" %>
