@@ -75,6 +75,17 @@
         <% end %>
       </li>
 
+      <!-- Payment Section -->
+      <li>
+        <% if current_user&.can_manage_teachers?  %>
+          <%= link_to payments_new_path do %>
+            <i class="fas fa-shopping-cart"></i> Payment
+          <% end %>
+        <% else %>
+          <span>Cannot access payment</span>
+        <% end %>
+      </li>
+
       <!-- Logout -->
       <li>
         <%= link_to session_path, method: :delete, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>
