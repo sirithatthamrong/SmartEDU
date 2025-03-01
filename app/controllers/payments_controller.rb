@@ -14,7 +14,7 @@ class PaymentsController < ApplicationController
                                                       payment_method: payment_method_id,
                                                       confirmation_method: "manual",
                                                       confirm: true,
-                                                      return_url: success_payments_url
+                                                      return_url: success_payments_url,
                                                     })
 
       payment = Payment.create(
