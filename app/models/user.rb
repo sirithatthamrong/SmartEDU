@@ -26,11 +26,14 @@
 #
 class User < ApplicationRecord
   has_secure_password
+
+  has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy
-  has_many :principal_teacher_relationships, foreign_key: "teacher_id", dependent: :destroy
-  has_many :teacher_student_relationships, foreign_key: "teacher_id", dependent: :destroy
-  has_many :homerooms, foreign_key: "teacher_id", dependent: :destroy
+
   has_many :students, primary_key: :email_address, foreign_key: :student_email_address
+  has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
+  has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
+  has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy
 
   before_validation :generate_school_email, on: :create
 
@@ -39,6 +42,7 @@ class User < ApplicationRecord
   validates :last_name, presence: true
   validates :personal_email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 8, maximum: 20 }, if: :password_required?
+  validates :school_id, presence: true
 
   ROLES = { admin: "admin", principal: "principal", teacher: "teacher", student: "student", system: "system" }.freeze
   validates :role, inclusion: { in: ROLES.values }

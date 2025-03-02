@@ -3,6 +3,7 @@ class TeachersController < ApplicationController
 
   def index
     @teachers = User.where(role: "teacher", school_id: current_user.school_id, approved: true)
+                    .select(:id, :first_name, :last_name, :email_address, :personal_email)
   end
 
   def destroy
