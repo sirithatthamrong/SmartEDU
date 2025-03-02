@@ -1,6 +1,6 @@
+  <% if student.errors.any? %>
 <%= form_with(model: student, class: 'form-control', local: true) do |form| %>
 
-  <% if student.errors.any? %>
     <div class="alert alert-error">
       <h2><%= pluralize(student.errors.count, "error") %> prohibited this student from being saved:</h2>
       <ul>
