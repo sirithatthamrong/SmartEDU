@@ -12,32 +12,32 @@
   <% end %>
 
   <div class="mb-4">
-    <%= form.label :first_name, class: 'label' %>
+    <%= form.label :first_name, "First Name", class: 'label' %>
     <%= form.text_field :first_name, class: 'input input-bordered w-full', required: true %>
   </div>
 
   <div class="mb-4">
-    <%= form.label :last_name, class: 'label' %>
+    <%= form.label :last_name, "Last Name", class: 'label' %>
     <%= form.text_field :last_name, class: 'input input-bordered w-full', required: true %>
   </div>
 
   <div class="mb-4">
-    <%= form.label :grade, class: 'label' %>
+    <%= form.label :grade, "Grade", class: 'label' %>
     <%= form.text_field :grade, class: 'input input-bordered w-full', required: true %>
   </div>
 
   <div class="mb-4">
-    <%= form.label :classroom_id, class: 'label' %>
+    <%= form.label :classroom_id, "Classroom", class: 'label' %>
     <%= form.text_field :classroom_id, class: 'input input-bordered w-full', required: true %>
   </div>
 
 <div class="mb-4">
-  <%= form.label :personal_email, "Personal Email", class: 'label' %>
-  <%= form.email_field :personal_email, value: student.user.personal_email, class: 'input input-bordered w-full', required: true %>
+  <%= form.label :personal_email, "Personal Email Address", class: 'label' %>
+  <%= form.email_field :personal_email, value: @user&.personal_email, class: 'input input-bordered w-full', required: true %>
 </div>
 
   <div class="mb-4">
-    <%= form.label :parent_email_address, class: 'label' %>
+    <%= form.label :parent_email_address,"Parent Email Address", class: 'label' %>
     <%= form.email_field :parent_email_address, class: 'input input-bordered w-full', required: true %>
   </div>
 

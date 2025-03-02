@@ -39,7 +39,7 @@ class StudentsController < ApplicationController
     user = User.create!(
       first_name: user_params[:first_name],
       last_name: user_params[:last_name],
-      personal_email: user_params[:student_email_address],
+      personal_email: user_params[:personal_email],
       role: "student",
       password: SecureRandom.hex(8),
       school_id: current_user.school_id
@@ -69,18 +69,25 @@ end
 
 def update
   ActiveRecord::Base.transaction do
+    classroom = Classroom.find_by(class_id: raw_student_params[:classroom_id]) # Find by class_id (string), not id (integer)
+
+    if classroom.nil?
+      flash[:error] = "Classroom not found"
+      render :edit, status: :unprocessable_entity and return
+    end
+
     user = User.find_by(email_address: @student.student_email_address)
 
     user.update!(
       first_name: user_params[:first_name],
       last_name: user_params[:last_name],
-      personal_email: user_params[:student_email_address] # The email entered in the form is their personal email
+      personal_email: user_params[:personal_email]
     )
 
     @student.update!(
       name: "#{user.first_name} #{user.last_name}",
       grade: student_params[:grade],
-      classroom_id: student_params[:classroom_id],
+      classroom_id: classroom.id,
       parent_email_address: student_params[:parent_email_address]
     )
   end
@@ -113,11 +120,11 @@ end
     @student = Student.find(params[:id])
   end
 
-  def raw_student_params
-    @raw_student_params ||= params.require(:student).permit(
-      :first_name, :last_name, :is_active, :grade, :classroom_id, :personal_email, :parent_email_address
-    )
-  end
+def raw_student_params
+  @raw_student_params ||= params.require(:student).permit(
+    :first_name, :last_name, :is_active, :grade, :classroom_id, :personal_email, :parent_email_address
+  )
+end
 
 def student_params
   raw_student_params.slice(:is_active, :grade, :classroom_id, :parent_email_address)
