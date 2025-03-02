@@ -25,16 +25,19 @@ Rails.application.routes.draw do
 
   get "home/index"
   resource :session
+  # resources :sessions
   resources :passwords, param: :token
   resources :signup, only: %i[new create]
   resources :users, only: %i[index] do
     member do
       patch :approve
-      delete :cancel
+      # delete :destroy
     end
   end
 
-get "login", to: "sessions#new", as: "login"
+  get "login", to: "sessions#new", as: "login"
+  # post "sessions", to: "sessions#create"
+  # delete "sessions", to: "sessions#destroy"
 
   get "/admin/scan_qr", to: "admin#scan_qr"
   post "/admin/checkin", to: "admin#checkin"
@@ -54,4 +57,5 @@ get "login", to: "sessions#new", as: "login"
   get "grades/:grade", to: "classrooms#by_grade", as: :grade
 
   resources :teachers, only: [ :index, :destroy ]
+  resources :users, only: [ :index, :destroy ]
 end

@@ -26,3 +26,23 @@
 #
 #  school_id  (school_id => schools.id)
 #
+
+admin:
+  first_name: "Admin"
+  last_name: "User"
+  email_address: "admin@example.com"
+  personal_email: "admin@example.com"
+  password_digest: <%= User.new(password: "password123").password_digest %>
+  role: "admin"
+  approved: true
+  school_id: 1
+
+teacher:
+  first_name: "Teacher"
+  last_name: "User"
+  email_address: "teacher@example.com"
+  personal_email: "teacher@example.com"
+  password_digest: <%= User.new(password: "password123").password_digest %>
+  role: "teacher"
+  approved: false
+  school_id: 1
