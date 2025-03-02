@@ -81,7 +81,7 @@ test "should update student" do
     classroom_id: @classroom.class_id,
     personal_email: "updated_personal_#{SecureRandom.hex(4)}@gmail.com",
     parent_email_address: @student.parent_email_address
-  }}
+  } }
 
   @student.reload
   assert_equal "Jane Doe", @student.name
@@ -96,5 +96,4 @@ test "should archive student after deletion" do
   assert_redirected_to students_path
   assert_equal "#{@student.name} was archived successfully.", flash[:notice]
 end
-
 end
