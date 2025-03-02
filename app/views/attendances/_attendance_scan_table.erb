@@ -10,14 +10,16 @@
       </thead>
       <tbody>
         <% @students.each do |student| %>
-          <tr class="hover" data-content="<%= student.name %>">
-            <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
-            <td><%= submit_tag "Check-in", name: "check_in",
-              formaction: attendances_path(student_id: student.id),
-              formmethod: :post,
-              class: "btn btn-primary btn-xs",
-              data: {turbo_frame: "students" }%></td>
-          </tr>
+<tr class="hover" data-content="<%= student.name %>">
+  <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
+  <td>
+    <%= button_to "Check-in",
+          attendances_path(student_id: student.id),
+          method: :post,
+          class: "btn btn-primary btn-xs",
+          data: { turbo_frame: "students" } %>
+  </td>
+</tr>
         <% end %>
       </tbody>
     </table>
