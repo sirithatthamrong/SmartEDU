@@ -67,26 +67,45 @@ rescue ActiveRecord::RecordInvalid => e
   render :new, status: :unprocessable_entity
 end
 
-  def update
-    respond_to do |format|
-      if @student.update(student_params)
-        format.html { redirect_to @student, notice: "Student was successfully updated." }
-        format.json { render :show, status: :ok, location: @student }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @student.errors, status: :unprocessable_entity }
-      end
-    end
+def update
+  ActiveRecord::Base.transaction do
+    user = User.find_by(email_address: @student.student_email_address)
+
+    user.update!(
+      first_name: user_params[:first_name],
+      last_name: user_params[:last_name],
+      personal_email: user_params[:student_email_address] # The email entered in the form is their personal email
+    )
+
+    @student.update!(
+      name: "#{user.first_name} #{user.last_name}",
+      grade: student_params[:grade],
+      classroom_id: student_params[:classroom_id],
+      parent_email_address: student_params[:parent_email_address]
+    )
   end
 
-  def destroy
-    @student.update(is_active: false)
-
-    respond_to do |format|
-      format.html { redirect_to students_path, notice: "#{@student.name} was archived successfully." }
-      format.json { head :no_content }
-    end
+  respond_to do |format|
+    format.html { redirect_to @student, notice: "Student was successfully updated." }
+    format.json { render :show, status: :ok, location: @student }
   end
+rescue ActiveRecord::RecordInvalid => e
+  flash[:error] = e.message
+  render :edit, status: :unprocessable_entity
+end
+
+def destroy
+  ActiveRecord::Base.transaction do
+    @student.update!(is_active: false)
+    user = User.find_by(email_address: @student.student_email_address)
+    user.update!(is_active: false) if user
+  end
+
+  respond_to do |format|
+    format.html { redirect_to students_path, notice: "#{@student.name} was archived successfully." }
+    format.json { head :no_content }
+  end
+end
 
   private
 
@@ -96,15 +115,15 @@ end
 
   def raw_student_params
     @raw_student_params ||= params.require(:student).permit(
-      :first_name, :last_name, :is_active, :grade, :classroom_id, :student_email_address, :parent_email_address
+      :first_name, :last_name, :is_active, :grade, :classroom_id, :personal_email, :parent_email_address
     )
   end
 
-  def student_params
-    raw_student_params.slice(:is_active, :grade, :classroom_id, :student_email_address, :parent_email_address)
-  end
+def student_params
+  raw_student_params.slice(:is_active, :grade, :classroom_id, :parent_email_address)
+end
 
-  def user_params
-    raw_student_params.slice(:first_name, :last_name, :student_email_address)
-  end
+def user_params
+  raw_student_params.slice(:first_name, :last_name, :personal_email) # student_email_address here is actually personal_email
+end
 end

@@ -31,10 +31,10 @@
     <%= form.text_field :classroom_id, class: 'input input-bordered w-full', required: true %>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :student_email_address, class: 'label' %>
-    <%= form.email_field :student_email_address, class: 'input input-bordered w-full', required: true %>
-  </div>
+<div class="mb-4">
+  <%= form.label :personal_email, "Personal Email", class: 'label' %>
+  <%= form.email_field :personal_email, value: student.user.personal_email, class: 'input input-bordered w-full', required: true %>
+</div>
 
   <div class="mb-4">
     <%= form.label :parent_email_address, class: 'label' %>
