@@ -78,13 +78,14 @@
     </div>
 
 
-
     <!-- Step 3: Payment Method -->
     <div class="hidden py-5" id="step-3">
       <h2 class="text-2xl font-bold mb-6">Payment Method</h2>
       <div class="mb-5">
         <label for="card-element" class="block mb-2 font-medium">Credit or debit card</label>
-        <div id="card-element" class="w-full p-3 border border-gray-300 rounded-md"></div>
+        <div class="card-input-container border border-gray-300 rounded-md p-3 bg-white">
+          <div id="card-element" class="h-10"></div>
+        </div>
         <div id="card-errors" class="text-red-500 mt-1 text-sm"></div>
       </div>
       <div class="flex justify-between mt-8">
@@ -124,7 +125,7 @@
 
 <!-- ----------------- -->
 
-<!-- Not work when move the js/controller files. Because of the required key from -->
+<!-- Not working when move the js/controller files. Because of the required key from -->
 <!--[Rails.application.credentials.dig(:stripe, :publishable_key]  -->
 
 <!-- ----------------- -->
@@ -221,6 +222,7 @@
             });
         }
 
+
         function validateStep(step) {
             switch (step) {
                 case 1:
@@ -264,6 +266,9 @@
 
             const elements = stripe.elements();
             card = elements.create("card");
+
+
+
             card.mount("#card-element");
 
             card.addEventListener('change', (event) => {
