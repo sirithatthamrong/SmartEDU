@@ -1,13 +1,18 @@
 document.addEventListener("DOMContentLoaded", function () {
   let scanner = new Instascan.Scanner({ video: document.getElementById("preview") });
   let activeCamera = null;
-  let scanning = true;
+  let scanning = true; // Ensure scanning is enabled at the start
+  let qrFrame = document.getElementById("qr-frame"); // Get QR frame element for flash effect
 
   scanner.addListener("scan", function (content) {
     if (!scanning) return;
-    scanning = false;
+    scanning = false; // Temporarily disable scanning to prevent duplicate scans
 
     console.log("Scanned content:", content);
+
+    // Flash effect to indicate successful scan
+    qrFrame.classList.add("flash-effect");
+    setTimeout(() => qrFrame.classList.remove("flash-effect"), 500);
 
     let parts = content.split(",");
     if (parts.length !== 2) {
@@ -32,12 +37,12 @@ document.addEventListener("DOMContentLoaded", function () {
     .then(response => response.json())
     .then(data => {
       alert(data.message || "Check-in failed!");
-      resumeScanning();
+      scanning = true; // Allow scanning again immediately after response
     })
     .catch(error => {
       console.error("Error:", error);
       alert("Error processing QR code. Please try again.");
-      resumeScanning();
+      scanning = true; // Ensure scanning resumes even on errors
     });
   });
 
@@ -47,6 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (cameras.length > 0) {
         activeCamera = cameras[0];
         scanner.start(activeCamera);
+        scanning = true; // Ensure scanning is enabled when camera starts
       } else {
         console.error("No cameras found.");
       }
@@ -56,9 +62,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
   function resumeScanning() {
-    setTimeout(() => {
-      scanning = true;
-    }, 1000); // Small delay to prevent duplicate scans
+    scanning = true; // Allow scanning again immediately after delay
   }
 
   // Stop the camera when navigating away

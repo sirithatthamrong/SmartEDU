@@ -1,0 +1,70 @@
+/* Full-screen QR scanner container */
+#qr-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+/* Full-screen video feed */
+#preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  z-index: -1;
+}
+
+/* QR scanning frame (Square & Responsive) */
+#qr-frame {
+  position: absolute;
+  width: min(60vw, 60vh); /* Ensure it's a square and scales with screen */
+  height: min(60vw, 60vh); /* Height matches width */
+  border: 4px solid rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  pointer-events: none;
+}
+/* Corner lines */
+#qr-frame::before,
+#qr-frame::after {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  border: 4px solid rgba(255, 255, 255, 0.8);
+}
+
+#qr-frame::before {
+  top: -4px;
+  left: -4px;
+  border-right: none;
+  border-bottom: none;
+}
+
+#qr-frame::after {
+  bottom: -4px;
+  right: -4px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Initially paused */
+.scan-paused {
+  animation-play-state: paused;
+}
+
+/* Flash effect when QR is successfully scanned */
+.flash-effect {
+  animation: flashAnimation 0.5s ease-in-out;
+}
+
+@keyframes flashAnimation {
+  0% { background: rgba(0, 255, 0, 0.5); }
+  100% { background: transparent; }
+}
