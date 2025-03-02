@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   scanner.addListener("scan", function (content) {
     if (!scanning) return;
-    scanning = false; // Temporarily disable scanning to prevent duplicate scans
+    scanning = false;
 
     console.log("Scanned content:", content);
 
@@ -65,16 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     scanning = true; // Allow scanning again immediately after delay
   }
 
-  function showNotification(message, type) {
-    let notification = document.createElement("div");
-    notification.className = `notification ${type}`;
-    notification.innerText = message;
-    document.body.appendChild(notification);
 
-    setTimeout(() => {
-      notification.remove();
-    }, 3000);
-  }
   function showNotification(message, type) {
   let notification = document.createElement("div");
   notification.className = `notification ${type}`;
