@@ -55,6 +55,6 @@ class Student < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     auth_object
-    ["classroom_id", "discarded_at", "grade", "id", "is_active", "name", "parent_email_address", "student_email_address", "uid"]
+    [ "classroom_id", "discarded_at", "grade", "id", "is_active", "name", "parent_email_address", "student_email_address", "uid" ]
   end
 end
