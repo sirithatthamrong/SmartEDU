@@ -56,7 +56,7 @@ class StudentsController < ApplicationController
       )
 
       respond_to do |format|
-        format.html { redirect_to @student, notice: "Student was successfully created." }
+        format.html { redirect_to @student, notice: "#{@student.name} was successfully created." }
         format.json { render :show, status: :created, location: @student }
       end
     end
@@ -93,7 +93,7 @@ class StudentsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to @student, notice: "Student was successfully updated." }
+      format.html { redirect_to @student, notice: "#{@student.name} was successfully updated." }
       format.json { render :show, status: :ok, location: @student }
     end
   rescue ActiveRecord::RecordInvalid => e
