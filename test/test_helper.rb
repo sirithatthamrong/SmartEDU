@@ -8,9 +8,10 @@ def ci?
 end
 
 module SignInHelper
-  def sign_in(user = nil)
-    user ||= User.find_by!(role: "principal")
-    post session_url, params: { email_address: user.email_address, password: "password123" }
+  def sign_in
+    @school = School.create!(name: "Test School", address: "123 Test St")
+    user = User.find_by!(role: "principal")
+    post session_url, params: { email_address: user.email_address, password: "password123", school_id: @school.id }
   end
 end
 

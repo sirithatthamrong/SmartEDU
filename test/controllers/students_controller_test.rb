@@ -36,7 +36,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       parent_email_address: "parenttest@example.com"
     )
 
-    sign_in_as(@principal)
+    sign_in()
   end
 
 test "should create student" do
@@ -97,7 +97,4 @@ test "should archive student after deletion" do
   assert_equal "#{@student.name} was archived successfully.", flash[:notice]
 end
 
-def sign_in_as(user)
-  post session_url, params: { email_address: user.email_address, password: "securepassword" }
-end
 end
