@@ -7,9 +7,9 @@
 #  id              :integer          not null, primary key
 #  approved        :boolean          default(FALSE)
 #  email_address   :string           not null
-#  first_name      :string
+#  first_name      :string           not null
 #  is_active       :boolean          default(TRUE)
-#  last_name       :string
+#  last_name       :string           not null
 #  password_digest :string           not null
 #  personal_email  :string           not null
 #  role            :string           default("student")
