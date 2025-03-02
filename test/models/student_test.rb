@@ -21,6 +21,7 @@
 #
 #  classroom_id           (classroom_id => classrooms.id)
 #  student_email_address  (student_email_address => users.email_address)
+#  student_email_address  (student_email_address => users.email_address)
 #
 require "test_helper"
 
