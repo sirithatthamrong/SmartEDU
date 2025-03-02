@@ -9,6 +9,7 @@
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  class_id    :string           not null
+#  school_id   :integer
 #
 # Indexes
 #
@@ -17,4 +18,5 @@
 class Classroom < ApplicationRecord
   validates :class_id, presence: true
   validates :grade_level, presence: true
+  has_many :students
 end

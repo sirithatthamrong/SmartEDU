@@ -30,6 +30,7 @@ class Student < ApplicationRecord
   validates :parent_email_address, presence: true
   include Discard::Model
   before_save :set_default_uid
+  belongs_to :classroom
   scope :active, -> { where(is_active: true) }
 
   private

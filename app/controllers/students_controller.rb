@@ -5,6 +5,10 @@ class StudentsController < ApplicationController
   attr_reader :students
   include Pagy::Backend
   def index
+    if params[:classroom_id].present?
+      @classroom = Classroom.find_by(id: params[:classroom_id])
+    end
+
     @grades = Student.distinct.pluck(:grade).compact.sort
 
     students_scope = Student.active

@@ -23,4 +23,9 @@
 class PrincipalTeacherRelationship < ApplicationRecord
   validates :principal_id, presence: true
   validates :teacher_id, presence: true
+
+  belongs_to :principal, class_name: "User"
+  belongs_to :teacher, class_name: "User"
+
+  validates :teacher_id, uniqueness: { scope: :principal_id, message: "This teacher is already assigned to the principal." }
 end
