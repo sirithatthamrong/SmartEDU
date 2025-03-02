@@ -26,12 +26,14 @@
 #
 class User < ApplicationRecord
   has_secure_password
-  has_many :sessions, dependent: :destroy
-  has_many :principal_teacher_relationships, foreign_key: "teacher_id", dependent: :destroy
-  has_many :teacher_student_relationships, foreign_key: "teacher_id", dependent: :destroy
-  has_many :homerooms, foreign_key: "teacher_id", dependent: :destroy
 
-before_validation :generate_school_email, on: :create
+  has_many :attendances, dependent: :destroy
+  has_many :sessions, dependent: :destroy
+  has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
+  has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
+  has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy
+
+  before_validation :generate_school_email, on: :create
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   validates :first_name, presence: true
@@ -39,6 +41,7 @@ before_validation :generate_school_email, on: :create
   validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :personal_email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 8, maximum: 20 }, if: :password_required?
+  validates :school_id, presence: true
 
   ROLES = { admin: "admin", principal: "principal", teacher: "teacher", student: "student", system: "system" }.freeze
   validates :role, inclusion: { in: ROLES.values }
@@ -48,9 +51,9 @@ before_validation :generate_school_email, on: :create
 
   before_create :auto_approve_principal
 
-def auto_approve_principal
-  self.approved = true if principal? || student?
-end
+  def auto_approve_principal
+    self.approved = true if principal? || student?
+  end
 
   def can_manage_teachers?
     admin? || principal?
@@ -78,25 +81,25 @@ end
 
   private
 
-def generate_school_email
-  return if email_address.present?
-  return if first_name.blank? || last_name.blank?
+  def generate_school_email
+    return if email_address.present?
+    return if first_name.blank? || last_name.blank?
 
-  first_name_part = first_name.strip.downcase.gsub(/\s+/, "")
-  last_name_part = last_name.strip.downcase.gsub(/\s+/, "")[0..2] # First 3 letters of last name
-  school_domain = "#{role.downcase}.schoolname.edu"
+    first_name_part = first_name.strip.downcase.gsub(/\s+/, "")
+    last_name_part = last_name.strip.downcase.gsub(/\s+/, "")[0..2] # First 3 letters of last name
+    school_domain = "#{role.downcase}.schoolname.edu"
 
-  base_email = "#{first_name_part}.#{last_name_part}@#{school_domain}"
-  unique_email = base_email
-  counter = 1
+    base_email = "#{first_name_part}.#{last_name_part}@#{school_domain}"
+    unique_email = base_email
+    counter = 1
 
-  while User.exists?(email_address: unique_email)
-    unique_email = "#{first_name_part}.#{last_name_part}#{counter}@#{school_domain}"
-    counter += 1
+    while User.exists?(email_address: unique_email)
+      unique_email = "#{first_name_part}.#{last_name_part}#{counter}@#{school_domain}"
+      counter += 1
+    end
+
+    self.email_address = unique_email
   end
-
-  self.email_address = unique_email
-end
 
   def password_required?
     new_record? || password.present?
