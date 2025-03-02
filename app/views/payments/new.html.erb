@@ -9,7 +9,7 @@
   <!-- Progress bar -->
   <div class="flex mb-8 relative">
     <div class="flex-1 relative">
-      <div class="w-8 h-8 bg-blue-500 text-white rounded-full mx-auto flex items-center justify-center border-2 border-blue-500">1</div>
+      <div class="w-8 h-8 bg-blue-500 text-white rounded-full mx-auto flex items-center justify-center border-2 border-gray-200">1</div>
       <p class="text-center text-xs mt-1">Personal</p>
     </div>
     <div class="flex-1 relative">
@@ -49,14 +49,35 @@
     <div class="hidden py-5" id="step-2">
       <h2 class="text-2xl font-bold mb-6">Payment Amount</h2>
       <div class="mb-5">
-        <label for="amount" class="block mb-2 font-medium">Amount</label>
-        <input type="number" id="amount" name="amount" class="w-full p-3 border border-gray-300 rounded-md" min="1" required>
+        <label class="block mb-2 font-medium">Choose Tier</label>
+        <label>
+          <input type="radio" name="tier" value="200" checked onchange="calculateTierAmount()" />
+          Tier 1
+        </label>
+        <label class="ml-4">
+          <input type="radio" name="tier" value="350" onchange="calculateTierAmount()" />
+          Tier 2
+        </label>
       </div>
+      <div class="mb-5">
+        <label for="student_count" class="block mb-2 font-medium">Number of Students</label>
+        <input
+          type="number" id="student_count"
+          name="student_count" min="1"
+          class="w-full p-3 border border-gray-300 rounded-md"
+          required
+          oninput="calculateTierAmount()"
+          />
+      </div>
+      <input type="hidden" id="amount" name="amount" value="0" />
+
       <div class="flex justify-between mt-8">
         <button type="button" id="prev-to-1" class="btn">Back</button>
         <button type="button" id="next-to-3" class="btn btn-primary flex">Next</button>
       </div>
     </div>
+
+
 
     <!-- Step 3: Payment Method -->
     <div class="hidden py-5" id="step-3">
@@ -90,8 +111,8 @@
         </div>
       </div>
       <div class="flex justify-between mt-8">
-        <button type="button" id="prev-to-3" class="py-3 px-5 bg-gray-100 text-gray-700 rounded-md font-semibold">Back</button>
-        <button type="button" id="submit-payment" class="py-3 px-5 bg-green-500 text-white rounded-md font-semibold">Complete Payment</button>
+        <button type="button" id="prev-to-3" class="btn">Back</button>
+        <button type="button" id="submit-payment" class="btn btn-primary flex">Complete Payment</button>
       </div>
     </div>
   </div>
@@ -109,6 +130,13 @@
 <!-- ----------------- -->
 
 <script>
+
+    function calculateTierAmount() {
+        const tier = parseInt(document.querySelector('input[name="tier"]:checked').value, 10) || 0;
+        const studentCount = parseInt(document.getElementById('student_count').value, 10) || 0;
+        document.getElementById('amount').value = tier * studentCount;
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
         console.log("Payment form script loaded");
 
@@ -152,6 +180,7 @@
                 goToStep(nextStep);
             }
         }
+
 
         function goToStep(stepNumber) {
             // Hide all steps
@@ -259,12 +288,15 @@
             const amount = document.getElementById('amount').value;
 
             document.getElementById('review-name').textContent = `${firstName} ${lastName}`;
-            document.getElementById('review-amount').textContent = (amount / 100).toFixed(2);
+            // Remove the division by 100 to display correct amount
+            document.getElementById('review-amount').textContent = amount;
 
             if (last4) {
                 document.getElementById('review-card-last4').textContent = "****" + last4;
             }
         }
+
+
 
         // Handle payment form submission
         document.getElementById('submit-payment').addEventListener('click', async function () {

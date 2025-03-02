@@ -14,14 +14,16 @@ class PaymentsController < ApplicationController
                                                       payment_method: payment_method_id,
                                                       confirmation_method: "manual",
                                                       confirm: true,
-                                                      return_url: success_payments_url,
+                                                      return_url: success_payments_url
                                                     })
 
       payment = Payment.create(
         amount: amount,
         status: "succeeded",
         user_id: current_user.id,
-        stripe_payment_intent_id: payment_intent.id
+        stripe_payment_intent_id: payment_intent.id,
+        last_name: last_name,
+        first_name: first_name
       )
 
 
