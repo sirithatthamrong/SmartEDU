@@ -32,7 +32,10 @@
 
     /* Button Styling */
     .entity-btn {
-        @apply px-4 py-2 font-medium text-white rounded-2xl transition;
+        @apply px-4 py-2 font-medium text-white
+        rounded-[var(--rounded-btn,.5rem)]
+        text-sm font-semibold gap-2 h-12
+        transition;
     }
 
     .entity-btn-delete {

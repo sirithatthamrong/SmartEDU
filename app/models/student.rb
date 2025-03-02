@@ -32,10 +32,10 @@ class Student < ApplicationRecord
   validates :parent_email_address, presence: true
 
   include Discard::Model
-  before_save :set_full_name, unless: -> { name.present? } # ✅ Ensure name is set before saving
+  before_save :set_full_name, unless: -> { name.present? }
   before_save :set_default_uid
 
-  scope :active, -> { where(is_active: true) }
+  scope :active, -> { where(is_active: true, discarded_at: nil) }
 
   private
 

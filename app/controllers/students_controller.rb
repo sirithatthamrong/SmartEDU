@@ -103,7 +103,7 @@ end
 
 def destroy
   ActiveRecord::Base.transaction do
-    @student.update!(is_active: false)
+    @student.update!(is_active: false, discarded_at: Time.current)
     user = User.find_by(email_address: @student.student_email_address)
     user.update!(is_active: false) if user
   end

@@ -1,4 +1,7 @@
 <%= render "shared/notice" %>
+
+<% content_for :title, "Manage Students" %>
+
 <div class="student-card max-w-md mx-auto mt-3">
   <div class="mt-2">
     <%= link_to students_path, class: "btn" do %>
