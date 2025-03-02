@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", function () {
   let scanner = new Instascan.Scanner({ video: document.getElementById("preview") });
   let activeCamera = null;
+  
   let scanning = true; // Ensure scanning is enabled at the start
   let qrFrame = document.getElementById("qr-frame");
 
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
     notification.remove();
   }, 3000);
 }
+
 
   // Stop the camera when navigating away
   function stopScanner() {
