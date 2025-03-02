@@ -113,8 +113,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const cardElement = document.getElementById('card-element');
         if (!cardElement) return;
 
+        const publishableKey = "<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>";
         if (!stripe) {
-            stripe = Stripe("<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>");
+            stripe = Stripe(publishableKey);
         }
 
         if (card) {
