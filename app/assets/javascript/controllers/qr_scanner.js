@@ -1,34 +1,52 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Create a new scanner instance using the video element with id "preview"
   let scanner = new Instascan.Scanner({ video: document.getElementById("preview") });
+  let activeCamera = null;
+  let scanning = true;
 
-scanner.addListener("scan", function (content) {
-  let [uid, hash] = content.split(",");
+  scanner.addListener("scan", function (content) {
+    if (!scanning) return;
+    scanning = false;
 
-  fetch("/admin/checkin", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
-    },
-    body: JSON.stringify({ uid: uid, hash: hash }) // now include hash
-  })
-  .then(response => response.json())
-  .then(data => {
-    if (data.success) {
-      alert(data.message);
-    } else {
-      alert(data.message || "Check-in failed!");
+    console.log("Scanned content:", content);
+
+    let parts = content.split(",");
+    if (parts.length !== 2) {
+      alert("Invalid QR code! Please scan a valid check-in code.");
+      return resumeScanning();
     }
-  })
-  .catch(error => console.error("Error:", error));
-});
+
+    let [uid, hash] = parts.map(part => part.trim());
+    if (!uid || !hash) {
+      alert("Invalid QR code! Missing required data.");
+      return resumeScanning();
+    }
+
+    fetch("/admin/checkin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+      },
+      body: JSON.stringify({ uid: uid, hash: hash })
+    })
+    .then(response => response.json())
+    .then(data => {
+      alert(data.message || "Check-in failed!");
+      resumeScanning();
+    })
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Error processing QR code. Please try again.");
+      resumeScanning();
+    });
+  });
 
   // Get available cameras and start the scanner with the first available one
   Instascan.Camera.getCameras()
     .then(function (cameras) {
       if (cameras.length > 0) {
-        scanner.start(cameras[0]);
+        activeCamera = cameras[0];
+        scanner.start(activeCamera);
       } else {
         console.error("No cameras found.");
       }
@@ -36,4 +54,23 @@ scanner.addListener("scan", function (content) {
     .catch(function (e) {
       console.error(e);
     });
+
+  function resumeScanning() {
+    setTimeout(() => {
+      scanning = true;
+    }, 1000); // Small delay to prevent duplicate scans
+  }
+
+  // Stop the camera when navigating away
+  function stopScanner() {
+    if (scanner) {
+      scanner.stop();
+    }
+    if (activeCamera && activeCamera.stream) {
+      activeCamera.stream.getTracks().forEach(track => track.stop());
+    }
+  }
+
+  window.addEventListener("beforeunload", stopScanner);
+  window.addEventListener("pagehide", stopScanner);
 });
