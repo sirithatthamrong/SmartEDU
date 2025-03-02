@@ -8,8 +8,8 @@ def ci?
 end
 
 module SignInHelper
-  def sign_in
-    user = User.find_by!(role: "principal")
+  def sign_in(user = nil)
+    user ||= User.find_by!(role: "principal")
     post session_url, params: { email_address: user.email_address, password: "password123" }
   end
 end
