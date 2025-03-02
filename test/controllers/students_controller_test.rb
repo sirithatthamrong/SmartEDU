@@ -5,11 +5,11 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
     @school = School.create!(name: 'Test School', address: '123 Main St')
 
     @principal = User.create!(
-      first_name: 'Principal',
-      last_name: 'Test',
+      first_name: "Principal",
+      last_name: "Test",
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
-      role: 'principal',
-      password: 'securepassword',
+      role: "principal",
+      password: "securepassword",
       school_id: @school.id
     )
 
@@ -46,7 +46,7 @@ test "should create student" do
       last_name: "Doe",
       grade: @classroom.grade_level,
       classroom_id: @classroom.class_id,  # Pass class_id (not id)
-      personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com", # Fix email field
+      personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com",
       parent_email_address: 'parent.doe@example.com'
     }}
   end
