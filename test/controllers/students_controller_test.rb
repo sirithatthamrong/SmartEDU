@@ -2,7 +2,7 @@ require "test_helper"
 
 class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @school = School.create!(name: 'Test School', address: '123 Main St')
+    @school = School.create!(name: "Test School", address: "123 Main St")
 
     @principal = User.create!(
       first_name: "Principal",
@@ -40,15 +40,15 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
   end
 
 test "should create student" do
-  assert_difference(['Student.count', 'User.count']) do
+  assert_difference([ "Student.count", "User.count" ]) do
     post students_url, params: { student: {
       first_name: "John",
       last_name: "Doe",
       grade: @classroom.grade_level,
       classroom_id: @classroom.class_id,  # Pass class_id (not id)
       personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com",
-      parent_email_address: 'parent.doe@example.com'
-    }}
+      parent_email_address: "parent.doe@example.com"
+    } }
   end
 
   student = Student.last
