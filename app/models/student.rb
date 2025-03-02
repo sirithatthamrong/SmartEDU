@@ -23,27 +23,33 @@
 #  student_email_address  (student_email_address => users.email_address)
 #
 class Student < ApplicationRecord
-  validates :name, presence: true, length: { minimum: 4, maximum: 20 }
+  belongs_to :user, primary_key: :email_address, foreign_key: :student_email_address
+  belongs_to :classroom
+
   validates :grade, presence: true
   validates :classroom_id, presence: true
-  validates :student_email_address, presence: true
+  validates :student_email_address, presence: true, uniqueness: true
   validates :parent_email_address, presence: true
+
   include Discard::Model
+  before_save :set_full_name, unless: -> { name.present? } # ✅ Ensure name is set before saving
   before_save :set_default_uid
-  belongs_to :classroom
+
   scope :active, -> { where(is_active: true) }
 
   private
 
-  def self.ransackable_attributes(auth_object = nil)
-    %w[name]
-  end
-
-  def self.ransackable_associations(auth_object = nil)
-    []
+  def set_full_name
+    user = User.find_by(email_address: self.student_email_address)
+    self.name = "#{user.first_name} #{user.last_name}" if user
   end
 
   def set_default_uid
     self.uid = SecureRandom.uuid if uid.blank?
   end
+
+def self.ransackable_attributes(auth_object = nil)
+  auth_object
+  [ "classroom_id", "discarded_at", "grade", "id", "is_active", "name", "parent_email_address", "student_email_address", "uid" ]
+end
 end
