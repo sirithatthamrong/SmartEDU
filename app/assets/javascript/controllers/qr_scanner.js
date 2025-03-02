@@ -75,6 +75,18 @@ document.addEventListener("DOMContentLoaded", function () {
       notification.remove();
     }, 3000);
   }
+  function showNotification(message, type) {
+  let notification = document.createElement("div");
+  notification.className = `notification ${type}`;
+  notification.innerText = message;
+
+  let qrContainer = document.getElementById("qr-container");
+  qrContainer.appendChild(notification);
+
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
 
   // Stop the camera when navigating away
   function stopScanner() {
