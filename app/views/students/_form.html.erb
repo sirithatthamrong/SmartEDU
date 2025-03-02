@@ -13,12 +13,12 @@
 
   <div class="mb-4">
     <%= form.label :first_name, "First Name", class: 'label' %>
-    <%= form.text_field :first_name, class: 'input input-bordered w-full', required: true %>
+    <%= form.text_field :first_name, value: student.user&.first_name, class: 'input input-bordered w-full', required: true %>
   </div>
 
   <div class="mb-4">
     <%= form.label :last_name, "Last Name", class: 'label' %>
-    <%= form.text_field :last_name, class: 'input input-bordered w-full', required: true %>
+    <%= form.text_field :last_name, value: student.user&.last_name, class: 'input input-bordered w-full', required: true %>
   </div>
 
   <div class="mb-4">
@@ -28,12 +28,12 @@
 
   <div class="mb-4">
     <%= form.label :classroom_id, "Classroom", class: 'label' %>
-    <%= form.text_field :classroom_id, class: 'input input-bordered w-full', required: true %>
+    <%= form.text_field :classroom_id, value: student.classroom&.class_id || "Not assigned", class: 'input input-bordered w-full' %>
   </div>
 
 <div class="mb-4">
   <%= form.label :personal_email, "Personal Email Address", class: 'label' %>
-  <%= form.email_field :personal_email, value: @user&.personal_email, class: 'input input-bordered w-full', required: true %>
+<%= form.email_field :personal_email, value: student.user&.personal_email, class: 'input input-bordered w-full', required: true %>
 </div>
 
   <div class="mb-4">
