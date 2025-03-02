@@ -35,5 +35,4 @@ async function initializeDataTable() {
     await waitForPageLoad();
 }
 
-window.stop(); // Stop rendering
 initializeDataTable().then(r => console.log("DataTable initialized!"));

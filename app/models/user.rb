@@ -26,10 +26,12 @@
 #
 class User < ApplicationRecord
   has_secure_password
+
+  has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy
-  has_many :principal_teacher_relationships, foreign_key: "teacher_id", dependent: :destroy
-  has_many :teacher_student_relationships, foreign_key: "teacher_id", dependent: :destroy
-  has_many :homerooms, foreign_key: "teacher_id", dependent: :destroy
+  has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
+  has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
+  has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy
 
   before_validation :generate_school_email, on: :create
 
