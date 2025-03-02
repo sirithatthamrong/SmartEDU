@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let scanner = new Instascan.Scanner({ video: document.getElementById("preview") });
   let activeCamera = null;
   let scanning = true; // Ensure scanning is enabled at the start
-  let qrFrame = document.getElementById("qr-frame"); // Get QR frame element for flash effect
+  let qrFrame = document.getElementById("qr-frame");
 
   scanner.addListener("scan", function (content) {
     if (!scanning) return;
@@ -16,13 +16,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
     let parts = content.split(",");
     if (parts.length !== 2) {
-      alert("Invalid QR code! Please scan a valid check-in code.");
+      showNotification("Invalid QR code! Please scan a valid check-in code.", "error");
       return resumeScanning();
     }
 
     let [uid, hash] = parts.map(part => part.trim());
     if (!uid || !hash) {
-      alert("Invalid QR code! Missing required data.");
+      showNotification("Invalid QR code! Missing required data.", "error");
       return resumeScanning();
     }
 
@@ -36,13 +36,13 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .then(response => response.json())
     .then(data => {
-      alert(data.message || "Check-in failed!");
-      scanning = true; // Allow scanning again immediately after response
+      showNotification(data.message || "Check-in failed!", "success");
+      scanning = true;
     })
     .catch(error => {
       console.error("Error:", error);
-      alert("Error processing QR code. Please try again.");
-      scanning = true; // Ensure scanning resumes even on errors
+      showNotification("Error processing QR code. Please try again.", "error");
+      scanning = true;
     });
   });
 
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (cameras.length > 0) {
         activeCamera = cameras[0];
         scanner.start(activeCamera);
-        scanning = true; // Ensure scanning is enabled when camera starts
+        scanning = true;
       } else {
         console.error("No cameras found.");
       }
@@ -63,6 +63,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function resumeScanning() {
     scanning = true; // Allow scanning again immediately after delay
+  }
+
+  function showNotification(message, type) {
+    let notification = document.createElement("div");
+    notification.className = `notification ${type}`;
+    notification.innerText = message;
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+      notification.remove();
+    }, 3000);
   }
 
   // Stop the camera when navigating away
