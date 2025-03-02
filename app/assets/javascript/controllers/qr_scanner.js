@@ -1,10 +1,25 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Create a new scanner instance using the video element with id "preview"
   let scanner = new Instascan.Scanner({ video: document.getElementById("preview") });
   let activeCamera = null;
+  let scanning = true;
 
   scanner.addListener("scan", function (content) {
-    let [uid, hash] = content.split(",");
+    if (!scanning) return;
+    scanning = false;
+
+    console.log("Scanned content:", content);
+
+    let parts = content.split(",");
+    if (parts.length !== 2) {
+      alert("Invalid QR code! Please scan a valid check-in code.");
+      return resumeScanning();
+    }
+
+    let [uid, hash] = parts.map(part => part.trim());
+    if (!uid || !hash) {
+      alert("Invalid QR code! Missing required data.");
+      return resumeScanning();
+    }
 
     fetch("/admin/checkin", {
       method: "POST",
@@ -12,13 +27,18 @@ document.addEventListener("DOMContentLoaded", function () {
         "Content-Type": "application/json",
         "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
       },
-      body: JSON.stringify({ uid: uid, hash: hash }) // now include hash
+      body: JSON.stringify({ uid: uid, hash: hash })
     })
     .then(response => response.json())
     .then(data => {
       alert(data.message || "Check-in failed!");
+      resumeScanning();
     })
-    .catch(error => console.error("Error:", error));
+    .catch(error => {
+      console.error("Error:", error);
+      alert("Error processing QR code. Please try again.");
+      resumeScanning();
+    });
   });
 
   // Get available cameras and start the scanner with the first available one
@@ -35,17 +55,22 @@ document.addEventListener("DOMContentLoaded", function () {
       console.error(e);
     });
 
+  function resumeScanning() {
+    setTimeout(() => {
+      scanning = true;
+    }, 1000); // Small delay to prevent duplicate scans
+  }
+
   // Stop the camera when navigating away
   function stopScanner() {
     if (scanner) {
-      scanner.stop(); // Stops scanning
+      scanner.stop();
     }
     if (activeCamera && activeCamera.stream) {
-      activeCamera.stream.getTracks().forEach(track => track.stop()); // Stops the camera stream
+      activeCamera.stream.getTracks().forEach(track => track.stop());
     }
   }
 
-  // Stop camera on page unload
   window.addEventListener("beforeunload", stopScanner);
   window.addEventListener("pagehide", stopScanner);
 });
