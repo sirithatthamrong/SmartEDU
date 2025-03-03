@@ -32,26 +32,31 @@ class Student < ApplicationRecord
   validates :classroom_id, presence: true
   validates :student_email_address, presence: true, uniqueness: true
   validates :parent_email_address, presence: true
+  validates :name, presence: true, uniqueness: { case_sensitive: false } # Ensure uniqueness
 
   include Discard::Model
   before_save :set_full_name, unless: -> { name.present? }
   before_save :set_default_uid
 
-  scope :active, -> { where(is_active: true) }
+  scope :active, -> { where(is_active: true, discarded_at: nil) }
 
   private
 
   def set_full_name
     user = User.find_by(email_address: self.student_email_address)
-    self.name = "#{user.first_name} #{user.last_name}" if user
+    if user && !Student.exists?(name: "#{user.first_name} #{user.last_name}") # Ensure uniqueness
+      self.name = "#{user.first_name} #{user.last_name}"
+    else
+      self.name = "#{user.first_name} #{user.last_name} #{SecureRandom.hex(2)}" # Append a random string
+    end
   end
 
   def set_default_uid
     self.uid = SecureRandom.uuid if uid.blank?
   end
 
-def self.ransackable_attributes(auth_object = nil)
-  auth_object
-  [ "classroom_id", "discarded_at", "grade", "id", "is_active", "name", "parent_email_address", "student_email_address", "uid" ]
-end
+  def self.ransackable_attributes(auth_object = nil)
+    auth_object
+    [ "classroom_id", "discarded_at", "grade", "id", "is_active", "name", "parent_email_address", "student_email_address", "uid" ]
+  end
 end
