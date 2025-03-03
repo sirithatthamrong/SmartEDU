@@ -1,32 +1,39 @@
 <%= render "shared/notice" %>
+<%= render "shared/confirmation_modal" %>
 <% content_for :title, "Manage Teachers" %>
 
-<div class="max-w-4xl mx-auto p-6 bg-white rounded-lg">
-
+<div class="entity-container">
   <% if @teachers.any? %>
-    <table class="w-full border border-gray-300 shadow-lg rounded-lg text-gray-800">
+    <table class="entity-table" id="teachers-table">
       <thead>
-      <tr class="bg-gradient-to-r from-blue-500 to-purple-500 text-white text-left">
-        <th class="py-4 px-6 border-b border-gray-300 text-center font-semibold uppercase">Email</th>
-        <th class="py-4 px-6 border-b border-gray-300 text-center font-semibold uppercase">Actions</th>
+      <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>School Email</th>
+        <th>Personal Email</th>
+        <th>Action</th>
       </tr>
       </thead>
       <tbody>
       <% @teachers.each do |teacher| %>
-        <tr id="teacher-<%= teacher.id %>" class="bg-white hover:bg-gray-50 transition duration-200 ease-in-out">
-          <td class="py-4 px-6 border-b border-gray-300 text-center"><%= teacher.email_address %></td>
-          <td class="py-4 px-6 text-center border-b border-gray-300">
-            <%= button_to "✖ Remove", teacher_path(teacher),
-                          method: :delete,
-                          remote: true,
-                          data: { turbo: true, confirm: "Are you sure you want to remove this teacher?" },
-                          class: "cancel-btn bg-red-500 py-2 px-4 rounded-md hover:bg-red-600 transition" %>
+        <tr id="teacher-<%= teacher.id %>">
+          <td><%= teacher.first_name %></td>
+          <td><%= teacher.last_name %></td>
+          <td><%= teacher.email_address %></td>
+          <td><%= teacher.personal_email %></td>
+          <td>
+            <button class="entity-btn entity-btn-delete"
+                    onclick="confirmDelete(<%= teacher.id %>, '<%= teacher.email_address %>', '/teachers')">
+              <i class="fas fa-trash"></i> Remove
+            </button>
           </td>
         </tr>
       <% end %>
       </tbody>
     </table>
   <% else %>
-    <p class="text-center text-gray-600 mt-6">No teachers available.</p>
+    <p class="text-left text-gray-600 mt-6 px-6">No teachers available.</p>
   <% end %>
 </div>
+
+<%= javascript_include_tag "controllers/delete_entity_controller" %>

@@ -1,9 +1,9 @@
 <div class="drawer">
   <input id="my-drawer" type="checkbox" class="drawer-toggle"/>
-  <div class="drawer-content">
+  <div class="drawer-content mt-10">
     <%= yield %>
   </div>
-  <div class="drawer-side">
+  <div class="drawer-side z-50">
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
     <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-2">
 
@@ -48,7 +48,7 @@
           </summary>
           <ul class="pl-4">
             <li><%= link_to new_attendance_path, class: "flex items-center gap-2" do %>
-                <i class="fas fa-qrcode"></i> Add Attendance
+                <i class="fas fa-qrcode"></i> Add Attendances
               <% end %></li>
             <li><%= link_to attendances_path, class: "flex items-center gap-2" do %>
                 <i class="fas fa-list"></i> List Attendances
