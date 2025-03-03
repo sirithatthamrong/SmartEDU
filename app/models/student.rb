@@ -32,6 +32,8 @@ class Student < ApplicationRecord
   validates :parent_email_address, presence: true
   validates :name, presence: true, uniqueness: { case_sensitive: false } # Ensure uniqueness
 
+  validate :classroom_must_match_grade
+
   include Discard::Model
   before_save :set_full_name, unless: -> { name.present? }
   before_save :set_default_uid
@@ -55,6 +57,12 @@ class Student < ApplicationRecord
 
   def self.ransackable_attributes(auth_object = nil)
     auth_object
-    [ "classroom_id", "discarded_at", "grade", "id", "is_active", "name", "parent_email_address", "student_email_address", "uid" ]
+    %w[classroom_id discarded_at grade id is_active name parent_email_address student_email_address uid]
+  end
+
+  def classroom_must_match_grade
+    if classroom && classroom.grade_level != grade
+      errors.add(:classroom_id, "must belong to the selected grade")
+    end
   end
 end
