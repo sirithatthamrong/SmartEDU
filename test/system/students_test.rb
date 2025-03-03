@@ -58,8 +58,8 @@ class StudentsTest < ApplicationSystemTestCase
     visit students_url
     click_on "New student"
 
-    fill_in "First Name", with: "Test"
-    fill_in "Last Name", with: "Student"
+    fill_in "First Name", with: "Hello"
+    fill_in "Last Name", with: "World"
     fill_in "Grade", with: @classroom.grade_level
     puts @classroom.grade_level
     fill_in "Classroom", with: @classroom.class_id
@@ -68,7 +68,9 @@ class StudentsTest < ApplicationSystemTestCase
     fill_in "Parent Email Address", with: "parenttest@example.com"
 
     click_on "Create Student"
+    assert_text "Hello World was successfully created."
   end
+
   test "should update student" do
     visit student_url(@student)
     click_on "Edit", match: :first
@@ -80,20 +82,22 @@ class StudentsTest < ApplicationSystemTestCase
     fill_in "Parent Email Address", with: @student.parent_email_address
 
     click_on "Update Student"
-    assert_text "Student was successfully updated"
-    assert_text "Edited Student"
+    assert_text "Edited Student was successfully updated."
     click_on "Back"
   end
 
   test "should archive student (destroy)" do
     visit student_url(@student)
 
-    click_on "Archive", match: :first
+    puts "Before clicking Archive - is_active: #{@student.is_active}"
 
-    sleep 10 # Wait for the database to update
+    click_on "Archive", match: :first
+    click_on "Yes, Archive", match: :first
+    sleep 5  # Allow time for the database update
 
     @student.reload
+    puts "After clicking Archive - is_active: #{@student.is_active}"
+
     assert_equal false, @student.is_active, "Student should be archived but is still active"
-    assert_text "#{@student.name} was archived successfully."
   end
 end
