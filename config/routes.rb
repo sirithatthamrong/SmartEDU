@@ -50,7 +50,7 @@ Rails.application.routes.draw do
       patch :activate
     end
     collection do
-      get :manage  # This will map to students#manage
+      get :manage
     end
   end
   get "classrooms/:id/grades/:grade", to: "classrooms#grading", as: :grading_by_grade
