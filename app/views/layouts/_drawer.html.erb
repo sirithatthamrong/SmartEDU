@@ -13,7 +13,13 @@
           <i class="fas fa-tachometer-alt"></i> Dashboard
         <% end %>
       </li>
-
+<% if current_user&.role == 'student' %>
+  <li>
+    <%= link_to profile_path, class: "flex items-center gap-2" do %>
+      <i class="fas fa-user"></i> Profile
+    <% end %>
+  </li>
+<% end %>
       <!-- Management Section -->
       <li>
         <details>
@@ -30,7 +36,6 @@
                   <i class="fas fa-user-shield"></i> Manage Users
                 <% end %></li>
             <% end %>
-
             <% if current_user&.can_manage_teachers? %>
               <li><%= link_to teachers_path, class: "flex items-center gap-2" do %>
                   <i class="fas fa-chalkboard-teacher"></i> Manage Teachers
