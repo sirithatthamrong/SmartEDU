@@ -23,6 +23,8 @@
 #  student_email_address  (student_email_address => users.email_address)
 #
 class Student < ApplicationRecord
+  self.table_name = "Students"
+
   belongs_to :user, primary_key: :email_address, foreign_key: :student_email_address
   belongs_to :classroom
 
