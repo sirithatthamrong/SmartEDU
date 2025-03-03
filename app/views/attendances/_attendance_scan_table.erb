@@ -1,29 +1,41 @@
-<div class="flex flex-row justify-around items-start mt-4">
+<div class="p-5 bg-neutral-400 flex justify-center">
+  <%= form_with url: new_attendance_path, method: :get, local: true, id: "student-search-form", data: { turbo_frame: "students" } do |f| %>
+    <%= f.text_field :name_cont, placeholder: "Search by student name...",
+          class: "input input-bordered w-full max-w-xs" %>
+  <% end %>
+</div>
+
+<div class="flex flex-row justify-around items-start w-full mt-4">
+
   <div class="bg-accent p-4 rounded-md w-fit">
     <h1 class="text-xl">Students</h1>
-    <table class="table table-zebra p-20">
-      <thead>
-        <tr>
-          <th>Student Name</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @students.each do |student| %>
-<tr class="hover" data-content="<%= student.name %>">
-  <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
-  <td>
-    <%= button_to "Check-in",
-          attendances_path(student_id: student.id),
-          method: :post,
-          class: "btn btn-primary btn-xs",
-          data: { turbo_frame: "students" } %>
-  </td>
-</tr>
-        <% end %>
-      </tbody>
-    </table>
+    <turbo-frame id="students">
+      <table class="table table-zebra p-20">
+        <thead>
+          <tr>
+            <th>Student Name</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @students.each do |student| %>
+            <tr class="hover" data-content="<%= student.name %>">
+              <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
+              <td>
+                <!-- ✅ Check-in Button -->
+                <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
+                  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                  <%= hidden_field_tag :student_id, student.id %>
+                  <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
+                </form>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </turbo-frame>
   </div>
+
   <div class="bg-yellow-200 p-4 rounded-md w-fit">
     <h1 class="text-xl">Checked-in Students</h1>
     <table id="latest-attendances" class="table table-zebra p-20">
@@ -43,4 +55,5 @@
       </tbody>
     </table>
   </div>
-</div>
+
+</div> <!-- End of Flex Container -->
