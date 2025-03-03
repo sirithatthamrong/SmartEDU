@@ -29,6 +29,8 @@ class User < ApplicationRecord
 
   has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy
+
+  has_many :students, primary_key: :email_address, foreign_key: :student_email_address
   has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
   has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
   has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy
@@ -38,7 +40,6 @@ class User < ApplicationRecord
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   validates :first_name, presence: true
   validates :last_name, presence: true
-  validates :email_address, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :personal_email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :password, presence: true, length: { minimum: 8, maximum: 20 }, if: :password_required?
   validates :school_id, presence: true
@@ -100,6 +101,7 @@ end
 
     self.email_address = unique_email
   end
+
 
   def password_required?
     new_record? || password.present?

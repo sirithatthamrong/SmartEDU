@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_24_074614) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -61,6 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_24_074614) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
