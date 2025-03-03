@@ -4,38 +4,34 @@
   </div>
 <% end %>
 
-
 <div class="flex flex-row justify-around items-start w-full mt-4">
-
   <div class="bg-accent p-4 rounded-md w-fit">
     <h1 class="text-xl">Students</h1>
-    <turbo-frame id="students">
-      <table class="table table-zebra p-20">
-        <thead>
-          <tr>
-            <th>Student Name</th>
-            <th>Action</th>
+    <table class="table table-zebra p-20">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @students.each do |student| %>
+          <tr class="hover" data-content="<%= student.name %>">
+            <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
+            <td>
+              <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
+                <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                <%= hidden_field_tag :student_id, student.id %>
+                <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
+              </form>
+            </td>
           </tr>
-        </thead>
-        <tbody>
-          <% @students.each do |student| %>
-            <tr class="hover" data-content="<%= student.name %>">
-              <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
-              <td>
-                <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
-                  <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                  <%= hidden_field_tag :student_id, student.id %>
-                  <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
-                </form>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </turbo-frame>
+        <% end %>
+      </tbody>
+    </table>
   </div>
 
-  <!-- ✅ Checked-in Students Table -->
+  <!-- Checked-in Students Table -->
   <div class="bg-yellow-200 p-4 rounded-md w-fit">
     <h1 class="text-xl">Checked-in Students</h1>
     <table id="latest-attendances" class="table table-zebra p-20">
@@ -55,5 +51,4 @@
       </tbody>
     </table>
   </div>
-
 </div> <!-- End of Flex Container -->
