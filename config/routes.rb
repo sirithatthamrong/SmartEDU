@@ -13,7 +13,12 @@ Rails.application.routes.draw do
     end
     resources :students, only: [ :index, :show ]
   end
+
   resources :attendances
+  resources :attendances, only: [:create] do
+    get '/check_if_checked_in', to: 'attendances#check_if_checked_in'
+  end
+
 
   get "/students/scan", to: "admin#scan_qr"
   resources :attendances

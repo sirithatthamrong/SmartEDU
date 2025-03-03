@@ -32,13 +32,18 @@ class AttendancesController < ApplicationController
   # POST /attendances or /attendances.json
   def create
     student = Student.find(params[:student_id])
-    CheckinService.checkin(student, Current.user)
-    respond_to do |format|
-      format.html { redirect_to new_attendance_path(request.parameters), notice: "Checked in successfully!" }
-      format.turbo_stream
+
+    existing_attendance = Attendance.where(student: student)
+                                    .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+                                    .first
+
+    if existing_attendance
+      render json: { status: "already_checked_in" }, status: :ok
+    else
+      CheckinService.checkin(student, Current.user)
+      render json: { status: "success" }, status: :ok
     end
   end
-
   # PATCH/PUT /attendances/1 or /attendances/1.json
   def update
     respond_to do |format|
@@ -52,21 +57,41 @@ class AttendancesController < ApplicationController
     end
   end
 
-  # DELETE /attendances/1 or /attendances/1.json
+  # app/controllers/attendances_controller.rb
   def destroy
-    @attendance.destroy!
+    # Fetch the student based on the student_id passed in params
+    student = Student.find(params[:student_id])
+
+    # Assuming you want to undo today's check-in for this student:
+    CheckinService.undo_checkin(student)
 
     respond_to do |format|
-      format.html { redirect_to attendances_path, status: :see_other, notice: "Attendance was successfully destroyed." }
-      format.json { head :no_content }
+      format.html { redirect_to student_attendances_path(student), notice: "Undo Check in successfully!" }
+      format.turbo_stream
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_attendance
-      @attendance = Attendance.find(params.expect(:id))
+  def check_if_checked_in
+    student = Student.find(params[:attendance_id])
+
+    # Check if the student has already checked in today
+    existing_attendance = Attendance.where(student: student)
+                                    .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+                                    .first
+
+    if existing_attendance
+      render json: { checked_in: true }
+    else
+      render json: { checked_in: false }
     end
+  end
+
+
+  private
+    # # Use callbacks to share common setup or constraints between actions.
+    # def set_attendance
+    #   @attendance = Attendance.find(params.expect(:id))
+    # end
 
     # Only allow a list of trusted parameters through.
     def attendance_params
