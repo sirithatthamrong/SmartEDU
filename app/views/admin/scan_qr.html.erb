@@ -1,9 +1,12 @@
 <%= render "shared/notice" %>
 <% content_for :title, "Scan QR Code" %>
 
-<h1>Scan QR Code</h1>
-
-<video id="preview" style="width: 100%; height: auto;"></video>
+<div id="qr-container">
+  <video id="preview"></video>
+  <div id="qr-frame">
+    <div id="scan-line"></div>
+  </div>
+</div>
 
 <!-- CSRF meta tag -->
 <meta name="csrf-token" content="<%= form_authenticity_token %>">

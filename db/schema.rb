@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_02_085329) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -126,7 +126,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_085329) do
   add_foreign_key "attendances", "users"
   add_foreign_key "homerooms", "classrooms"
   add_foreign_key "homerooms", "users", column: "teacher_id"
-  add_foreign_key "payments", "users"
   add_foreign_key "principal_teacher_relationships", "users", column: "principal_id"
   add_foreign_key "principal_teacher_relationships", "users", column: "teacher_id"
   add_foreign_key "school_tiers", "schools"

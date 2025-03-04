@@ -1,20 +1,29 @@
 <div class=>
   <div class="card-body">
     <h2 class="card-title text-xl font-bold">Name: <%= student.name %></h2>
-    <p class="text-gray-700">ID: <%= student.id %></p>
-    <p class="text-gray-700">Grade: <%= student.grade %></p>
-    <p class="text-gray-700">Classroom: <%= student.classroom_id %></p>
-    <p class="text-gray-700">Student Email: <%= student.student_email_address %></p>
-    <p class="text-gray-700">Parent Email: <%= student.parent_email_address %></p>
+    <p class="text-gray-700"><span class="font-semibold">ID:</span> <%= student.id %></p>
+    <p class="text-gray-700"><span class="font-semibold">Grade:</span> <%= student.grade %></p>
+    <p class="text-gray-700"><span class="font-semibold">Classroom:</span> <%= student.classroom_id %></p>
+    <p class="text-gray-700"><span class="font-semibold">Student Email:</span> <%= student.student_email_address %></p>
+    <p class="text-gray-700"><span class="font-semibold">Parent Email:</span> <%= student.parent_email_address %></p>
 
-    <!-- Display the UID -->
-<!--    <p class="text-gray-500 break-words">UID: <%#= student.uid %></p>-->
+    <!-- Small Clickable QR Code -->
+    <figure class="p-5 flex justify-center">
+      <%= link_to "#qr-modal", class: "cursor-pointer", data: { turbo_frame: "qr-modal" } do %>
+        <%= generate_qr_code(@student.uid) %>
+      <% end %>
+    </figure>
+
+    <div class="mt-2 flex justify-center space-x-4">
+      <%= link_to edit_student_path(@student), class: "entity-btn entity-btn-secondary text-center" do %>
+        <i class="fas fa-edit"></i> Edit
+      <% end %>
+      <button class="entity-btn entity-btn-delete"
+              onclick="confirmArchive(<%= @student.id %>, '<%= @student.name %>', '/students')">
+        <i class="fas fa-trash"></i> Archive
+      </button>
+    </div>
   </div>
-
-  <!-- Small Clickable QR Code -->
-  <figure class="p-5 flex justify-center">
-    <%= link_to "#qr-modal", class: "cursor-pointer", data: { turbo_frame: "qr-modal" } do %>
-      <%= generate_qr_code(@student.uid) %>
-    <% end %>
-  </figure>
 </div>
+
+<%= javascript_include_tag "controllers/archive_entity_controller", "data-turbo-track": "reload" %>
