@@ -59,15 +59,10 @@ class AttendancesController < ApplicationController
 
   # app/controllers/attendances_controller.rb
   def destroy
-    # Fetch the student based on the student_id passed in params
-    student = Student.find(params[:student_id])
-
-    # Assuming you want to undo today's check-in for this student:
-    CheckinService.undo_checkin(student)
-
+    @attendance.destroy!
     respond_to do |format|
-      format.html { redirect_to student_attendances_path(student), notice: "Undo Check in successfully!" }
-      format.turbo_stream
+      format.html { redirect_to attendances_path, status: :see_other, notice: "Attendance was successfully destroyed." }
+      format.json { head :no_content }
     end
   end
 
@@ -88,10 +83,10 @@ class AttendancesController < ApplicationController
 
 
   private
-    # # Use callbacks to share common setup or constraints between actions.
-    # def set_attendance
-    #   @attendance = Attendance.find(params.expect(:id))
-    # end
+    # Use callbacks to share common setup or constraints between actions.
+    def set_attendance
+      @attendance = Attendance.find(params.expect(:id))
+    end
 
     # Only allow a list of trusted parameters through.
     def attendance_params

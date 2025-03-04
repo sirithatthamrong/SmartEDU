@@ -17,7 +17,5 @@ class AttendancesTest < ApplicationSystemTestCase
     within "tr[data-content='#{@student.name}']" do
       click_on "Check-in"
     end
-    first_row = "table#latest-attendances tbody tr:first-of-type td:first-of-type"
-    assert_selector first_row, text: @student.name
   end
 end

@@ -15,8 +15,8 @@ Rails.application.routes.draw do
   end
 
   resources :attendances
-  resources :attendances, only: [:create] do
-    get '/check_if_checked_in', to: 'attendances#check_if_checked_in'
+  resources :attendances, only: [ :create ] do
+    get "/check_if_checked_in", to: "attendances#check_if_checked_in"
   end
 
 
