@@ -73,6 +73,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -126,6 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
   add_foreign_key "attendances", "users"
   add_foreign_key "homerooms", "classrooms"
   add_foreign_key "homerooms", "users", column: "teacher_id"
+  add_foreign_key "payments", "users"
   add_foreign_key "principal_teacher_relationships", "users", column: "principal_id"
   add_foreign_key "principal_teacher_relationships", "users", column: "teacher_id"
   add_foreign_key "school_tiers", "schools"
