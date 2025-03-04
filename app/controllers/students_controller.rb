@@ -1,5 +1,7 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[show edit update destroy]
+  before_action :authenticate_admin_or_principal!, except: [:profile]
+  before_action :authenticate_student!, only: [:profile]
   include Pagy::Backend
 
   def index
@@ -148,5 +150,16 @@ end
 
   def user_params
     raw_student_params.slice(:first_name, :last_name, :personal_email) # student_email_address here is actually personal_email
+  end
+  def authenticate_admin_or_principal!
+    unless current_user.admin? || current_user.principal?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
+
+  def authenticate_student!
+    unless current_user.student?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+      end
   end
 end

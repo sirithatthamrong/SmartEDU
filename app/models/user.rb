@@ -72,9 +72,9 @@ class User < ApplicationRecord
     role == "teacher"
   end
 
-def student?
-  role == "student"
-end
+  def student?
+   role == "student"
+  end
 
   def system?
     role == "system"
