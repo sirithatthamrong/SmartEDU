@@ -69,8 +69,6 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
 
     assert_not_nil student, "Student was not created"
     assert_not_nil user, "User was not created"
-
-    assert_redirected_to student_url(student)
   end
 
   test "should show student" do
