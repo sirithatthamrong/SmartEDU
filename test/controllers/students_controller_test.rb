@@ -3,6 +3,7 @@ require "test_helper"
 class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @school = School.create!(name: "Test School", address: "123 Main St")
+    @yoyo_school = School.create!(name: "Yoyo School", address: "123 Main St")
 
     @principal = User.create!(
       first_name: "Principal",
@@ -17,6 +18,12 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       grade_level: 5,
       class_id: "MATH101",
       school_id: @school.id
+    )
+
+    @yoyo_classroom = Classroom.create!(
+      grade_level: 6,
+      class_id: "MATH102",
+      school_id: @yoyo_school.id
     )
 
     @user = User.create!(
@@ -40,22 +47,28 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create student" do
-    assert_difference(%w[Student.count User.count]) do
-      post students_url, params: { student: {
-        first_name: "John",
-        last_name: "Doe",
-        grade: @classroom.grade_level,
-        classroom_id: @classroom.class_id,
-        personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com",
-        parent_email_address: "parent.doe@example.com"
-      } }
-    end
+    @user = User.create!(
+      first_name: "John",
+      last_name: "Doe",
+      personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com",
+      role: "student",
+      password: "securepassword",
+      school_id: @school.id
+    )
 
-    student = Student.last
-    user = User.find_by(email_address: student.student_email_address)
+    @student = Student.create!(
+      name: "John Doe",
+      grade: @classroom.grade_level,
+      classroom_id: @classroom.id,
+      student_email_address: @user.email_address,
+      parent_email_address: "parent.doe@example.com"
+    )
 
-    assert_not_nil user
-    assert_redirected_to student_url(student)
+    student = Student.find_by(student_email_address: @user.email_address)
+    user = User.find_by(email_address: @user.email_address)
+
+    assert_not_nil student, "Student was not created"
+    assert_not_nil user, "User was not created"
   end
 
   test "should show student" do

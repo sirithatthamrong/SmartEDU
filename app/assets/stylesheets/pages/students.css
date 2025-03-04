@@ -1,6 +1,7 @@
 @layer components {
     .student-card {
         @apply relative bg-white rounded-xl p-6 mx-auto shadow-[0px_4px_15px_rgba(0,0,0,0.2),0px_-4px_15px_rgba(0,0,0,0.2)];
+        margin-bottom: 2rem;
     }
 
     .card-body {
