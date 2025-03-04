@@ -1,7 +1,65 @@
-<h1>My Profile</h1>
+<div class="max-w-4xl mx-auto mt-8 bg-white shadow-lg rounded-lg p-8 border">
+  <!-- Profile Container -->
+  <div class="flex flex-col md:flex-row bg-gray-50 p-6 rounded-lg">
+    <!-- QR Code Section -->
+    <div class="bg-white p-6 rounded-lg shadow-md flex items-center justify-center mb-6 md:mb-0">
+      <%= generate_qr_code(@student.uid) %>
+    </div>
 
-<p><strong>Name:</strong> <%= @student.name %></p>
-<p><strong>UID:</strong> <%= @student.uid %></p>
-<p><strong>Grade:</strong> <%= @student.grade %></p>
-<p><strong>Email:</strong> <%= @student.student_email_address %></p>
-<p><strong>Parent Email:</strong> <%= @student.parent_email_address %></p>
+    <!-- Student Info Section -->
+    <div class="md:ml-6 flex-1 bg-white p-6 rounded-lg shadow-md">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div>
+          <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+          <div id="first_name" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.user.first_name %>
+          </div>
+        </div>
+
+        <div>
+          <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+          <div id="last_name" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.user.last_name %>
+          </div>
+        </div>
+
+        <div>
+          <label for="uid" class="block text-sm font-medium text-gray-700">UID</label>
+          <div id="uid" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.uid %>
+          </div>
+        </div>
+
+        <div>
+          <label for="grade" class="block text-sm font-medium text-gray-700">Grade</label>
+          <div id="grade" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.grade %>
+          </div>
+        </div>
+
+        <div>
+          <label for="classroom" class="block text-sm font-medium text-gray-700">Classroom</label>
+          <div id="classroom" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.classroom&.class_id || "Not Assigned" %>
+          </div>
+        </div>
+
+        <div>
+          <label for="student_email" class="block text-sm font-medium text-gray-700">Student Email</label>
+          <div id="student_email" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.student_email_address %>
+          </div>
+        </div>
+
+        <div>
+          <label for="parent_email" class="block text-sm font-medium text-gray-700">Parent Email</label>
+          <div id="parent_email" class="mt-1 p-3 w-full rounded border border-gray-300 bg-gray-50">
+            <%= @student.parent_email_address %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
