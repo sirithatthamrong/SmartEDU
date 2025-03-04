@@ -45,6 +45,7 @@ class StudentsController < ApplicationController
     if classroom.nil?
       @student.errors.add(:classroom_id, "must belong to the selected school and grade")
       flash.now[:error] = "Classroom not found or does not belong to this school."
+      Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
       render :new, status: :unprocessable_entity and return
     end
 
@@ -59,13 +60,13 @@ class StudentsController < ApplicationController
       )
 
       unless @user.valid?
+        Rails.logger.debug "User creation failed: #{@user.errors.full_messages}"
         flash.now[:errors] = @user.errors.full_messages.map { |msg| "<li>#{msg}</li>" }.join
         raise ActiveRecord::Rollback
       end
 
       @user.save!
 
-      # Assign attributes to Student
       full_name = "#{@user.first_name} #{@user.last_name}"
       @student.assign_attributes(
         name: full_name,
@@ -76,23 +77,27 @@ class StudentsController < ApplicationController
       )
 
       unless @student.valid?
+        Rails.logger.debug "Student creation failed: #{@student.errors.full_messages}"
         flash.now[:error] = @student.errors.full_messages.to_sentence
         raise ActiveRecord::Rollback
       end
 
       @student.save!
-      Rails.logger.debug "Student created successfully: #{@student.inspect}"
+      Rails.logger.debug "Student successfully created: #{@student.inspect}"
 
       true # If everything is successful
     end
 
     if success
+      Rails.logger.debug "Redirecting to student: #{student_url(@student)}"
       redirect_to @student, notice: "#{@student.name} was successfully created."
     else
+      Rails.logger.debug "Rendering new student form due to failure."
       render :new, status: :unprocessable_entity
     end
 
   rescue ActiveRecord::RecordInvalid => e
+    Rails.logger.debug "Transaction failed: #{e.message}"
     flash.now[:error] = "Error: #{e.message}"
     render :new, status: :unprocessable_entity
   end
