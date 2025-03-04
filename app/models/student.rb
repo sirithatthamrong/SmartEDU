@@ -1,6 +1,6 @@
 # == Schema Information
 #
-# Table name: students
+# Table name: Students
 #
 #  id                    :integer          not null, primary key
 #  discarded_at          :datetime
@@ -21,8 +21,11 @@
 #
 #  classroom_id           (classroom_id => classrooms.id)
 #  student_email_address  (student_email_address => users.email_address)
+#  student_email_address  (student_email_address => users.email_address)
 #
 class Student < ApplicationRecord
+      self.table_name = "Students"
+
   belongs_to :user, primary_key: :email_address, foreign_key: :student_email_address
   belongs_to :classroom
 

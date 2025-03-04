@@ -55,7 +55,6 @@ class AttendancesController < ApplicationController
   # DELETE /attendances/1 or /attendances/1.json
   def destroy
     @attendance.destroy!
-
     respond_to do |format|
       format.html { redirect_to attendances_path, status: :see_other, notice: "Attendance was successfully destroyed." }
       format.json { head :no_content }
@@ -65,11 +64,11 @@ class AttendancesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_attendance
-      @attendance = Attendance.find(params.expect(:id))
+      @attendance = Attendance.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def attendance_params
-      params.expect(attendance: [ :student_id, :timestamp, :user_id ])
+      params.require(:attendance).permit(:student_id, :timestamp, :user_id)
     end
 end

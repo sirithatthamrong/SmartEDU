@@ -1,4 +1,10 @@
-<div class="flex flex-row justify-around items-start mt-4">
+<% if notice.present? %>
+  <div class="alert alert-info w-fit mx-auto mb-4">
+    <%= notice %>
+  </div>
+<% end %>
+
+<div class="flex flex-row justify-around items-start w-full mt-4">
   <div class="bg-accent p-4 rounded-md w-fit">
     <h1 class="text-xl">Students</h1>
     <table class="table table-zebra p-20">
@@ -12,16 +18,20 @@
         <% @students.each do |student| %>
           <tr class="hover" data-content="<%= student.name %>">
             <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
-            <td><%= submit_tag "Check-in", name: "check_in",
-              formaction: attendances_path(student_id: student.id),
-              formmethod: :post,
-              class: "btn btn-primary btn-xs",
-              data: {turbo_frame: "students" }%></td>
+            <td>
+              <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
+                <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+                <%= hidden_field_tag :student_id, student.id %>
+                <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
+              </form>
+            </td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
+
+  <!-- Checked-in Students Table -->
   <div class="bg-yellow-200 p-4 rounded-md w-fit">
     <h1 class="text-xl">Checked-in Students</h1>
     <table id="latest-attendances" class="table table-zebra p-20">
@@ -41,4 +51,4 @@
       </tbody>
     </table>
   </div>
-</div>
+</div> <!-- End of Flex Container -->
