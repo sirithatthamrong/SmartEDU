@@ -69,6 +69,8 @@ class UsersController < ApplicationController
   end
 
   def authenticate_admin!
-    redirect_to root_path, alert: "Not authorized" unless current_user&.can_manage_teachers?
-  end
+    unless current_user.admin?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+end
 end
