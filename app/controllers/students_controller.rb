@@ -85,6 +85,8 @@ class StudentsController < ApplicationController
       @student.save!
       Rails.logger.debug "Student successfully created: #{@student.inspect}"
 
+      # TODO: Update Teacher and Student Relationship
+
       true # If everything is successful
     end
 
@@ -139,6 +141,8 @@ class StudentsController < ApplicationController
         flash[:error] = @student.errors.full_messages.to_sentence
         raise ActiveRecord::RecordInvalid
       end
+
+      # TODO: Update Teacher and Student Relationship
     end
 
     respond_to do |format|
