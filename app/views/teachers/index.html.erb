@@ -1,12 +1,14 @@
 <%= render "shared/notice" %>
 <%= render "shared/confirmation_modal" %>
+
 <% content_for :title, "Manage Teachers" %>
 
-<div class="entity-container">
+<div class="my-entity-container px-6">
   <% if @teachers.any? %>
-    <table class="entity-table" id="teachers-table">
+    <table class="entity-table" id="shared-table" data-turbo="false">
       <thead>
       <tr>
+        <th>ID</th>
         <th>First Name</th>
         <th>Last Name</th>
         <th>School Email</th>
@@ -17,12 +19,13 @@
       <tbody>
       <% @teachers.each do |teacher| %>
         <tr id="teacher-<%= teacher.id %>">
+          <td><%= teacher.id %></td>
           <td><%= teacher.first_name %></td>
           <td><%= teacher.last_name %></td>
           <td><%= teacher.email_address %></td>
           <td><%= teacher.personal_email %></td>
           <td>
-            <button class="entity-btn entity-btn-delete"
+            <button class="entity-btn entity-btn-delete" style="height: 2.5rem;"
                     onclick="confirmDelete(<%= teacher.id %>, '<%= teacher.email_address %>', '/teachers')">
               <i class="fas fa-trash"></i> Remove
             </button>
@@ -37,3 +40,4 @@
 </div>
 
 <%= javascript_include_tag "controllers/delete_entity_controller" %>
+<%= javascript_include_tag "controllers/students_table_controller" %>
