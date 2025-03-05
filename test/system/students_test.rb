@@ -54,6 +54,7 @@ class StudentsTest < ApplicationSystemTestCase
     assert_selector "h2", text: "Students"
   end
 
+  # TODO: Fix the following tests
   # test "should create student" do
   #   visit students_url
   #   click_on "New student"
