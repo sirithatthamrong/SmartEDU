@@ -2,7 +2,7 @@ require "test_helper"
 
 class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @school = School.create!(name: "Test School", address: "123 Main St")
+    @eiei_school = School.create!(name: "Test School", address: "123 Main St")
     @yoyo_school = School.create!(name: "Yoyo School", address: "123 Main St")
 
     @principal = User.create!(
@@ -11,13 +11,13 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
       role: "principal",
       password: "securepassword",
-      school_id: @school.id
+      school_id: @eiei_school.id
     )
 
     @classroom = Classroom.create!(
       grade_level: 5,
       class_id: "MATH101",
-      school_id: @school.id
+      school_id: @eiei_school.id
     )
 
     @yoyo_classroom = Classroom.create!(
@@ -31,8 +31,8 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       last_name: "Student#{SecureRandom.hex(2)}",
       personal_email: "test_student_#{SecureRandom.hex(4)}@gmail.com",
       role: "student",
-      password: "securepassword",
-      school_id: @school.id
+      password: "password123",
+      school_id: @eiei_school.id
     )
 
     @student = Student.create!(
@@ -43,7 +43,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       parent_email_address: "parenttest@example.com"
     )
 
-    sign_in
+    sign_in(@user)
   end
 
   test "should create student" do
@@ -53,7 +53,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       personal_email: "personal_#{SecureRandom.hex(4)}@gmail.com",
       role: "student",
       password: "securepassword",
-      school_id: @school.id
+      school_id: @eiei_school.id
     )
 
     @student = Student.create!(
@@ -91,12 +91,22 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       first_name: "Jane",
       last_name: "Doe",
       grade: @classroom.grade_level,
-      classroom_id: @classroom.class_id,
+      classroom_id: @classroom.id,
       personal_email: "updated_personal_#{SecureRandom.hex(4)}@gmail.com",
       parent_email_address: @student.parent_email_address
     } }
 
+    if @student.errors.any?
+      puts @student.errors.full_messages
+    end
+    # puts "Grade: #{Classroom.find_by(grade_level: @classroom.grade_level)}"
+    # puts "Classroom ID: #{Classroom.find_by(class_id: @classroom.class_id)}"
+    # puts "Student Email Address: #{User.find_by(email_address: @student.student_email_address)}"
+    puts @classroom.inspect
+    # puts "Response Body: #{response.body}"
     @student.reload
+    puts @user.inspect
+    puts @student.inspect
     assert_equal "Jane Doe", @student.name
     assert_redirected_to student_url(@student)
   end

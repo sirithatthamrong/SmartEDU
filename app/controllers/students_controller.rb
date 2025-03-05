@@ -108,13 +108,17 @@ class StudentsController < ApplicationController
 
     ActiveRecord::Base.transaction do
       classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
+      puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
+        Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
         flash[:error] = "Classroom not found"
         render :edit, status: :unprocessable_entity and return
       end
 
       user = User.find_by(email_address: @student.student_email_address)
+      Rails.logger.debug "Before update - Student: #{@student.inspect}"
+      Rails.logger.debug "Before update - User: #{user.inspect}"
 
       user.update!(
         first_name: user_params[:first_name],
@@ -128,6 +132,13 @@ class StudentsController < ApplicationController
         classroom_id: classroom.id,
         parent_email_address: student_params[:parent_email_address]
       )
+      Rails.logger.debug "After update - Student: #{@student.reload.inspect}"
+
+      if @student.errors.any?
+        Rails.logger.debug "Student update failed: #{user.errors.full_messages}"
+        flash[:error] = @student.errors.full_messages.to_sentence
+        raise ActiveRecord::RecordInvalid
+      end
     end
 
     respond_to do |format|
