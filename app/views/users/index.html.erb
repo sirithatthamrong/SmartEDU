@@ -3,9 +3,9 @@
 
 <% content_for :title, "Manage Users" %>
 
-<div class="entity-container">
+<div class="my-entity-container px-6">
   <% if @pending_users.any? %>
-    <table class="entity-table">
+    <table id="shared-table" class="entity-table" data-turbo="false">
       <thead>
       <tr>
         <th>First Name</th>
@@ -24,12 +24,12 @@
           <td><%= user.email_address %></td>
           <td><%= user.personal_email %></td>
           <td><%= user.role.capitalize %></td>
-          <td class="flex space-x-4">
-            <button class="entity-btn bg-green-500 hover:bg-green-600"
+          <td class="flex space-x-2">
+            <button class="entity-btn bg-green-500 hover:bg-green-600" style="height: 2.5rem;"
                     onclick="confirmApprove(<%= user.id %>, '<%= user.email_address %>')">
               <i class="fas fa-check"></i> Approve
             </button>
-            <button class="entity-btn entity-btn-delete"
+            <button class="entity-btn entity-btn-delete" style="height: 2.5rem;"
                     onclick="confirmDelete(<%= user.id %>, '<%= user.email_address %>', '/users')">
               <i class="fas fa-trash"></i> Remove
             </button>
@@ -45,3 +45,4 @@
 
 <%= javascript_include_tag "controllers/delete_entity_controller" %>
 <%= javascript_include_tag "controllers/approval_entity_controller" %>
+<%= javascript_include_tag "controllers/students_table_controller" %>
