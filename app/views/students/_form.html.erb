@@ -10,25 +10,25 @@
   </div>
 
   <div>
-    <%= form.label :grade, "Grade", class: 'text-gray-700 font-semibold' %>
+    <%= form.label :grade, "Grade", class: 'text-gray-700 font-semibold', required: true %>
     <%= form.select :grade, options_for_select(@grades, student.grade),
                     { prompt: "Select Grade" }, class: 'input input-bordered w-full mb-2', id: "grade-select" %>
   </div>
 
   <div>
-    <%= form.label :classroom_id, "Classroom", class: 'text-gray-700 font-semibold' %>
+    <%= form.label :classroom_id, "Classroom", class: 'text-gray-700 font-semibold', required: true %>
     <%= form.select :classroom_id,
                     options_from_collection_for_select(@classrooms, :id, :class_id, student.classroom_id),
                     { prompt: "Select Classroom" }, class: 'input input-bordered w-full mb-2', id: "classroom-select" %>
   </div>
 
   <div>
-    <%= form.label :personal_email, "Personal Email Address", class: 'text-gray-700 font-semibold' %>
+    <%= form.label :personal_email, "Personal Email Address", class: 'text-gray-700 font-semibold', required: true %>
     <%= form.email_field :personal_email, value: student.user&.personal_email, class: 'input input-bordered w-full mb-2', required: true %>
   </div>
 
   <div>
-    <%= form.label :parent_email_address, "Parent Email Address", class: 'text-gray-700 font-semibold' %>
+    <%= form.label :parent_email_address, "Parent Email Address", class: 'text-gray-700 font-semibold', required: true %>
     <%= form.email_field :parent_email_address, class: 'input input-bordered w-full mb-2', required: true %>
   </div>
 

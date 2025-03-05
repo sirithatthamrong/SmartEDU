@@ -103,8 +103,11 @@ class StudentsController < ApplicationController
   end
 
   def update
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
+    @classrooms = Classroom.where(school_id: current_user.school_id)
+
     ActiveRecord::Base.transaction do
-      classroom = Classroom.find_by(class_id: raw_student_params[:classroom_id]) # Find by class_id (string), not id (integer)
+      classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
 
       if classroom.nil?
         flash[:error] = "Classroom not found"
