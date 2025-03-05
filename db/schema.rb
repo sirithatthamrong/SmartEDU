@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_05_074022) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -78,10 +78,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
     t.string "uid", null: false
     t.datetime "discarded_at"
     t.boolean "is_active", default: true, null: false
-    t.integer "grade"
+    t.integer "grade", null: false
     t.string "student_email_address", default: "student@example.com", null: false
     t.string "parent_email_address", default: "parent@example.com", null: false
-    t.integer "classroom_id", default: 0, null: false
+    t.integer "classroom_id", null: false
     t.index ["classroom_id"], name: "index_students_on_classroom_id"
     t.index ["discarded_at"], name: "index_students_on_discarded_at"
   end

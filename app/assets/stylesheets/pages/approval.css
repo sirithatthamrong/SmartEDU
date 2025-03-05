@@ -16,6 +16,8 @@
     /* Table Styling */
     .entity-table {
         @apply w-full border border-gray-300 rounded-2xl shadow-xl bg-white;
+        border-radius: 1rem !important;
+        overflow: hidden;
     }
 
     .entity-table thead th {
