@@ -14,7 +14,7 @@ module SignInHelper
     post session_url, params: { email_address: user.email_address, password: "password123", school_id: @school.id }
   end
 
-  def sign_in(user)
+  def sign_in_with_parameter(user)
     post session_url, params: { email_address: user.email_address, password: "password123", school_id: user.school_id }
   end
 end

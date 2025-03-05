@@ -43,7 +43,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       parent_email_address: "parenttest@example.com"
     )
 
-    sign_in(@user)
+    sign_in_with_parameter(@user)
   end
 
   test "should create student" do
