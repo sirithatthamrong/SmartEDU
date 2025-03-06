@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[show edit update destroy]
-  before_action :authenticate_admin_or_principal!, except: [:profile]
-  before_action :authenticate_student!, only: [:profile]
+  before_action :authenticate_admin_or_principal!, except: [ :profile ]
+  before_action :authenticate_student!, only: [ :profile ]
   include Pagy::Backend
 
   def index
@@ -78,14 +78,13 @@ end
       )
 
       unless @user.valid?
-        Rails.logger.debug "User creation failed: #{@user.errors.full_messages}"
         flash.now[:errors] = @user.errors.full_messages.map { |msg| "<li>#{msg}</li>" }.join
         raise ActiveRecord::Rollback
       end
 
       @user.save!
 
-      full_name = "#{@user.first_name} #{@user.last_name}"
+      full_name = "#{@user.first_name} #{ @user.last_name }"
       @student.assign_attributes(
         name: full_name,
         grade: student_params[:grade],
@@ -95,29 +94,29 @@ end
       )
 
       unless @student.valid?
-        Rails.logger.debug "Student creation failed: #{@student.errors.full_messages}"
+        Rails.logger.debug "Student creation failed: #{ @student.errors.full_messages }"
         flash.now[:error] = @student.errors.full_messages.to_sentence
         raise ActiveRecord::Rollback
       end
 
       @student.save!
-      Rails.logger.debug "Student successfully created: #{@student.inspect}"
+      Rails.logger.debug "Student successfully created: #{ @student.inspect }"
 
-      # TODO: Update Teacher and Student Relationship
+      # 2TODO: Update Teacher and Student Relationship
 
       true # If everything is successful
     end
 
     if success
       Rails.logger.debug "Redirecting to student: #{student_url(@student)}"
-      redirect_to @student, notice: "#{@student.name} was successfully created."
+      redirect_to @student, notice: "#{ @student.name } was successfully created."
     else
       Rails.logger.debug "Rendering new student form due to failure."
       render :new, status: :unprocessable_entity
     end
 
   rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.debug "Transaction failed: #{e.message}"
+    Rails.logger.debug "Transaction failed: #{ e.message }"
     flash.now[:error] = "Error: #{e.message}"
     render :new, status: :unprocessable_entity
   end
@@ -131,14 +130,14 @@ end
       puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
-        Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
+        Rails.logger.debug "Error: Classroom not found for school_id=#{ current_user.school_id }"
         flash[:error] = "Classroom not found"
         render :edit, status: :unprocessable_entity and return
       end
 
       user = User.find_by(email_address: @student.student_email_address)
-      Rails.logger.debug "Before update - Student: #{@student.inspect}"
-      Rails.logger.debug "Before update - User: #{user.inspect}"
+      Rails.logger.debug "Before update - Student: #{ @student.inspect }"
+      Rails.logger.debug "Before update - User: #{ user.inspect }"
 
       user.update!(
         first_name: user_params[:first_name],
@@ -147,24 +146,24 @@ end
       )
 
       @student.update!(
-        name: "#{user.first_name} #{user.last_name}",
+        name: "#{user.first_name} #{ user.last_name }",
         grade: student_params[:grade],
         classroom_id: classroom.id,
         parent_email_address: student_params[:parent_email_address]
       )
-      Rails.logger.debug "After update - Student: #{@student.reload.inspect}"
+      Rails.logger.debug "After update - Student: #{ @student.reload.inspect }"
 
       if @student.errors.any?
-        Rails.logger.debug "Student update failed: #{user.errors.full_messages}"
+        Rails.logger.debug "Student update failed: #{ user.errors.full_messages }"
         flash[:error] = @student.errors.full_messages.to_sentence
         raise ActiveRecord::RecordInvalid
       end
 
-      # TODO: Update Teacher and Student Relationship
+      # 2TODO: Update Teacher and Student Relationship
     end
 
     respond_to do |format|
-      format.html { redirect_to @student, notice: "#{@student.name} was successfully updated." }
+      format.html { redirect_to @student, notice: "#{ @student.name } was successfully updated." }
       format.json { render :show, status: :ok, location: @student }
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -180,7 +179,7 @@ end
     end
 
     respond_to do |format|
-      format.html { redirect_to students_path, notice: "#{@student.name} was successfully archived." }
+      format.html { redirect_to students_path, notice: "#{ @student.name } was successfully archived." }
       format.json { head :no_content }
     end
   end
