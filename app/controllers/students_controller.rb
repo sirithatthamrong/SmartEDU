@@ -1,19 +1,19 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy ]
-  before_action :authorize_admin_or_principal!, except: [ :profile ]
-  before_action :authorize_student!, only: [ :profile ]
+  before_action :authorize_admin_or_principal!, except: [:profile]
+  before_action :authorize_student!, only: [:profile]
   include Pagy::Backend
 
   def index
-    @classroom = Classroom.find_by(id: params[:classroom_id]) if params[ :classroom_id ].present?
+    @classroom = Classroom.find_by(id: params[:classroom_id]) if params[:classroom_id].present?
     @grades = Student.distinct.pluck(:grade).compact.sort
     students_scope = Student.active
-    students_scope = students_scope.where(grade: params[:grade]) if params[ :grade ].present?
+    students_scope = students_scope.where(grade: params[:grade]) if params[:grade].present?
     @pagy, @students = pagy(students_scope)
   end
 
   def show
-    @student = Student.kept.find_by(id: params[ :id ])
+    @student = Student.kept.find_by(id: params[:id])
     respond_to do |format|
       format.html { render "show" }
       format.json { render json: @student }
@@ -37,7 +37,7 @@ class StudentsController < ApplicationController
   # GET /students/new
   def new
     @student = Student.new
-    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck( :grade_level )
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     @classrooms = Classroom.where(school_id: current_user.school_id)
     Rails.logger.debug "Grades: #{ @grades.inspect }"
     Rails.logger.debug "Classrooms: #{ @classrooms.inspect }"
@@ -58,20 +58,20 @@ class StudentsController < ApplicationController
     @student = Student.new(student_params)
     @user = User.new(user_params)
 
-    classroom = Classroom.find_by(id: raw_student_params[ :classroom_id ], school_id: current_user.school_id)
+    classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
 
     if classroom.nil?
       @student.errors.add(:classroom_id, "must belong to the selected school and grade")
       flash.now[:error] = "Classroom not found or does not belong to this school."
-      Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
+      Rails.logger.debug "Error: Classroom not found for school_id=#{ current_user.school_id }"
       render :new, status: :unprocessable_entity and return
     end
 
     success = ActiveRecord::Base.transaction do
       @user.assign_attributes(
-        first_name: user_params[ :first_name ],
-        last_name: user_params[ :last_name ],
-        personal_email: user_params[ :personal_email ],
+        first_name: user_params[:first_name],
+        last_name: user_params[:last_name],
+        personal_email: user_params[:personal_email],
         role: "student",
         password: SecureRandom.hex(8),
         school_id: current_user.school_id
@@ -87,10 +87,10 @@ class StudentsController < ApplicationController
       full_name = "#{@user.first_name} #{ @user.last_name }"
       @student.assign_attributes(
         name: full_name,
-        grade: student_params[ :grade ],
+        grade: student_params[:grade],
         classroom_id: classroom.id,
         student_email_address: @user.email_address,
-        parent_email_address: student_params[ :parent_email_address ]
+        parent_email_address: student_params[:parent_email_address]
       )
 
       unless @student.valid?
@@ -126,7 +126,7 @@ class StudentsController < ApplicationController
     @classrooms = Classroom.where(school_id: current_user.school_id)
 
     ActiveRecord::Base.transaction do
-      classroom = Classroom.find_by(id: raw_student_params[ :classroom_id ], school_id: current_user.school_id)
+      classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
       puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
@@ -140,16 +140,16 @@ class StudentsController < ApplicationController
       Rails.logger.debug "Before update - User: #{ user.inspect }"
 
       user.update!(
-        first_name: user_params[ :first_name ],
-        last_name: user_params[ :last_name ],
-        personal_email: user_params[ :personal_email ]
+        first_name: user_params[:first_name],
+        last_name: user_params[:last_name],
+        personal_email: user_params[:personal_email]
       )
 
       @student.update!(
         name: "#{user.first_name} #{ user.last_name }",
-        grade: student_params[ :grade ],
+        grade: student_params[:grade],
         classroom_id: classroom.id,
-        parent_email_address: student_params[ :parent_email_address ]
+        parent_email_address: student_params[:parent_email_address]
       )
       Rails.logger.debug "After update - Student: #{ @student.reload.inspect }"
 
@@ -187,7 +187,7 @@ class StudentsController < ApplicationController
   private
 
   def set_student
-    @student = Student.find(params[ :id ])
+    @student = Student.find(params[:id])
   end
 
   def raw_student_params
