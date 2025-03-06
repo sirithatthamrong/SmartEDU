@@ -50,9 +50,9 @@ class User < ApplicationRecord
   scope :approved, -> { where(approved: true) }
   scope :pending_in_school, ->(school_id) { where(approved: false, school_id: school_id) }
 
-  before_create :auto_approve_principal
+  before_create :auto_approve_principal_or_student
 
-  def auto_approve_principal
+  def auto_approve_principal_or_student
     self.approved = true if principal? || student?
   end
 

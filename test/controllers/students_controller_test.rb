@@ -4,15 +4,15 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @eiei_school = School.create!(name: "Test School", address: "123 Main St")
     @yoyo_school = School.create!(name: "Yoyo School", address: "123 Main St")
-
     @principal = User.create!(
       first_name: "Principal",
       last_name: "Test",
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
       role: "principal",
-      password: "securepassword",
+      password: "password123",
       school_id: @eiei_school.id
     )
+    sign_in_with_parameter(@principal)
 
     @classroom = Classroom.create!(
       grade_level: 5,
@@ -43,7 +43,6 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       parent_email_address: "parenttest@example.com"
     )
 
-    sign_in_with_parameter(@user)
   end
 
   test "should create student" do
@@ -55,7 +54,6 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       password: "securepassword",
       school_id: @eiei_school.id
     )
-
     @student = Student.create!(
       name: "John Doe",
       grade: @classroom.grade_level,
