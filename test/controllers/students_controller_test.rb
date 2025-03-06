@@ -4,6 +4,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @eiei_school = School.create!(name: "Test School", address: "123 Main St")
     @yoyo_school = School.create!(name: "Yoyo School", address: "123 Main St")
+
     @principal = User.create!(
       first_name: "Principal",
       last_name: "Test",
@@ -12,7 +13,6 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       password: "password123",
       school_id: @eiei_school.id
     )
-    sign_in_with_parameter(@principal)
 
     @classroom = Classroom.create!(
       grade_level: 5,
@@ -42,6 +42,8 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       student_email_address: @user.email_address,
       parent_email_address: "parenttest@example.com"
     )
+
+    sign_in_with_parameter(@principal)
   end
 
   test "should create student" do
@@ -53,6 +55,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       password: "securepassword",
       school_id: @eiei_school.id
     )
+
     @student = Student.create!(
       name: "John Doe",
       grade: @classroom.grade_level,
@@ -96,14 +99,8 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
     if @student.errors.any?
       puts @student.errors.full_messages
     end
-    # puts "Grade: #{Classroom.find_by(grade_level: @classroom.grade_level)}"
-    # puts "Classroom ID: #{Classroom.find_by(class_id: @classroom.class_id)}"
-    # puts "Student Email Address: #{User.find_by(email_address: @student.student_email_address)}"
-    puts @classroom.inspect
-    # puts "Response Body: #{response.body}"
+
     @student.reload
-    puts @user.inspect
-    puts @student.inspect
     assert_equal "Jane Doe", @student.name
     assert_redirected_to student_url(@student)
   end
