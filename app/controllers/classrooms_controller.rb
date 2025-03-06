@@ -1,5 +1,5 @@
 class ClassroomsController < ApplicationController
-  before_action :set_classroom, only: [ :show, :grading ]
+  before_action :set_classroom, only: [:show, :grading]
   before_action :authenticate_admin_or_teacher_or_principal!
 
   def index
@@ -19,7 +19,6 @@ class ClassroomsController < ApplicationController
     @students = @classroom.students.where(grade: @classroom.grade_level).order(:name)
   end
 
-
   # Grading action for displaying students and their grades
   def grading
     @classroom = Classroom.find(params[:id])
@@ -35,21 +34,20 @@ class ClassroomsController < ApplicationController
 
   def by_grade
     @classroom = Classroom.first
-    @grade = params[:grade]  # Ensure @grade is set from params
+    @grade = params[:grade] # Ensure @grade is set from params
 
     if @grade.blank?
       flash[:alert] = "Grade is missing."
       redirect_to classrooms_path and return
     end
 
-    Rails.logger.debug "DEBUG: is checking grade"   # Check if grade is properly set
+    Rails.logger.debug "DEBUG: is checking grade" # Check if grade is properly set
 
     @classrooms = Classroom.where("grade_level LIKE ?", "#{@grade}%").order(:class_id)
 
-    Rails.logger.debug "DEBUG: @grade = #{@grade}"   # Check if grade is properly set
+    Rails.logger.debug "DEBUG: @grade = #{@grade}" # Check if grade is properly set
     Rails.logger.debug "DEBUG: @classrooms = #{@classrooms}" # Check fetched classrooms
   end
-
 
   private
 
@@ -57,10 +55,12 @@ class ClassroomsController < ApplicationController
   def set_classroom
     @classroom = Classroom.find(params[:id])
   end
+
   def grade_level
     @classroom = Classroom.find(params[:id])
     @students_by_grade = @classroom.students.group_by(&:grade)
   end
+
   def authenticate_admin_or_teacher_or_principal!
     unless current_user.admin? || current_user.teacher? || current_user.principal?
       redirect_to root_path, alert: "You are not authorized to access this page."
