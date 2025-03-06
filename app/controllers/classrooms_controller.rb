@@ -1,5 +1,5 @@
 class ClassroomsController < ApplicationController
-  before_action :set_classroom, only: [:show, :grading]
+  before_action :set_classroom, only: [ :show, :grading ]
   before_action :authenticate_admin_or_teacher_or_principal!
 
   def index
