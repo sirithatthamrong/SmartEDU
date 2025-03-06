@@ -9,24 +9,24 @@
     <h1 class="text-xl">Students</h1>
     <table class="table table-zebra p-20">
       <thead>
-        <tr>
-          <th>Student Name</th>
-          <th>Action</th>
-        </tr>
+      <tr>
+        <th>Student Name</th>
+        <th>Action</th>
+      </tr>
       </thead>
       <tbody>
-        <% @students.each do |student| %>
-          <tr class="hover" data-content="<%= student.name %>">
-            <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
-            <td>
-              <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
-                <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-                <%= hidden_field_tag :student_id, student.id %>
-                <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
-              </form>
-            </td>
-          </tr>
-        <% end %>
+      <% @students.each do |student| %>
+        <tr class="hover" data-content="<%= student.name %>">
+          <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
+          <td>
+            <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
+              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
+              <%= hidden_field_tag :student_id, student.id %>
+              <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
+            </form>
+          </td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   </div>
@@ -36,18 +36,18 @@
     <h1 class="text-xl">Checked-in Students</h1>
     <table id="latest-attendances" class="table table-zebra p-20">
       <thead>
-        <tr>
-          <th>Name</th>
-          <th>Time</th>
-        </tr>
+      <tr>
+        <th>Name</th>
+        <th>Time</th>
+      </tr>
       </thead>
       <tbody>
-        <% @attendances.each do |attendance| %>
-          <tr class="hover">
-            <td><%= attendance.student.name %></td>
-            <td><%= attendance.timestamp.strftime('%Y-%m-%d %H:%M') %></td>
-          </tr>
-        <% end %>
+      <% @attendances.each do |attendance| %>
+        <tr class="hover">
+          <td><%= attendance.student.name %></td>
+          <td><%= attendance.timestamp.strftime('%Y-%m-%d %H:%M') %></td>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   </div>

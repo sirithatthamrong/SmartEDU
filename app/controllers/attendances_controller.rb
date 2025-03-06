@@ -61,50 +61,51 @@ class AttendancesController < ApplicationController
       format.json { head :no_content }
     end
   end
+
   def scan_qr
     # This will render app/views/admin/scan_qr.html.erb
   end
 
-def checkin
-  uid = params[:uid]
-  hash = params[:hash]
+  def checkin
+    uid = params[:uid]
+    hash = params[:hash]
 
-  secret = Rails.application.credentials.secret_key_base
-  expected = Digest::SHA256.hexdigest("#{uid}|#{secret}")
+    secret = Rails.application.credentials.secret_key_base
+    expected = Digest::SHA256.hexdigest("#{uid}|#{secret}")
 
-  if hash != expected
-    render json: { success: false, message: "Invalid QR code" }
-    return
-  end
-
-  student = Student.find_by(uid: uid)
-  if student
-    CheckinService.checkin(student, current_user)
-    message = "Student checked in successfully at #{Time.current.strftime('%H:%M:%S')}."
-    respond_to do |format|
-      format.json { render json: { success: true, message: message } }
-      format.html { redirect_to admin_scan_qr_path, notice: message }
+    if hash != expected
+      render json: { success: false, message: "Invalid QR code" }
+      return
     end
-  else
-    message = "Student not found."
-    respond_to do |format|
-      format.json { render json: { success: false, message: message } }
-      format.html { redirect_to admin_scan_qr_path, alert: message }
+
+    student = Student.find_by(uid: uid)
+    if student
+      CheckinService.checkin(student, current_user)
+      message = "Student checked in successfully at #{Time.current.strftime('%H:%M:%S')}."
+      respond_to do |format|
+        format.json { render json: { success: true, message: message } }
+        format.html { redirect_to admin_scan_qr_path, notice: message }
+      end
+    else
+      message = "Student not found."
+      respond_to do |format|
+        format.json { render json: { success: false, message: message } }
+        format.html { redirect_to admin_scan_qr_path, alert: message }
+      end
     end
   end
-end
-
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_attendance
-      @attendance = Attendance.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def attendance_params
-      params.require(:attendance).permit(:student_id, :timestamp, :user_id)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_attendance
+    @attendance = Attendance.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def attendance_params
+    params.require(:attendance).permit(:student_id, :timestamp, :user_id)
+  end
 
   def authorize_admin_or_principal_or_system_or_teacher!
     unless current_user.admin? || current_user.principal? || current_user.system? || current_user.teacher?

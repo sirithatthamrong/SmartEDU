@@ -1,5 +1,5 @@
 class ClassroomsController < ApplicationController
-  before_action :set_classroom, only: [ :show, :grading ]
+  before_action :set_classroom, only: [:show, :grading]
   before_action :authorize_admin_or_teacher_or_principal!
 
   def index
@@ -60,6 +60,7 @@ class ClassroomsController < ApplicationController
     @classroom = Classroom.find(params[:id])
     @students_by_grade = @classroom.students.group_by(&:grade)
   end
+
   def authorize_admin_or_teacher_or_principal!
     unless current_user.admin? || current_user.teacher? || current_user.principal?
       redirect_to root_path, alert: "You are not authorized to access this page."

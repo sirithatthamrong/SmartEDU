@@ -26,25 +26,25 @@ document.addEventListener("DOMContentLoaded", function () {
             return resumeScanning();
         }
 
-    fetch("/attendances/checkin", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
-      },
-      body: JSON.stringify({ uid: uid, hash: hash })
-    })
-    .then(response => response.json())
-    .then(data => {
-      showNotification(data.message || "Check-in failed!", "success");
-      scanning = true;
-    })
-    .catch(error => {
-      console.error("Error:", error);
-      showNotification("Error processing QR code. Please try again.", "error");
-      scanning = true;
+        fetch("/attendances/checkin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
+            },
+            body: JSON.stringify({uid: uid, hash: hash})
+        })
+            .then(response => response.json())
+            .then(data => {
+                showNotification(data.message || "Check-in failed!", "success");
+                scanning = true;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                showNotification("Error processing QR code. Please try again.", "error");
+                scanning = true;
+            });
     });
-  });
 
     // Get available cameras and start the scanner with the first available one
     Instascan.Camera.getCameras()

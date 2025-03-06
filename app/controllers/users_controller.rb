@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   before_action :authorize_admin!
-  before_action :set_user, only: [ :destroy ]
+  before_action :set_user, only: [:destroy]
 
   def index
     @pending_users = User.pending_in_school(current_user.school_id)
@@ -72,5 +72,5 @@ class UsersController < ApplicationController
     unless current_user.admin?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
-end
+  end
 end

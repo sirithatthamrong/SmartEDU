@@ -1,7 +1,7 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     let gradeDropdown = document.getElementById("grade");
 
-    gradeDropdown.addEventListener("change", function() {
+    gradeDropdown.addEventListener("change", function () {
         document.getElementById("gradeFilterForm").submit(); // Auto-submit form
     });
 });
@@ -34,10 +34,10 @@ async function initializeDataTable() {
             search: "",
             searchPlaceholder: "Search students...",
         },
-        initComplete: function() {
+        initComplete: function () {
             styleDataTableElements();
         },
-        drawCallback: function() {
+        drawCallback: function () {
             styleDataTableElements(); // Apply styles every time the page updates
         }
     });
