@@ -1,0 +1,49 @@
+<div class="max-w-4xl mx-auto mt-8 bg-white shadow-lg rounded-xl p-8 border">
+  <% content_for :title, "My Profile" %>
+
+  <!-- Profile Container -->
+  <div class="bg-gray-50 p-6 rounded-xl flex flex-col items-center">
+
+    <!-- QR Code Section -->
+    <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-center">
+      <%= generate_qr_code(@student.uid) %>
+    </div>
+
+    <!-- Student Info Section -->
+    <div class="mt-6 w-full bg-white p-6 rounded-xl shadow-md">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <div>
+          <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
+          <input id="first_name" class="input input-bordered w-full mt-2" type="text" value="<%= @student.user.first_name %>" readonly>
+        </div>
+
+        <div>
+          <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
+          <input id="last_name" class="input input-bordered w-full mt-2" type="text" value="<%= @student.user.last_name %>" readonly>
+        </div>
+
+        <div>
+          <label for="grade" class="block text-sm font-medium text-gray-700">Grade</label>
+          <input id="grade" class="input input-bordered w-full mt-2" type="text" value="<%= @student.grade %>" readonly>
+        </div>
+
+        <div>
+          <label for="classroom" class="block text-sm font-medium text-gray-700">Classroom</label>
+          <input id="classroom" class="input input-bordered w-full mt-2" type="text" value="<%= @student.classroom&.class_id || 'Not Assigned' %>" readonly>
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="student_email" class="block text-sm font-medium text-gray-700">Student Email</label>
+          <input id="student_email" class="input input-bordered w-full mt-2" type="email" value="<%= @student.student_email_address %>" readonly>
+        </div>
+
+        <div class="md:col-span-2">
+          <label for="parent_email" class="block text-sm font-medium text-gray-700">Parent Email</label>
+          <input id="parent_email" class="input input-bordered w-full mt-2" type="email" value="<%= @student.parent_email_address %>" readonly>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

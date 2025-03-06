@@ -1,5 +1,7 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[show edit update destroy]
+  before_action :authenticate_admin_or_principal!, except: [ :profile ]
+  before_action :authenticate_student!, only: [ :profile ]
   include Pagy::Backend
 
   def index
@@ -18,6 +20,21 @@ class StudentsController < ApplicationController
     end
   end
 
+def profile
+  Rails.logger.debug "Current User Email: #{current_user.email_address}"
+  @student = Student.find_by(student_email_address: current_user.email_address)
+
+  if @student.nil?
+    Rails.logger.debug "No student found for email: #{current_user.email_address}"
+    redirect_to root_path, alert: "Profile not found."
+    return
+  end
+
+  Rails.logger.debug "Student Found: #{@student.name}"
+  render "profile"
+end
+
+  # GET /students/new
   def new
     @student = Student.new
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
@@ -33,6 +50,7 @@ class StudentsController < ApplicationController
     Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
   end
 
+  # POST /students or /students.json
   def create
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     @classrooms = Classroom.where(school_id: current_user.school_id)
@@ -65,9 +83,10 @@ class StudentsController < ApplicationController
         raise ActiveRecord::Rollback
       end
 
+
       @user.save!
 
-      full_name = "#{@user.first_name} #{@user.last_name}"
+      full_name = "#{@user.first_name} #{ @user.last_name }"
       @student.assign_attributes(
         name: full_name,
         grade: student_params[:grade],
@@ -77,29 +96,29 @@ class StudentsController < ApplicationController
       )
 
       unless @student.valid?
-        Rails.logger.debug "Student creation failed: #{@student.errors.full_messages}"
+        Rails.logger.debug "Student creation failed: #{ @student.errors.full_messages }"
         flash.now[:error] = @student.errors.full_messages.to_sentence
         raise ActiveRecord::Rollback
       end
 
       @student.save!
-      Rails.logger.debug "Student successfully created: #{@student.inspect}"
+      Rails.logger.debug "Student successfully created: #{ @student.inspect }"
 
-      # TODO: Update Teacher and Student Relationship
+      # 2TODO: Update Teacher and Student Relationship
 
       true # If everything is successful
     end
 
     if success
       Rails.logger.debug "Redirecting to student: #{student_url(@student)}"
-      redirect_to @student, notice: "#{@student.name} was successfully created."
+      redirect_to @student, notice: "#{ @student.name } was successfully created."
     else
       Rails.logger.debug "Rendering new student form due to failure."
       render :new, status: :unprocessable_entity
     end
 
   rescue ActiveRecord::RecordInvalid => e
-    Rails.logger.debug "Transaction failed: #{e.message}"
+    Rails.logger.debug "Transaction failed: #{ e.message }"
     flash.now[:error] = "Error: #{e.message}"
     render :new, status: :unprocessable_entity
   end
@@ -113,14 +132,14 @@ class StudentsController < ApplicationController
       puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
-        Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
+        Rails.logger.debug "Error: Classroom not found for school_id=#{ current_user.school_id }"
         flash[:error] = "Classroom not found"
         render :edit, status: :unprocessable_entity and return
       end
 
       user = User.find_by(email_address: @student.student_email_address)
-      Rails.logger.debug "Before update - Student: #{@student.inspect}"
-      Rails.logger.debug "Before update - User: #{user.inspect}"
+      Rails.logger.debug "Before update - Student: #{ @student.inspect }"
+      Rails.logger.debug "Before update - User: #{ user.inspect }"
 
       user.update!(
         first_name: user_params[:first_name],
@@ -129,24 +148,24 @@ class StudentsController < ApplicationController
       )
 
       @student.update!(
-        name: "#{user.first_name} #{user.last_name}",
+        name: "#{user.first_name} #{ user.last_name }",
         grade: student_params[:grade],
         classroom_id: classroom.id,
         parent_email_address: student_params[:parent_email_address]
       )
-      Rails.logger.debug "After update - Student: #{@student.reload.inspect}"
+      Rails.logger.debug "After update - Student: #{ @student.reload.inspect }"
 
       if @student.errors.any?
-        Rails.logger.debug "Student update failed: #{user.errors.full_messages}"
+        Rails.logger.debug "Student update failed: #{ user.errors.full_messages }"
         flash[:error] = @student.errors.full_messages.to_sentence
         raise ActiveRecord::RecordInvalid
       end
 
-      # TODO: Update Teacher and Student Relationship
+      # 2TODO: Update Teacher and Student Relationship
     end
 
     respond_to do |format|
-      format.html { redirect_to @student, notice: "#{@student.name} was successfully updated." }
+      format.html { redirect_to @student, notice: "#{ @student.name } was successfully updated." }
       format.json { render :show, status: :ok, location: @student }
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -162,7 +181,7 @@ class StudentsController < ApplicationController
     end
 
     respond_to do |format|
-      format.html { redirect_to students_path, notice: "#{@student.name} was successfully archived." }
+      format.html { redirect_to students_path, notice: "#{ @student.name } was successfully archived." }
       format.json { head :no_content }
     end
   end
@@ -185,5 +204,17 @@ class StudentsController < ApplicationController
 
   def user_params
     raw_student_params.slice(:first_name, :last_name, :personal_email) # student_email_address here is actually personal_email
+  end
+
+  def authenticate_admin_or_principal!
+    unless current_user.admin? || current_user.principal?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
+
+  def authenticate_student!
+    unless current_user.student?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
   end
 end
