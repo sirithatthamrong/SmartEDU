@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       get :grading
       get :grade_level
     end
-    resources :students, only: [:index, :show]
+    resources :students, only: [ :index, :show ]
   end
 
   # Attendances Routes
@@ -63,6 +63,6 @@ Rails.application.routes.draw do
   get "grades/:grade", to: "classrooms#by_grade", as: :grade
 
   # Teachers & Users
-  resources :teachers, only: [:index, :destroy]
-  resources :users, only: [:index, :destroy]
+  resources :teachers, only: [ :index, :destroy ]
+  resources :users, only: [ :index, :destroy ]
 end
