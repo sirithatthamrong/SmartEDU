@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "teachers/index"
   get "teachers/destroy"
-  resources :classrooms, only: [:index, :show]
+  resources :classrooms, only: [ :index, :show ]
 
   resources :classrooms do
     collection do
@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       get :grading
       get :grade_level
     end
-    resources :students, only: [:index, :show]
+    resources :students, only: [ :index, :show ]
   end
 
   # Attendances Routes
@@ -36,8 +36,8 @@ Rails.application.routes.draw do
   get "home/index"
   resource :session
   resources :passwords, param: :token
-  resources :signup, only: %i[new create]
-  resources :users, only: %i[index] do
+  resources :signup, only: %i[ new create ]
+  resources :users, only: %i[ index ] do
     member do
       patch :approve
     end
