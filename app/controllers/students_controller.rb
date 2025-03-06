@@ -50,7 +50,6 @@ class StudentsController < ApplicationController
     Rails.logger.debug "Classrooms: #{ @classrooms.inspect }"
   end
 
-  # POST /students or /students.json
   def create
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     @classrooms = Classroom.where(school_id: current_user.school_id)
@@ -102,7 +101,7 @@ class StudentsController < ApplicationController
       @student.save!
       Rails.logger.debug "Student successfully created: #{ @student.inspect }"
 
-      # 2TODO: Update Teacher and Student Relationship
+      update_teacher_student_relationships(@student)
 
       true # If everything is successful
     end
@@ -130,14 +129,14 @@ class StudentsController < ApplicationController
       puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
-        Rails.logger.debug "Error: Classroom not found for school_id=#{ current_user.school_id }"
+        Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
         flash[:error] = "Classroom not found"
         render :edit, status: :unprocessable_entity and return
       end
 
       user = User.find_by(email_address: @student.student_email_address)
-      Rails.logger.debug "Before update - Student: #{ @student.inspect }"
-      Rails.logger.debug "Before update - User: #{ user.inspect }"
+      Rails.logger.debug "Before update - Student: #{@student.inspect}"
+      Rails.logger.debug "Before update - User: #{user.inspect}"
 
       user.update!(
         first_name: user_params[:first_name],
@@ -146,20 +145,14 @@ class StudentsController < ApplicationController
       )
 
       @student.update!(
-        name: "#{user.first_name} #{ user.last_name }",
+        name: "#{user.first_name} #{user.last_name}",
         grade: student_params[:grade],
         classroom_id: classroom.id,
         parent_email_address: student_params[:parent_email_address]
       )
-      Rails.logger.debug "After update - Student: #{ @student.reload.inspect }"
+      Rails.logger.debug "After update - Student: #{@student.reload.inspect}"
 
-      if @student.errors.any?
-        Rails.logger.debug "Student update failed: #{ user.errors.full_messages }"
-        flash[:error] = @student.errors.full_messages.to_sentence
-        raise ActiveRecord::RecordInvalid
-      end
-
-      # 2TODO: Update Teacher and Student Relationship
+      update_teacher_student_relationships(@student)
     end
 
     respond_to do |format|
@@ -185,6 +178,29 @@ class StudentsController < ApplicationController
   end
 
   private
+
+  def update_teacher_student_relationships(student)
+    Rails.logger.debug "Updating teacher-student relationships for student_id=#{student.id}"
+
+    homeroom_teacher = Homeroom.find_by(classroom_id: student.classroom_id)&.teacher_id
+
+    if homeroom_teacher
+      existing_relationship = TeacherStudentRelationship.find_by(teacher_id: homeroom_teacher, student_id: student.id)
+
+      if existing_relationship
+        Rails.logger.debug "Relationship already exists between student #{student.id} and teacher #{homeroom_teacher}"
+      else
+        TeacherStudentRelationship.create!(teacher_id: homeroom_teacher, student_id: student.id)
+        Rails.logger.debug "Assigned student #{student.id} to teacher #{homeroom_teacher}"
+      end
+
+      # Remove any old relationships if the student switched classrooms
+      TeacherStudentRelationship.where(student_id: student.id).where.not(teacher_id: homeroom_teacher).destroy_all
+      Rails.logger.debug "Removed old teacher relationships for student #{student.id}"
+    else
+      Rails.logger.debug "No homeroom teacher found for classroom_id=#{student.classroom_id}"
+    end
+  end
 
   def set_student
     @student = Student.find(params[:id])
