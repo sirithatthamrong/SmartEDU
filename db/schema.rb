@@ -10,20 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
-  create_table "Students", force: :cascade do |t|
-    t.string "name"
-    t.string "uid", null: false
-    t.datetime "discarded_at"
-    t.boolean "is_active", default: true, null: false
-    t.integer "grade"
-    t.string "student_email_address", default: "student@example.com", null: false
-    t.string "parent_email_address", default: "parent@example.com", null: false
-    t.integer "classroom_id", default: 0, null: false
-    t.index ["classroom_id"], name: "index_students_on_classroom_id"
-    t.index ["discarded_at"], name: "index_students_on_discarded_at"
-  end
-
+ActiveRecord::Schema[8.0].define(version: 2025_03_05_074022) do
   create_table "Users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -102,6 +89,19 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
     t.index ["user_id"], name: "index_sessions_on_user_id"
   end
 
+  create_table "students", force: :cascade do |t|
+    t.string "name"
+    t.string "uid", null: false
+    t.datetime "discarded_at"
+    t.boolean "is_active", default: true, null: false
+    t.integer "grade"
+    t.string "student_email_address", default: "student@example.com", null: false
+    t.string "parent_email_address", default: "parent@example.com", null: false
+    t.integer "classroom_id", null: false
+    t.index ["classroom_id"], name: "index_students_on_classroom_id"
+    t.index ["discarded_at"], name: "index_students_on_discarded_at"
+  end
+
   create_table "teacher_student_relationships", force: :cascade do |t|
     t.integer "teacher_id", null: false
     t.integer "student_id", null: false
@@ -111,9 +111,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
     t.index ["teacher_id"], name: "index_teacher_student_relationships_on_teacher_id"
   end
 
-  add_foreign_key "Students", "classrooms"
-  add_foreign_key "Students", "users", column: "student_email_address", primary_key: "email_address"
-  add_foreign_key "Students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "Users", "schools"
   add_foreign_key "attendances", "students"
   add_foreign_key "attendances", "users"
@@ -123,6 +120,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_02_125550) do
   add_foreign_key "principal_teacher_relationships", "users", column: "teacher_id"
   add_foreign_key "school_tiers", "schools"
   add_foreign_key "sessions", "users"
+  add_foreign_key "students", "classrooms"
+  add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
+  add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "teacher_student_relationships", "users", column: "student_id"
   add_foreign_key "teacher_student_relationships", "users", column: "teacher_id"
 end

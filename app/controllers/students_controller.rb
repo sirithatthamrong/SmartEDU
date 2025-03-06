@@ -37,24 +37,38 @@ end
   # GET /students/new
   def new
     @student = Student.new
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
+    @classrooms = Classroom.where(school_id: current_user.school_id)
+    Rails.logger.debug "Grades: #{@grades.inspect}"
+    Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
   end
 
   def edit
-    # This method is intentionally left empty because the edit functionality
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
+    @classrooms = Classroom.where(school_id: current_user.school_id)
+    Rails.logger.debug "Grades: #{@grades.inspect}"
+    Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
   end
 
   # POST /students or /students.json
   def create
-    classroom = Classroom.find_by(class_id: raw_student_params[:classroom_id]) # Find by class_id (string), not id (integer)
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
+    @classrooms = Classroom.where(school_id: current_user.school_id)
+
+    @student = Student.new(student_params)
+    @user = User.new(user_params)
+
+    classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
 
     if classroom.nil?
-      flash[:error] = "Classroom not found"
-      @student = Student.new(student_params)
+      @student.errors.add(:classroom_id, "must belong to the selected school and grade")
+      flash.now[:error] = "Classroom not found or does not belong to this school."
+      Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
       render :new, status: :unprocessable_entity and return
     end
 
-    ActiveRecord::Base.transaction do
-      user = User.create!(
+    success = ActiveRecord::Base.transaction do
+      @user.assign_attributes(
         first_name: user_params[:first_name],
         last_name: user_params[:last_name],
         personal_email: user_params[:personal_email],
@@ -63,38 +77,67 @@ end
         school_id: current_user.school_id
       )
 
-      full_name = "#{user.first_name} #{user.last_name}"
+      unless @user.valid?
+        flash.now[:errors] = @user.errors.full_messages.map { |msg| "<li>#{msg}</li>" }.join
+        raise ActiveRecord::Rollback
+      end
 
-      @student = Student.create!(
+      @user.save!
+
+      full_name = "#{@user.first_name} #{ @user.last_name }"
+      @student.assign_attributes(
         name: full_name,
         grade: student_params[:grade],
         classroom_id: classroom.id,
-        student_email_address: user.email_address,
+        student_email_address: @user.email_address,
         parent_email_address: student_params[:parent_email_address]
       )
 
-      respond_to do |format|
-        format.html { redirect_to @student, notice: "#{@student.name} was successfully created." }
-        format.json { render :show, status: :created, location: @student }
+      unless @student.valid?
+        Rails.logger.debug "Student creation failed: #{ @student.errors.full_messages }"
+        flash.now[:error] = @student.errors.full_messages.to_sentence
+        raise ActiveRecord::Rollback
       end
+
+      @student.save!
+      Rails.logger.debug "Student successfully created: #{ @student.inspect }"
+
+      # 2TODO: Update Teacher and Student Relationship
+
+      true # If everything is successful
+    end
+
+    if success
+      Rails.logger.debug "Redirecting to student: #{student_url(@student)}"
+      redirect_to @student, notice: "#{ @student.name } was successfully created."
+    else
+      Rails.logger.debug "Rendering new student form due to failure."
+      render :new, status: :unprocessable_entity
     end
 
   rescue ActiveRecord::RecordInvalid => e
-    flash[:error] = e.message
-    @student = Student.new(student_params)
+    Rails.logger.debug "Transaction failed: #{ e.message }"
+    flash.now[:error] = "Error: #{e.message}"
     render :new, status: :unprocessable_entity
   end
 
   def update
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
+    @classrooms = Classroom.where(school_id: current_user.school_id)
+
     ActiveRecord::Base.transaction do
-      classroom = Classroom.find_by(class_id: raw_student_params[:classroom_id]) # Find by class_id (string), not id (integer)
+      classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
+      puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
+        Rails.logger.debug "Error: Classroom not found for school_id=#{ current_user.school_id }"
         flash[:error] = "Classroom not found"
         render :edit, status: :unprocessable_entity and return
       end
 
       user = User.find_by(email_address: @student.student_email_address)
+      Rails.logger.debug "Before update - Student: #{ @student.inspect }"
+      Rails.logger.debug "Before update - User: #{ user.inspect }"
 
       user.update!(
         first_name: user_params[:first_name],
@@ -103,15 +146,24 @@ end
       )
 
       @student.update!(
-        name: "#{user.first_name} #{user.last_name}",
+        name: "#{user.first_name} #{ user.last_name }",
         grade: student_params[:grade],
         classroom_id: classroom.id,
         parent_email_address: student_params[:parent_email_address]
       )
+      Rails.logger.debug "After update - Student: #{ @student.reload.inspect }"
+
+      if @student.errors.any?
+        Rails.logger.debug "Student update failed: #{ user.errors.full_messages }"
+        flash[:error] = @student.errors.full_messages.to_sentence
+        raise ActiveRecord::RecordInvalid
+      end
+
+      # 2TODO: Update Teacher and Student Relationship
     end
 
     respond_to do |format|
-      format.html { redirect_to @student, notice: "#{@student.name} was successfully updated." }
+      format.html { redirect_to @student, notice: "#{ @student.name } was successfully updated." }
       format.json { render :show, status: :ok, location: @student }
     end
   rescue ActiveRecord::RecordInvalid => e
@@ -127,7 +179,7 @@ end
     end
 
     respond_to do |format|
-      format.html { redirect_to students_path, notice: "#{@student.name} was successfully archived." }
+      format.html { redirect_to students_path, notice: "#{ @student.name } was successfully archived." }
       format.json { head :no_content }
     end
   end
@@ -160,6 +212,6 @@ end
   def authorize_student!
     unless current_user.student?
       redirect_to root_path, alert: "You are not authorized to access this page."
-      end
+    end
   end
 end
