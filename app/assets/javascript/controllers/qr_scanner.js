@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return resumeScanning();
         }
 
-        fetch("/admin/checkin", {
+        fetch("/attendances/checkin", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

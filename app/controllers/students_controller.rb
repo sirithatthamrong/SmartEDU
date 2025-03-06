@@ -1,7 +1,7 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: %i[show edit update destroy]
-  before_action :authenticate_admin_or_principal!, except: [ :profile ]
-  before_action :authenticate_student!, only: [ :profile ]
+  before_action :set_student, only: %i[ show edit update destroy ]
+  before_action :authorize_admin_or_principal!, except: [ :profile ]
+  before_action :authorize_student!, only: [ :profile ]
   include Pagy::Backend
 
   def index
@@ -20,34 +20,34 @@ class StudentsController < ApplicationController
     end
   end
 
-def profile
-  Rails.logger.debug "Current User Email: #{current_user.email_address}"
-  @student = Student.find_by(student_email_address: current_user.email_address)
+  def profile
+    Rails.logger.debug "Current User Email: #{ current_user.email_address }"
+    @student = Student.find_by(student_email_address: current_user.email_address)
 
-  if @student.nil?
-    Rails.logger.debug "No student found for email: #{current_user.email_address}"
-    redirect_to root_path, alert: "Profile not found."
-    return
+    if @student.nil?
+      Rails.logger.debug "No student found for email: #{ current_user.email_address }"
+      redirect_to root_path, alert: "Profile not found."
+      return
+    end
+
+    Rails.logger.debug "Student Found: #{ @student.name }"
+    render "profile"
   end
-
-  Rails.logger.debug "Student Found: #{@student.name}"
-  render "profile"
-end
 
   # GET /students/new
   def new
     @student = Student.new
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     @classrooms = Classroom.where(school_id: current_user.school_id)
-    Rails.logger.debug "Grades: #{@grades.inspect}"
-    Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
+    Rails.logger.debug "Grades: #{ @grades.inspect }"
+    Rails.logger.debug "Classrooms: #{ @classrooms.inspect }"
   end
 
   def edit
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     @classrooms = Classroom.where(school_id: current_user.school_id)
-    Rails.logger.debug "Grades: #{@grades.inspect}"
-    Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
+    Rails.logger.debug "Grades: #{ @grades.inspect }"
+    Rails.logger.debug "Classrooms: #{ @classrooms.inspect }"
   end
 
   def create
@@ -62,7 +62,7 @@ end
     if classroom.nil?
       @student.errors.add(:classroom_id, "must belong to the selected school and grade")
       flash.now[:error] = "Classroom not found or does not belong to this school."
-      Rails.logger.debug "Error: Classroom not found for school_id=#{current_user.school_id}"
+      Rails.logger.debug "Error: Classroom not found for school_id=#{ current_user.school_id }"
       render :new, status: :unprocessable_entity and return
     end
 
@@ -77,7 +77,6 @@ end
       )
 
       unless @user.valid?
-        Rails.logger.debug "User creation failed: #{@user.errors.full_messages}"
         flash.now[:errors] = @user.errors.full_messages.map { |msg| "<li>#{msg}</li>" }.join
         raise ActiveRecord::Rollback
       end
@@ -108,7 +107,7 @@ end
     end
 
     if success
-      Rails.logger.debug "Redirecting to student: #{student_url(@student)}"
+      Rails.logger.debug "Redirecting to student: #{ student_url(@student) }"
       redirect_to @student, notice: "#{ @student.name } was successfully created."
     else
       Rails.logger.debug "Rendering new student form due to failure."
@@ -221,13 +220,13 @@ end
     raw_student_params.slice(:first_name, :last_name, :personal_email) # student_email_address here is actually personal_email
   end
 
-  def authenticate_admin_or_principal!
+  def authorize_admin_or_principal!
     unless current_user.admin? || current_user.principal?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
   end
 
-  def authenticate_student!
+  def authorize_student!
     unless current_user.student?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
