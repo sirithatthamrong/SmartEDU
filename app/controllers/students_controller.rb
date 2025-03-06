@@ -78,9 +78,11 @@ end
       )
 
       unless @user.valid?
+        Rails.logger.debug "User creation failed: #{@user.errors.full_messages}"
         flash.now[:errors] = @user.errors.full_messages.map { |msg| "<li>#{msg}</li>" }.join
         raise ActiveRecord::Rollback
       end
+
 
       @user.save!
 
@@ -203,6 +205,7 @@ end
   def user_params
     raw_student_params.slice(:first_name, :last_name, :personal_email) # student_email_address here is actually personal_email
   end
+
   def authenticate_admin_or_principal!
     unless current_user.admin? || current_user.principal?
       redirect_to root_path, alert: "You are not authorized to access this page."
