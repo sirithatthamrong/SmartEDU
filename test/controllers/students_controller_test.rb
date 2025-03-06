@@ -42,7 +42,6 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       student_email_address: @user.email_address,
       parent_email_address: "parenttest@example.com"
     )
-
   end
 
   test "should create student" do

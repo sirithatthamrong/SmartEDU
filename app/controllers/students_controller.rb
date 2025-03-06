@@ -212,6 +212,6 @@ end
   def authenticate_student!
     unless current_user.student?
       redirect_to root_path, alert: "You are not authorized to access this page."
-      end
+    end
   end
 end
