@@ -20,19 +20,19 @@ class StudentsController < ApplicationController
     end
   end
 
-def profile
-  Rails.logger.debug "Current User Email: #{current_user.email_address}"
-  @student = Student.find_by(student_email_address: current_user.email_address)
+  def profile
+    Rails.logger.debug "Current User Email: #{current_user.email_address}"
+    @student = Student.find_by(student_email_address: current_user.email_address)
 
-  if @student.nil?
-    Rails.logger.debug "No student found for email: #{current_user.email_address}"
-    redirect_to root_path, alert: "Profile not found."
-    return
+    if @student.nil?
+      Rails.logger.debug "No student found for email: #{current_user.email_address}"
+      redirect_to root_path, alert: "Profile not found."
+      return
+    end
+
+    Rails.logger.debug "Student Found: #{@student.name}"
+    render "profile"
   end
-
-  Rails.logger.debug "Student Found: #{@student.name}"
-  render "profile"
-end
 
   # GET /students/new
   def new
@@ -69,9 +69,9 @@ end
 
     success = ActiveRecord::Base.transaction do
       @user.assign_attributes(
-        first_name: user_params[:first_name],
-        last_name: user_params[:last_name],
-        personal_email: user_params[:personal_email],
+        first_name: user_params[ :first_name ],
+        last_name: user_params[ :last_name ],
+        personal_email: user_params[ :personal_email ],
         role: "student",
         password: SecureRandom.hex(8),
         school_id: current_user.school_id
@@ -82,16 +82,15 @@ end
         raise ActiveRecord::Rollback
       end
 
-
       @user.save!
 
       full_name = "#{@user.first_name} #{ @user.last_name }"
       @student.assign_attributes(
         name: full_name,
-        grade: student_params[:grade],
+        grade: student_params[ :grade ],
         classroom_id: classroom.id,
         student_email_address: @user.email_address,
-        parent_email_address: student_params[:parent_email_address]
+        parent_email_address: student_params[ :parent_email_address ]
       )
 
       unless @student.valid?
@@ -141,16 +140,16 @@ end
       Rails.logger.debug "Before update - User: #{ user.inspect }"
 
       user.update!(
-        first_name: user_params[:first_name],
-        last_name: user_params[:last_name],
-        personal_email: user_params[:personal_email]
+        first_name: user_params[ :first_name ],
+        last_name: user_params[ :last_name ],
+        personal_email: user_params[ :personal_email ]
       )
 
       @student.update!(
         name: "#{user.first_name} #{ user.last_name }",
-        grade: student_params[:grade],
+        grade: student_params[ :grade ],
         classroom_id: classroom.id,
-        parent_email_address: student_params[:parent_email_address]
+        parent_email_address: student_params[ :parent_email_address ]
       )
       Rails.logger.debug "After update - Student: #{ @student.reload.inspect }"
 
@@ -188,7 +187,7 @@ end
   private
 
   def set_student
-    @student = Student.find(params[:id])
+    @student = Student.find(params[ :id ])
   end
 
   def raw_student_params
@@ -204,6 +203,7 @@ end
   def user_params
     raw_student_params.slice(:first_name, :last_name, :personal_email) # student_email_address here is actually personal_email
   end
+
   def authorize_admin_or_principal!
     unless current_user.admin? || current_user.principal?
       redirect_to root_path, alert: "You are not authorized to access this page."
