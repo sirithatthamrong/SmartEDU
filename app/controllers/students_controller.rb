@@ -1,19 +1,19 @@
 class StudentsController < ApplicationController
-  before_action :set_student, only: %i[show edit update destroy]
-  before_action :authorize_admin_or_principal!, except: [:profile]
-  before_action :authorize_student!, only: [:profile]
+  before_action :set_student, only: %i[ show edit update destroy ]
+  before_action :authorize_admin_or_principal!, except: [ :profile ]
+  before_action :authorize_student!, only: [ :profile ]
   include Pagy::Backend
 
   def index
-    @classroom = Classroom.find_by(id: params[:classroom_id]) if params[:classroom_id].present?
+    @classroom = Classroom.find_by(id: params[:classroom_id]) if params[ :classroom_id ].present?
     @grades = Student.distinct.pluck(:grade).compact.sort
     students_scope = Student.active
-    students_scope = students_scope.where(grade: params[:grade]) if params[:grade].present?
+    students_scope = students_scope.where(grade: params[:grade]) if params[ :grade ].present?
     @pagy, @students = pagy(students_scope)
   end
 
   def show
-    @student = Student.kept.find_by(id: params[:id])
+    @student = Student.kept.find_by(id: params[ :id ])
     respond_to do |format|
       format.html { render "show" }
       format.json { render json: @student }
@@ -21,33 +21,33 @@ class StudentsController < ApplicationController
   end
 
   def profile
-    Rails.logger.debug "Current User Email: #{current_user.email_address}"
+    Rails.logger.debug "Current User Email: #{ current_user.email_address }"
     @student = Student.find_by(student_email_address: current_user.email_address)
 
     if @student.nil?
-      Rails.logger.debug "No student found for email: #{current_user.email_address}"
+      Rails.logger.debug "No student found for email: #{ current_user.email_address }"
       redirect_to root_path, alert: "Profile not found."
       return
     end
 
-    Rails.logger.debug "Student Found: #{@student.name}"
+    Rails.logger.debug "Student Found: #{ @student.name }"
     render "profile"
   end
 
   # GET /students/new
   def new
     @student = Student.new
-    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck( :grade_level )
     @classrooms = Classroom.where(school_id: current_user.school_id)
-    Rails.logger.debug "Grades: #{@grades.inspect}"
-    Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
+    Rails.logger.debug "Grades: #{ @grades.inspect }"
+    Rails.logger.debug "Classrooms: #{ @classrooms.inspect }"
   end
 
   def edit
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     @classrooms = Classroom.where(school_id: current_user.school_id)
-    Rails.logger.debug "Grades: #{@grades.inspect}"
-    Rails.logger.debug "Classrooms: #{@classrooms.inspect}"
+    Rails.logger.debug "Grades: #{ @grades.inspect }"
+    Rails.logger.debug "Classrooms: #{ @classrooms.inspect }"
   end
 
   # POST /students or /students.json
@@ -58,7 +58,7 @@ class StudentsController < ApplicationController
     @student = Student.new(student_params)
     @user = User.new(user_params)
 
-    classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
+    classroom = Classroom.find_by(id: raw_student_params[ :classroom_id ], school_id: current_user.school_id)
 
     if classroom.nil?
       @student.errors.add(:classroom_id, "must belong to the selected school and grade")
@@ -108,7 +108,7 @@ class StudentsController < ApplicationController
     end
 
     if success
-      Rails.logger.debug "Redirecting to student: #{student_url(@student)}"
+      Rails.logger.debug "Redirecting to student: #{ student_url(@student) }"
       redirect_to @student, notice: "#{ @student.name } was successfully created."
     else
       Rails.logger.debug "Rendering new student form due to failure."
@@ -126,7 +126,7 @@ class StudentsController < ApplicationController
     @classrooms = Classroom.where(school_id: current_user.school_id)
 
     ActiveRecord::Base.transaction do
-      classroom = Classroom.find_by(id: raw_student_params[:classroom_id], school_id: current_user.school_id)
+      classroom = Classroom.find_by(id: raw_student_params[ :classroom_id ], school_id: current_user.school_id)
       puts "Current user: #{current_user.inspect}"
 
       if classroom.nil?
