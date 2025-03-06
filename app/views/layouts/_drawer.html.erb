@@ -14,48 +14,60 @@
         <% end %>
       </li>
 
+      <!-- Profile -->
+      <% if current_user&.student? %>
+        <li>
+          <%= link_to profile_path, class: "flex items-center gap-2" do %>
+            <i class="fas fa-user"></i> Profile
+          <% end %>
+        </li>
+      <% end %>
+
       <!-- Management Section -->
-      <li>
-        <details>
-          <summary class="font-semibold flex items-center gap-2">
-            <i class="fas fa-users-cog"></i> Management
-          </summary>
-          <ul class="pl-4">
-            <li><%= link_to students_path, class: "flex items-center gap-2" do %>
-                <i class="fas fa-user-graduate"></i> Manage Students
-              <% end %></li>
-
-            <% if current_user&.can_manage_teachers? %>
-              <li><%= link_to users_path, class: "flex items-center gap-2" do %>
-                  <i class="fas fa-user-shield"></i> Manage Users
+      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
+        <li>
+          <details>
+            <summary class="font-semibold flex items-center gap-2">
+              <i class="fas fa-users-cog"></i> Management
+            </summary>
+            <ul class="pl-4">
+              <li><%= link_to students_path, class: "flex items-center gap-2" do %>
+                  <i class="fas fa-user-graduate"></i> Manage Students
                 <% end %></li>
-            <% end %>
 
-            <% if current_user&.can_manage_teachers? %>
-              <li><%= link_to teachers_path, class: "flex items-center gap-2" do %>
-                  <i class="fas fa-chalkboard-teacher"></i> Manage Teachers
-                <% end %></li>
-            <% end %>
-          </ul>
-        </details>
-      </li>
+              <% if current_user&.can_manage_teachers? %>
+                <li><%= link_to users_path, class: "flex items-center gap-2" do %>
+                    <i class="fas fa-user-shield"></i> Manage Users
+                  <% end %></li>
+              <% end %>
+              <% if current_user&.can_manage_teachers? %>
+                <li><%= link_to teachers_path, class: "flex items-center gap-2" do %>
+                    <i class="fas fa-chalkboard-teacher"></i> Manage Teachers
+                  <% end %></li>
+              <% end %>
+            </ul>
+          </details>
+        </li>
+      <% end %>
 
       <!-- Attendance Section -->
-      <li>
-        <details>
-          <summary class="font-semibold flex items-center gap-2">
-            <i class="fas fa-clipboard-list"></i> Attendance
-          </summary>
-          <ul class="pl-4">
-            <li><%= link_to new_attendance_path, class: "flex items-center gap-2" do %>
-                <i class="fas fa-qrcode"></i> Add Attendances
-              <% end %></li>
-            <li><%= link_to attendances_path, class: "flex items-center gap-2" do %>
-                <i class="fas fa-list"></i> List Attendances
-              <% end %></li>
-          </ul>
-        </details>
-      </li>
+      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
+        <li>
+          <details>
+            <summary class="font-semibold flex items-center gap-2">
+              <i class="fas fa-clipboard-list"></i> Attendance
+            </summary>
+            <ul class="pl-4">
+              <li><%= link_to new_attendance_path, class: "flex items-center gap-2" do %>
+                  <i class="fas fa-qrcode"></i> Add Attendances
+                <% end %></li>
+              <li><%= link_to attendances_path, class: "flex items-center gap-2" do %>
+                  <i class="fas fa-list"></i> List Attendances
+                <% end %></li>
+            </ul>
+          </details>
+        </li>
+      <% end %>
 
       <!-- Extra Features for Admin -->
       <% if current_user&.admin? %>
@@ -65,15 +77,17 @@
       <% end %>
 
       <!-- Grades Section -->
-      <li>
-        <% if current_user&.can_manage_teachers? || @classroom.present? %>
-          <%= link_to grading_classroom_path(@classroom || Classroom.first), class: "flex items-center gap-2" do %>
-            <i class="fas fa-graduation-cap"></i> Grades
+      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
+        <li>
+          <% if current_user&.can_manage_teachers? || @classroom.present? %>
+            <%= link_to grading_classroom_path(@classroom || Classroom.first), class: "flex items-center gap-2" do %>
+              <i class="fas fa-graduation-cap"></i> Grades
+            <% end %>
+          <% else %>
+            <span class="text-gray-500">No Classroom Available</span>
           <% end %>
-        <% else %>
-          <span class="text-gray-500">No Classroom Available</span>
-        <% end %>
-      </li>
+        </li>
+      <% end %>
 
       <!-- Logout -->
       <li>
@@ -81,7 +95,6 @@
           <i class="fas fa-sign-out-alt"></i> Logout
         <% end %>
       </li>
-
     </ul>
   </div>
 </div>

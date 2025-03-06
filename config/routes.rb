@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :attendances
 
   get "/students/scan", to: "admin#scan_qr"
+  get "/profile", to: "students#profile"
   resources :attendances
   resources :students do
     collection do
@@ -27,8 +28,8 @@ Rails.application.routes.draw do
   resource :session
   # resources :sessions
   resources :passwords, param: :token
-  resources :signup, only: %i[new create]
-  resources :users, only: %i[index] do
+  resources :signup, only: %i[ new create ]
+  resources :users, only: %i[ index ] do
     member do
       patch :approve
       # delete :destroy
