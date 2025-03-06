@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "teachers/index"
   get "teachers/destroy"
-  resources :classrooms, only: [:index, :show]
+  resources :classrooms, only: [ :index, :show ]
 
   resources :classrooms do
     collection do
