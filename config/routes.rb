@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "teachers/index"
   get "teachers/destroy"
-  resources :classrooms, only: [:index, :show]
+  resources :classrooms, only: [ :index, :show ]
 
   resources :classrooms do
     collection do
@@ -11,7 +11,7 @@ Rails.application.routes.draw do
       get :grading
       get :grade_level
     end
-    resources :students, only: [:index, :show]
+    resources :students, only: [ :index, :show ]
   end
   resources :attendances
 
@@ -28,8 +28,8 @@ Rails.application.routes.draw do
   resource :session
   # resources :sessions
   resources :passwords, param: :token
-  resources :signup, only: %i[new create]
-  resources :users, only: %i[index] do
+  resources :signup, only: %i[ new create ]
+  resources :users, only: %i[ index ] do
     member do
       patch :approve
       # delete :destroy
@@ -57,6 +57,6 @@ Rails.application.routes.draw do
   get "classrooms/:id/grades/:grade", to: "classrooms#grading", as: :grading_by_grade
   get "grades/:grade", to: "classrooms#by_grade", as: :grade
 
-  resources :teachers, only: [:index, :destroy]
-  resources :users, only: [:index, :destroy]
+  resources :teachers, only: [ :index, :destroy ]
+  resources :users, only: [ :index, :destroy ]
 end
