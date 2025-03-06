@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
       if student
         @classroom = Classroom.find_by(id: student.classroom_id)
 
-
         # Debugging: Log the classroom found
         # Rails.logger.info "DEBUG: Classroom found: #{@classroom.inspect}"
       else
@@ -34,7 +33,6 @@ class ApplicationController < ActionController::Base
       end
     end
   end
-
 
   helper_method :current_user
 

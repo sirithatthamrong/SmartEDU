@@ -1,5 +1,6 @@
 class AttendancesController < ApplicationController
   before_action :set_attendance, only: %i[ show edit update destroy ]
+  before_action :authorize_admin_or_principal!
   include Pagy::Backend
   # GET /attendances or /attendances.json
   def index
@@ -71,4 +72,11 @@ class AttendancesController < ApplicationController
     def attendance_params
       params.require(:attendance).permit(:student_id, :timestamp, :user_id)
     end
+  private
+
+  def authorize_admin_or_principal!
+    unless current_user.admin? || current_user.principal?
+      redirect_to root_path, alert: "You are not authorized to access this page."
+    end
+  end
 end
