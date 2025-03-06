@@ -10,7 +10,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       last_name: "Test",
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
       role: "principal",
-      password: "securepassword",
+      password: "password123",
       school_id: @eiei_school.id
     )
 
@@ -43,7 +43,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       parent_email_address: "parenttest@example.com"
     )
 
-    sign_in_with_parameter(@user)
+    sign_in_with_parameter(@principal)
   end
 
   test "should create student" do
@@ -99,14 +99,8 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
     if @student.errors.any?
       puts @student.errors.full_messages
     end
-    # puts "Grade: #{Classroom.find_by(grade_level: @classroom.grade_level)}"
-    # puts "Classroom ID: #{Classroom.find_by(class_id: @classroom.class_id)}"
-    # puts "Student Email Address: #{User.find_by(email_address: @student.student_email_address)}"
-    puts @classroom.inspect
-    # puts "Response Body: #{response.body}"
+
     @student.reload
-    puts @user.inspect
-    puts @student.inspect
     assert_equal "Jane Doe", @student.name
     assert_redirected_to student_url(@student)
   end

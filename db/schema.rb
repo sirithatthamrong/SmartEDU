@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_05_074022) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -27,7 +27,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_05_074022) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "school_id"
-    t.index ["class_id"], name: "index_classrooms_on_class_id", unique: true
+    t.index ["school_id", "class_id"], name: "index_classrooms_on_school_id_and_class_id", unique: true
   end
 
   create_table "homerooms", force: :cascade do |t|
