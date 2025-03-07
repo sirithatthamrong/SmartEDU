@@ -1,19 +1,9 @@
 <%= render "shared/single_box" do %>
-  <h1 class="text-3xl font-bold text-center pb-4">
-    <%= render "shared/logo_text" %> Sign Up
+  <h1 class="text-3xl font-bold pb-4 text-[#1f2937] text-center">
+    Sign Up
   </h1>
 
-  <% if @user.errors.any? %>
-    <div class="alert alert-error mt-4">
-      <ul>
-        <% @user.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <%= form_with(model: @user, url: signup_index_path, class: "form-control mt-4", local: true, html: { autocomplete: "on" }) do |form| %>
+  <%= form_with(model: @user, url: signup_index_path, class: "form-control", local: true, html: { autocomplete: "on" }) do |form| %>
     <%= form.text_field :first_name, class: "input input-bordered w-full mt-2", placeholder: "First Name", required: true %>
     <%= form.text_field :last_name, class: "input input-bordered w-full mt-2", placeholder: "Last Name", required: true %>
 
@@ -24,18 +14,18 @@
     <%= form.select :school_id, School.all.collect { |s| [s.name, s.id] }, { prompt: "Select School" }, class: "input input-bordered w-full mt-2" %>
 
     <div class="mt-4">
-      <div class="flex items-center mt-2">
+      <div class="flex items-center mt-2 justify-center">
         <%= form.radio_button :role, "teacher", class: "radio radio-primary" %>
-        <div class="ml-2 px-2">Teacher</div>
+        <div class="pr-4 px-2">Teacher</div>
         <%= form.radio_button :role, "student", class: "radio radio-primary" %>
-        <div class="ml-2 px-2">Student</div>
+        <div class="px-2">Student</div>
       </div>
     </div>
 
     <%= form.submit "Sign Up", class: "btn btn-primary w-full mt-4" %>
   <% end %>
 
-  <div>
-    <%= link_to "Sign in", new_session_path, method: :get, class: "btn w-full bg-[#FFEAD2] text-[#8294C4] py-3 rounded-[var(--rounded-btn,.5rem)] font-semibold hover:bg-[#DBDFEA] transition-all duration-300 mt-2" %>
+  <div class="pt-4 text-center">
+    <%= link_to "Back to Sign In", new_session_path, method: :get, class: "text-[#8294C4] hover:underline" %>
   </div>
 <% end %>
