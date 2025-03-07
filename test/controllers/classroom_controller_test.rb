@@ -2,7 +2,12 @@ require "test_helper"
 
 class ClassroomsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @classroom = Classroom.create!(class_id: "1B", grade_level: 1)
+    @eiei_school = School.create!(name: "Eiei School", address: "123 Main St")
+    @classroom = Classroom.create!(
+      grade_level: 5,
+      class_id: "MATH101",
+      school_id: @eiei_school.id
+    )
     @student = Student.first
     @student2 = Student.second
     sign_in

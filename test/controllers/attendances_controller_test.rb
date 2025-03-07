@@ -23,7 +23,6 @@ class AttendancesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-
   test "should show attendance" do
     get attendance_url(@attendance)
     assert_response :success
