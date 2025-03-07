@@ -60,13 +60,10 @@ class StudentsTest < ApplicationSystemTestCase
 
     fill_in "First Name", with: "Hello"
     fill_in "Last Name", with: "World"
-    fill_in "Grade", with: @classroom.grade_level
-    puts @classroom.grade_level
-    fill_in "Classroom", with: @classroom.class_id
-    puts @classroom.id
+    select @classroom.grade_level.to_s, from: "grade-select"
+    select @classroom.class_id, from: "classroom-select"
     fill_in "Personal Email Address", with: "student#{SecureRandom.hex(4)}@example.com"
     fill_in "Parent Email Address", with: "parenttest@example.com"
-
     click_on "Create Student"
     assert_text "Hello World was successfully created."
   end
@@ -76,8 +73,8 @@ class StudentsTest < ApplicationSystemTestCase
     click_on "Edit", match: :first
     fill_in "First Name", with: "Edited"
     fill_in "Last Name", with: "Student"
-    fill_in "Grade", with: @classroom2.grade_level
-    fill_in "Classroom", with: @classroom2.class_id
+    select @classroom.grade_level.to_s, from: "grade-select"
+    select @classroom.class_id, from: "classroom-select"
     fill_in "Personal Email Address", with: @student.student_email_address
     fill_in "Parent Email Address", with: @student.parent_email_address
 
@@ -93,7 +90,7 @@ class StudentsTest < ApplicationSystemTestCase
 
     click_on "Archive", match: :first
     click_on "Yes, Archive", match: :first
-    sleep 5  # Allow time for the database update
+    sleep 5 # Allow time for the database update
 
     @student.reload
     puts "After clicking Archive - is_active: #{@student.is_active}"

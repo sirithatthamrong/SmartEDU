@@ -14,40 +14,46 @@ Rails.application.routes.draw do
     resources :students, only: [ :index, :show ]
   end
 
+  # Attendances Routes
+  resources :attendances do
+    collection do
+      get "scan_qr", to: "attendances#scan_qr", as: "scan_qr"
+      post "checkin", to: "attendances#checkin"
+    end
+  end
+
   resources :attendances
   resources :attendances, only: [ :create ] do
     get "/check_if_checked_in", to: "attendances#check_if_checked_in"
   end
 
 
-  get "/students/scan", to: "admin#scan_qr"
-  resources :attendances
+  # Profile
+  get "/profile", to: "students#profile"
+
+  # Students
   resources :students do
     collection do
       post "mark_attendance"
     end
   end
 
+  # Other Routes
   get "home/index"
   resource :session
-  # resources :sessions
   resources :passwords, param: :token
-  resources :signup, only: %i[new create]
-  resources :users, only: %i[index] do
+  resources :signup, only: %i[ new create ]
+  resources :users, only: %i[ index ] do
     member do
       patch :approve
-      # delete :destroy
     end
   end
 
   get "login", to: "sessions#new", as: "login"
-  # post "sessions", to: "sessions#create"
-  # delete "sessions", to: "sessions#destroy"
-
-  get "/admin/scan_qr", to: "admin#scan_qr"
-  post "/admin/checkin", to: "admin#checkin"
   get "up" => "rails/health#show", as: :rails_health_check
   root "home#index"
+
+  # Additional Student Actions
   resources :students do
     member do
       patch :toggle_status
@@ -55,12 +61,14 @@ Rails.application.routes.draw do
       patch :activate
     end
     collection do
-      get :manage  # This will map to students#manage
+      get :manage
     end
   end
+
   get "classrooms/:id/grades/:grade", to: "classrooms#grading", as: :grading_by_grade
   get "grades/:grade", to: "classrooms#by_grade", as: :grade
 
+  # Teachers & Users
   resources :teachers, only: [ :index, :destroy ]
   resources :users, only: [ :index, :destroy ]
 end
