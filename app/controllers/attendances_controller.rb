@@ -32,14 +32,17 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
+    Rails.logger.info("Creating Checkin")
+    Rails.logger.info(params)
+
     student = Student.find(params[:student_id])
 
     existing_attendance = Attendance.where(student: student)
                                     .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
                                     .first
-
     if existing_attendance
-      render json: { status: "already_checked_in" }, status: :ok
+      existing_attendance.destroy!
+      render json: { status: "Destroy!" }, status: :ok
     else
       CheckinService.checkin(student, Current.user)
       render json: { status: "success" }, status: :ok
@@ -100,20 +103,20 @@ class AttendancesController < ApplicationController
   end
 
   def check_if_checked_in
+    Rails.logger.info("Checking if student is checked in")
+    Rails.logger.info(params)
     student = Student.find(params[:attendance_id])
 
     # Check if the student has already checked in today
     existing_attendance = Attendance.where(student: student)
                                     .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
                                     .first
-
     if existing_attendance
       render json: { checked_in: true }
     else
       render json: { checked_in: false }
     end
   end
-
 
   private
 

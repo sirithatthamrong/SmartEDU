@@ -32,79 +32,8 @@
   <%= link_to "Back to Classrooms", by_grade_classrooms_path(@classroom.class_id.first), class: "text-blue-500 hover:underline" %>
 </div>
 
+<%= javascript_include_tag "controllers/classroom_checkin_controller" %>
+
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll(".check-in-btn").forEach(button => {
-            let studentId = button.dataset.studentId;
-
-            // First, check if the student has already checked in today
-            checkIfAlreadyCheckedIn(studentId).then(isCheckedIn => {
-                if (isCheckedIn) {
-                    button.classList.add("checked-in");
-                    button.style.backgroundColor = "lightgreen";
-                    button.textContent = "Checked In";
-                } else {
-                    button.classList.remove("checked-in");
-                    button.style.backgroundColor = "";
-                    button.textContent = "Check-In";
-                }
-            });
-
-            button.addEventListener("click", async function (event) {
-                event.preventDefault();
-                let btn = event.target;
-                let checkedIn = btn.classList.contains("checked-in");
-
-                if (!checkedIn) {
-                    // Attempt to check in (POST)
-                    try {
-                        let response = await fetch("<%= attendances_path %>", {
-                            method: "POST",
-                            headers: {
-                                "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content,
-                                "Content-Type": "application/json"
-                            },
-                            body: JSON.stringify({student_id: studentId})
-                        });
-
-                        let result = await response.json();
-
-                        if (response.ok && result.status === "success") {
-                            btn.classList.add("checked-in");
-                            btn.style.backgroundColor = "lightgreen";
-                            btn.textContent = "Checked In";
-                            console.log("Check-in successful");
-                        } else if (result.status === "already_checked_in") {
-                            console.log("Already checked in today.");
-                            btn.classList.add("checked-in");
-                            btn.style.backgroundColor = "lightgreen";
-                            btn.textContent = "Checked In";
-                        } else {
-                            console.error("Check-in failed:", await response.text());
-                        }
-                    } catch (error) {
-                        console.error("Check-in request error:", error);
-                    }
-                }
-            });
-        });
-    });
-
-    // Function to check if the student has already checked in today
-    async function checkIfAlreadyCheckedIn(studentId) {
-        try {
-            let response = await fetch(`/attendances/${studentId}/check_if_checked_in`, {
-                method: "GET",
-                headers: {
-                    "X-CSRF-Token": document.querySelector("meta[name='csrf-token']").content
-                }
-            });
-
-            let result = await response.json();
-            return result.checked_in; // Expecting { checked_in: true } or { checked_in: false }
-        } catch (error) {
-            console.error("Error checking check-in status:", error);
-            return false;
-        }
-    }
+    window.attendancesPath = "<%= attendances_path %>";
 </script>
