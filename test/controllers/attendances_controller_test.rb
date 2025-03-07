@@ -17,9 +17,14 @@ class AttendancesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create attendance" do
-    assert_no_changes("Attendance.count") do
+    puts "Creating Checkin"
+    puts @attendance.student_id
+    puts "Attendance.count: #{Attendance.count}"
+    assert_changes("Attendance.count") do
       post attendances_url, params: { student_id: @attendance.student_id }
       puts @response.body
+      puts "Attendance.count After: #{Attendance.count}"
+      puts "Attendance.count: #{Attendance.count}"
     end
   end
 

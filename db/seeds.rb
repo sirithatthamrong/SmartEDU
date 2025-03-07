@@ -157,7 +157,7 @@ puts "✅ Relationships Established"
 # Create Attendance Records
 Attendance.create!(student_id: student1.id, user_id: teacher1.id, timestamp: Time.current)
 Attendance.create!(student_id: student2.id, user_id: teacher2.id, timestamp: Time.current)
-# Attendance.create!(student_id: student3.id, user_id: teacher3.id, timestamp: Time.current)
+Attendance.create!(student_id: student3.id, user_id: teacher3.id, timestamp: Time.current)
 
 puts "✅ Attendance Records Created"
 puts "✅ Seeding complete!"
