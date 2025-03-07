@@ -35,10 +35,7 @@
     <%= form.submit "Sign Up", class: "btn btn-primary w-full mt-4" %>
   <% end %>
 
-  <div class="text-center py-4">
-    or
-  </div>
   <div>
-    <%= link_to "Sign in", new_session_path, method: :get, class: "btn btn-secondary btn-wide w-full" %>
+    <%= link_to "Sign in", new_session_path, method: :get, class: "btn w-full bg-[#FFEAD2] text-[#8294C4] py-3 rounded-[var(--rounded-btn,.5rem)] font-semibold hover:bg-[#DBDFEA] transition-all duration-300 mt-2" %>
   </div>
 <% end %>

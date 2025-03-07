@@ -22,7 +22,7 @@ class SignupController < ApplicationController
       end
     end
   rescue ActiveRecord::RecordInvalid => e
-    flash[:alert] = "Error: #{e.message}"
+    flash[:error] = "Error: #{e.message}"
     render :new
   end
 

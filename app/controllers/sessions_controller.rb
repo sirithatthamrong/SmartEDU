@@ -17,11 +17,11 @@ class SessionsController < ApplicationController
         start_new_session_for(user)
         redirect_to after_authentication_url
       else
-        flash[:alert] = "Your account is pending approval."
+        flash[:notice] = "Your account is pending approval."
         redirect_to root_path
       end
     else
-      flash[:alert] = "Invalid email or password"
+      flash[:error] = "Invalid email or password."
       render :new, status: :unprocessable_entity
     end
   end
