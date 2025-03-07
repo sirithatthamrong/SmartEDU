@@ -20,5 +20,4 @@ class AttendancesTest < ApplicationSystemTestCase
   #     click_on "Check-in"
   #   end
   # end
-
 end
