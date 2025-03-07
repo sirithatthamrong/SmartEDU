@@ -25,6 +25,7 @@ class PaymentsController < ApplicationController
         last_name: last_name,
         first_name: first_name
       )
+      session[:last_payment_id] = payment.id
 
 
       Rails.logger.info("Payment intent: #{payment_intent}")
@@ -42,6 +43,9 @@ class PaymentsController < ApplicationController
   end
 
   def success
+    @payment = Payment.find_by(id: session[:last_payment_id])
+    # Clear the session variable after using it
+    session.delete(:last_payment_id)
   end
 
   def cancel
