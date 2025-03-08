@@ -19,11 +19,9 @@
         <tr class="hover" data-content="<%= student.name %>">
           <td><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
           <td>
-            <form action="<%= attendances_path %>" method="post" data-turbo="false" id="checkin-form-<%= student.id %>">
-              <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-              <%= hidden_field_tag :student_id, student.id %>
-              <button type="submit" class="btn btn-primary btn-xs">Check-in</button>
-            </form>
+            <button class="check-in-btn btn btn-m" data-student-id="<%= student.id %>">
+              Check-In
+            </button>
           </td>
         </tr>
       <% end %>
@@ -52,3 +50,9 @@
     </table>
   </div>
 </div> <!-- End of Flex Container -->
+
+<%= javascript_include_tag "controllers/add_attendance_controller" %>
+
+<script>
+    window.attendancesPath = "<%= attendances_path %>";
+</script>
