@@ -21,6 +21,9 @@ Rails.application.routes.draw do
       post "checkin", to: "attendances#checkin"
     end
   end
+  resources :attendances, only: [ :create ] do
+    get "/check_if_checked_in", to: "attendances#check_if_checked_in"
+  end
 
   # Profile
   get "/profile", to: "students#profile"

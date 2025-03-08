@@ -32,14 +32,22 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
+    Rails.logger.info("Creating Checkin")
+    Rails.logger.info(params)
+
     student = Student.find(params[:student_id])
-    CheckinService.checkin(student, Current.user)
-    respond_to do |format|
-      format.html { redirect_to new_attendance_path(request.parameters) }
-      format.turbo_stream { redirect_to new_attendance_path(request.parameters) }
+
+    existing_attendance = Attendance.where(student: student)
+                                    .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+                                    .first
+    if existing_attendance
+      existing_attendance.destroy!
+      render json: { status: "Destroy!" }, status: :ok
+    else
+      CheckinService.checkin(student, Current.user)
+      render json: { status: "success" }, status: :ok
     end
   end
-
   # PATCH/PUT /attendances/1 or /attendances/1.json
   def update
     respond_to do |format|
@@ -53,7 +61,6 @@ class AttendancesController < ApplicationController
     end
   end
 
-  # DELETE /attendances/1 or /attendances/1.json
   def destroy
     @attendance.destroy!
     respond_to do |format|
@@ -92,6 +99,22 @@ class AttendancesController < ApplicationController
         format.json { render json: { success: false, message: message } }
         format.html { redirect_to admin_scan_qr_path, alert: message }
       end
+    end
+  end
+
+  def check_if_checked_in
+    Rails.logger.info("Checking if student is checked in")
+    Rails.logger.info(params)
+    student = Student.find(params[:attendance_id])
+
+    # Check if the student has already checked in today
+    existing_attendance = Attendance.where(student: student)
+                                    .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
+                                    .first
+    if existing_attendance
+      render json: { checked_in: true }
+    else
+      render json: { checked_in: false }
     end
   end
 
