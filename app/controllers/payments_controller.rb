@@ -1,4 +1,5 @@
 class PaymentsController < ApplicationController
+  before_action :check_principal, only: [ :create, :success ]
   def create
     Rails.logger.debug("Received params: #{params.inspect}")
 
@@ -50,5 +51,10 @@ class PaymentsController < ApplicationController
 
   def cancel
     redirect_to root_path, alert: "Payment cancelled."
+  end
+
+  private
+  def check_principal
+    redirect_to root_path, alert: "Unauthorized access" unless current_user&.principal?
   end
 end
