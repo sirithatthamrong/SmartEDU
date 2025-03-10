@@ -32,7 +32,6 @@ admin = User.create!(
   first_name: "Admin",
   last_name: "User",
   password: "password123",
-  password_confirmation: "password123",
   role: "admin",
   approved: true,
   school_id: school1.id
