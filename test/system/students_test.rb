@@ -45,7 +45,7 @@ class StudentsTest < ApplicationSystemTestCase
     visit new_session_url
     fill_in "email_address", with: @principal.email_address
     fill_in "password", with: "securepassword"
-    click_on "Sign in"
+    click_on "Sign In"
     assert_selector "h2 span", text: "Dashboard"
   end
 

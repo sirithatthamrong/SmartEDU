@@ -1,35 +1,23 @@
 <%= render "shared/single_box" do %>
   <div>
-    <h1 class="text-3xl font-bold pb-4"> <%= render "shared/logo_text" %> Sign in</h1>
-
-    <% if flash[:alert] %>
-      <div class="alert alert-error">
-        <%= flash[:alert] %>
-      </div>
-    <% end %>
-
-    <% if flash[:notice] %>
-      <div class="alert alert-success">
-        <%= flash[:notice] %>
-      </div>
-    <% end %>
+    <h1 class="text-3xl font-bold pb-4 text-[#1f2937] text-center">
+      Sign In
+    </h1>
 
     <%= form_with(url: session_path, html: { autocomplete: "on" }) do |form| %>
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input input-bordered input-primary w-full mt-2" %>
+      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input input-bordered w-full mb-2 mt-2" %>
       <br>
-      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", class: "input input-bordered input-primary w-full mt-2" %>
+      <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", class: "input input-bordered w-full mb-2" %>
       <br>
-      <%= form.submit "Sign in", class: "btn btn-primary btn-wide mt-4 w-full" %>
+      <%= form.submit "Sign In", class: "btn btn-primary btn-wide mt-4 w-full" %>
     <% end %>
 
-    <div class="text-center py-4">
-      or
-    </div>
     <div>
-      <%= link_to "Sign up", new_signup_path, method: :get, class: "btn btn-secondary btn-wide w-full" %>
+      <%= link_to "Sign Up", new_signup_path, method: :get,
+                  class: "btn w-full bg-[#FFEAD2] text-[#8294C4] py-3 rounded-[var(--rounded-btn,.5rem)] font-semibold hover:bg-[#DBDFEA] transition-all duration-300 mt-2" %>
     </div>
-    <div class="pt-4">
-      <%= link_to "Forgot password?", new_password_path, class: "link link-info" %>
+    <div class="pt-4 text-center">
+      <%= link_to "Forgot password?", new_password_path, class: "text-[#8294C4] hover:underline" %>
     </div>
   </div>
 <% end %>
