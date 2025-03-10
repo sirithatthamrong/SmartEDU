@@ -40,6 +40,5 @@ class TeachersControllerTest < ActionDispatch::IntegrationTest
     assert_response :redirect, "Delete failed with response: #{response.body}"
     follow_redirect!
     assert_response :success
-
   end
 end
