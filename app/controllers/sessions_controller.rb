@@ -10,7 +10,7 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email_address: params[:email_address])
+    user = User.find_by(email_address: params[:email_address].strip.downcase)
 
     if user&.authenticate(params[:password])
       if user.approved?
