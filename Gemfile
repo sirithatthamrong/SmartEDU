@@ -80,3 +80,7 @@ gem "pry-byebug", "~> 3.10"
 gem "tailwindcss-ruby", "~> 3.4"
 
 gem "tailwindcss-rails", "~> 3.3"
+
+gem "dotenv-rails", "~> 3.1"
+
+gem "stripe"

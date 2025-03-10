@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
+  get "payments/new"
+  get "payments/create"
   get "teachers/index"
   get "teachers/destroy"
   resources :classrooms, only: [ :index, :show ]
 
+  resources :payments, only: [ :new, :create ] do
+  collection do
+    get "success", to: "payments#success"
+    get "cancel", to: "payments#cancel"
+  end
+  end
   resources :classrooms do
     collection do
       get "by_grade/:grade", to: "classrooms#by_grade", as: "by_grade"
@@ -20,6 +28,9 @@ Rails.application.routes.draw do
       get "scan_qr", to: "attendances#scan_qr", as: "scan_qr"
       post "checkin", to: "attendances#checkin"
     end
+  end
+  resources :attendances, only: [ :create ] do
+    get "/check_if_checked_in", to: "attendances#check_if_checked_in"
   end
 
   # Profile
