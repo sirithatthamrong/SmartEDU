@@ -84,7 +84,8 @@ class User < ApplicationRecord
   private
 
   def password_required?
-    !teacher_or_admin? && (new_record? || password.present?)
+    return false if teacher_or_admin? # Skip validation for generated passwords
+    new_record? || password.present?
   end
 
   def teacher_or_admin?
