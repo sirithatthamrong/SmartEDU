@@ -84,8 +84,3 @@ gem "tailwindcss-rails", "~> 3.3"
 gem "dotenv-rails", "~> 3.1"
 
 gem "stripe"
-
-gem "rubocop", require: false
-gem "rubocop-rails", require: false
-gem "rubocop-performance", require: false
-gem "rubocop-rails-omakase", require: false
