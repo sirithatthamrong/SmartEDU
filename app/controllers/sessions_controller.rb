@@ -10,18 +10,18 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email_address: params[:email_address])
+    user = User.find_by(email_address: params[:email_address].strip.downcase)
 
     if user&.authenticate(params[:password])
       if user.approved?
         start_new_session_for(user)
         redirect_to after_authentication_url
       else
-        flash[:alert] = "Your account is pending approval."
+        flash[:notice] = "Your account is pending approval."
         redirect_to root_path
       end
     else
-      flash[:alert] = "Invalid email or password"
+      flash[:error] = "Invalid email or password."
       render :new, status: :unprocessable_entity
     end
   end
