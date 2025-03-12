@@ -9,8 +9,12 @@ class StudentsTest < ApplicationSystemTestCase
       last_name: "Test",
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
       role: "principal",
-      password: "securepassword",
+      password: "password123",
       school_id: @school.id
+    )
+
+    @principal.update(
+      password: "password123"
     )
 
     @classroom = Classroom.create!(
@@ -44,7 +48,7 @@ class StudentsTest < ApplicationSystemTestCase
   def login_as_principal
     visit new_session_url
     fill_in "email_address", with: @principal.email_address
-    fill_in "password", with: "securepassword"
+    fill_in "password", with: "password123"
     click_on "Sign In"
     assert_selector "h2 span", text: "Dashboard"
   end

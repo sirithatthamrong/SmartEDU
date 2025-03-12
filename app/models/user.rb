@@ -94,11 +94,13 @@ class User < ApplicationRecord
 
   def generate_school_email
     return if email_address.present?
-    return if first_name.blank? || last_name.blank?
+    return if first_name.blank? || last_name.blank? || school_id.blank?
 
     first_name_part = first_name.strip.downcase.gsub(/\s+/, "")
     last_name_part = last_name.strip.downcase.gsub(/\s+/, "")[0..2] # First 3 letters of last name
-    school_domain = "#{role.downcase}.schoolname.edu"
+    school_name = School.find(school_id).name.downcase.gsub(/\s+/, "") # Removes spaces
+
+    school_domain = "#{role.downcase}.#{school_name}.edu"
 
     base_email = "#{first_name_part}.#{last_name_part}@#{school_domain}"
     unique_email = base_email
@@ -113,9 +115,7 @@ class User < ApplicationRecord
   end
 
   def generate_password
-    return unless teacher_or_admin?
-
-    generated_password = SecureRandom.hex(12)
+    generated_password = SecureRandom.hex(8)
     self.password = generated_password # Store password for hashing
     @plain_password = generated_password # Keep a copy to send via email
   end
