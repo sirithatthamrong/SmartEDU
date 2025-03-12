@@ -9,8 +9,12 @@ class StudentsTest < ApplicationSystemTestCase
       last_name: "Test",
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
       role: "principal",
-      password: "securepassword",
+      password: "password123",
       school_id: @school.id
+    )
+
+    @principal.update(
+      password: "password123"
     )
 
     @classroom = Classroom.create!(
