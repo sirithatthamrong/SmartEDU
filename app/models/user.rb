@@ -113,9 +113,7 @@ class User < ApplicationRecord
   end
 
   def generate_password
-    return unless teacher_or_admin?
-
-    generated_password = SecureRandom.hex(12)
+    generated_password = SecureRandom.hex(8)
     self.password = generated_password # Store password for hashing
     @plain_password = generated_password # Keep a copy to send via email
   end
