@@ -8,7 +8,6 @@ class TeachersControllerTest < ActionDispatch::IntegrationTest
       first_name: "Admin",
       last_name: "User",
       email_address: "admin@test.com",
-      password: "password123",
       role: "admin",
       approved: true,
       school_id: @school.id,

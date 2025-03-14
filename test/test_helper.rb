@@ -10,18 +10,14 @@ end
 
 module SignInHelper
   def sign_in
-    @school = School.create!(name: "Yoyo land", address: "123 Test St")
     user = User.find_by!(role: "principal")
-
-    puts "User info: #{user.inspect}"
-    post session_url, params: { email_address: user.email_address, password: "password123", school_id: @school.id }
+    post session_path, params: { email_address: user.email_address, password: "password123", school_id: user.school_id }
     follow_redirect!
     assert_response :success, "Login failed: #{response.body}"
   end
 
   def sign_in_with_parameter(user)
     post session_path, params: { email_address: user.email_address, password: user.password, school_id: user.school_id }
-    puts "Login Response Body: #{response.body}"
     follow_redirect!
     assert_response :success, "Login failed: #{response.body}"
   end

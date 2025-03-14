@@ -46,6 +46,9 @@ principal1 = User.create!(
   role: "principal", school_id: school1.id, approved: true
 )
 
+# Update the principal's password
+principal1.update!(password: "password123")
+
 principal2 = User.create!(
   first_name: "Bob", last_name: "Smith",
   personal_email: "bob.smith@example.com",
@@ -53,6 +56,8 @@ principal2 = User.create!(
   password: "password123",
   role: "principal", school_id: school2.id, approved: true
 )
+
+principal2.update!(password: "password123")
 
 # Create Teachers
 teacher1 = User.create!(
