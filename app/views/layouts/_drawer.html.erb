@@ -51,7 +51,7 @@
       <% end %>
 
       <!-- Attendance Section -->
-      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
+      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? || current_user&.system? %>
         <li>
           <details>
             <summary class="font-semibold flex items-center gap-2">
@@ -69,11 +69,13 @@
         </li>
       <% end %>
 
-      <!-- Extra Features for Admin -->
-      <% if current_user&.admin? %>
-        <li><%= link_to "/students/scan", class: "flex items-center gap-2" do %>
+      <!-- Scan QR Section -->
+      <% if current_user&.system? %>
+        <li>
+          <%= link_to scan_qr_attendances_path, class: "flex items-center gap-2" do %>
             <i class="fas fa-qrcode"></i> Scan QR Code
-          <% end %></li>
+          <% end %>
+        </li>
       <% end %>
 
       <!-- Grades Section -->
@@ -89,12 +91,23 @@
         </li>
       <% end %>
 
+      <!-- Payment Section -->
+      <li>
+        <% if current_user&.principal? %>
+          <%= link_to payments_new_path do %>
+            <i class="fas fa-shopping-cart"></i> Payment
+          <% end %>
+        <% end %>
+      </li>
+
+
       <!-- Logout -->
       <li>
         <%= link_to session_path, method: :delete, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>
           <i class="fas fa-sign-out-alt"></i> Logout
         <% end %>
       </li>
+
     </ul>
   </div>
 </div>

@@ -7,7 +7,7 @@
 <!-- Include CSRF Token -->
 <meta name="csrf-token" content="<%= form_authenticity_token %>">
 
-<%= form_with url: "/admin/checkin", method: :post, local: true do |f| %>
+<%= form_with url: "/attendances/checkin", method: :post, local: true do |f| %>
   <div class="form-group">
     <label for="uid">Scan QR Code</label>
     <input type="text" name="uid" id="uid" class="form-control" required>

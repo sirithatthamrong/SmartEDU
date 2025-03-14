@@ -29,13 +29,14 @@ class User < ApplicationRecord
 
   has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy
-
   has_many :students, primary_key: :email_address, foreign_key: :student_email_address
   has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
   has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
   has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy
 
   before_validation :generate_school_email, on: :create
+  before_validation :generate_password, on: :create
+  after_create :send_login_credentials
 
   normalizes :email_address, with: ->(e) { e.strip.downcase }
   validates :first_name, presence: true
@@ -73,7 +74,7 @@ class User < ApplicationRecord
   end
 
   def student?
-   role == "student"
+    role == "student"
   end
 
   def system?
@@ -82,13 +83,24 @@ class User < ApplicationRecord
 
   private
 
+  def password_required?
+    return false if teacher_or_admin? # Skip validation for generated passwords
+    new_record? || password.present?
+  end
+
+  def teacher_or_admin?
+    role.in?(%w[teacher admin])
+  end
+
   def generate_school_email
     return if email_address.present?
-    return if first_name.blank? || last_name.blank?
+    return if first_name.blank? || last_name.blank? || school_id.blank?
 
     first_name_part = first_name.strip.downcase.gsub(/\s+/, "")
     last_name_part = last_name.strip.downcase.gsub(/\s+/, "")[0..2] # First 3 letters of last name
-    school_domain = "#{role.downcase}.schoolname.edu"
+    school_name = School.find(school_id).name.downcase.gsub(/\s+/, "") # Removes spaces
+
+    school_domain = "#{role.downcase}.#{school_name}.edu"
 
     base_email = "#{first_name_part}.#{last_name_part}@#{school_domain}"
     unique_email = base_email
@@ -102,13 +114,13 @@ class User < ApplicationRecord
     self.email_address = unique_email
   end
 
-  def password_required?
-    new_record? || password.present?
+  def generate_password
+    generated_password = SecureRandom.hex(8)
+    self.password = generated_password # Store password for hashing
+    @plain_password = generated_password # Keep a copy to send via email
   end
 
-  def validate_student_email
-    unless Student.exists?(student_email_address: email_address)
-      errors.add(:email_address, "is not linked to any student in our records")
-    end
+  def send_login_credentials
+    UserMailer.send_login_credentials(self, @plain_password).deliver_later
   end
 end

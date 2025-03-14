@@ -17,12 +17,11 @@ class AttendancesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create attendance" do
-    assert_difference("Attendance.count") do
+    assert_changes("Attendance.count") do
       post attendances_url, params: { student_id: @attendance.student_id }
       puts @response.body
     end
   end
-
 
   test "should show attendance" do
     get attendance_url(@attendance)

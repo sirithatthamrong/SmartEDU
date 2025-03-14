@@ -39,6 +39,18 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
     t.index ["teacher_id"], name: "index_homerooms_on_teacher_id"
   end
 
+  create_table "payments", force: :cascade do |t|
+    t.integer "amount", null: false
+    t.string "status", default: "pending", null: false
+    t.string "stripe_payment_intent_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "first_name"
+    t.string "last_name"
+    t.index ["user_id"], name: "index_payments_on_user_id"
+  end
+
   create_table "principal_teacher_relationships", force: :cascade do |t|
     t.integer "principal_id", null: false
     t.integer "teacher_id", null: false
@@ -78,7 +90,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
     t.string "uid", null: false
     t.datetime "discarded_at"
     t.boolean "is_active", default: true, null: false
-    t.integer "grade", null: false
+    t.integer "grade"
     t.string "student_email_address", default: "student@example.com", null: false
     t.string "parent_email_address", default: "parent@example.com", null: false
     t.integer "classroom_id", null: false
@@ -115,6 +127,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
   add_foreign_key "attendances", "users"
   add_foreign_key "homerooms", "classrooms"
   add_foreign_key "homerooms", "users", column: "teacher_id"
+  add_foreign_key "payments", "users"
   add_foreign_key "principal_teacher_relationships", "users", column: "principal_id"
   add_foreign_key "principal_teacher_relationships", "users", column: "teacher_id"
   add_foreign_key "school_tiers", "schools"

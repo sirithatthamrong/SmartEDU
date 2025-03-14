@@ -1,5 +1,5 @@
 class TeachersController < ApplicationController
-  before_action :authenticate_admin_or_principal!
+  before_action :authorize_admin!, only: %i[ index destroy ]
 
   def index
     @teachers = User.where(role: "teacher", school_id: current_user.school_id, approved: true)
@@ -18,8 +18,9 @@ class TeachersController < ApplicationController
 
   private
 
-  def authenticate_admin_or_principal!
-    unless current_user.admin? || current_user.principal?
+  def authorize_admin!
+    puts "Current User: #{current_user.inspect}"
+    unless current_user.admin?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
   end
