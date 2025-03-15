@@ -40,6 +40,10 @@
         <label for="last_name" class="block mb-2 font-medium">Last Name</label>
         <input type="text" id="last_name" name="last_name" class="input input-bordered w-full" required>
       </div>
+      <div class="mb-5">
+        <label for="email" class="block mb-2 font-medium">Email</label>
+        <input type="email" id="email" name="email" class="input input-bordered w-full" required>
+      </div>
       <div class="flex justify-end mt-8">
         <button type="button" id="next-to-2" class="btn btn-primary w-full">Next</button>
       </div>
@@ -109,6 +113,10 @@
         <div class="mb-5 border-b border-gray-100 pb-3">
           <h3 class="text-lg font-semibold mb-2">Payment Method</h3>
           <p> Credit Card <span id="review-card-last4" class="font-mono"></span></p>
+        </div>
+        <div class="mb-5 border-b border-gray-100 pb-3">
+          <h3 class="text-lg font-semibold mb-2">Email</h3>
+          <p> Email <span id="review-email" class="font-mono"></span></p>
         </div>
       </div>
       <div class="flex justify-between mt-8">
@@ -228,10 +236,19 @@
                 case 1:
                     const firstName = document.getElementById('first_name').value;
                     const lastName = document.getElementById('last_name').value;
-                    if (!firstName || !lastName) {
+                    const email = document.getElementById('email').value;
+                    if (!firstName || !lastName || !email) {
                         alert('Please fill in all required fields');
                         return false;
                     }
+
+                    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                    if (!emailRegex.test(email)) {
+                        alert('Please enter a valid email address');
+                        return false;
+                    }
+
+
                     return true;
                 case 2:
                     const amount = document.getElementById('amount').value;
@@ -291,10 +308,12 @@
             const firstName = document.getElementById('first_name').value;
             const lastName = document.getElementById('last_name').value;
             const amount = document.getElementById('amount').value;
+            const email = document.getElementById('email').value;
 
             document.getElementById('review-name').textContent = `${firstName} ${lastName}`;
             // Remove the division by 100 to display correct amount
             document.getElementById('review-amount').textContent = amount;
+            document.getElementById('review-email').textContent = email;
 
             if (last4) {
                 document.getElementById('review-card-last4').textContent = "****" + last4;
@@ -308,6 +327,7 @@
             const firstName = document.getElementById('first_name').value;
             const lastName = document.getElementById('last_name').value;
             const amount = document.getElementById('amount').value;
+            const email = document.getElementById('email').value;
 
             const submitButton = document.getElementById('submit-payment');
             submitButton.disabled = true;
@@ -319,6 +339,7 @@
                     card: card,
                     billing_details: {
                         name: `${firstName} ${lastName}`,
+
                     }
                 });
 
@@ -339,7 +360,8 @@
                         first_name: firstName,
                         last_name: lastName,
                         amount: parseInt(amount),
-                        payment_method_id: paymentMethod.id
+                        payment_method_id: paymentMethod.id,
+                        email : email
                     }),
                 });
 
