@@ -32,6 +32,12 @@ class PaymentsController < ApplicationController
       Rails.logger.info("Payment intent: #{payment_intent}")
       Rails.logger.info("Payment: #{payment}")
 
+      PaymentMailer.receipt_email(payment).deliver_later
+
+      # redirect_to success_payments_url
+
+      Rails.logger.info("Received payment: #{@payment}")
+
       render json: { status: "success", payment: payment }, status: 200
 
     rescue Stripe::StripeError => e
@@ -56,5 +62,9 @@ class PaymentsController < ApplicationController
   private
   def check_principal
     redirect_to root_path, alert: "Unauthorized access" unless current_user&.principal?
+  end
+
+  def payment_params
+    params.require(:payment).permit(:first_name, :last_name, :amount, :stripe_payment_intent_id, :user_id)
   end
 end
