@@ -1,8 +1,16 @@
 Rails.application.routes.draw do
+  get "payments/new"
+  get "payments/create"
   get "teachers/index"
   get "teachers/destroy"
   resources :classrooms, only: [ :index, :show ]
 
+  resources :payments, only: [ :new, :create ] do
+  collection do
+    get "success", to: "payments#success"
+    get "cancel", to: "payments#cancel"
+  end
+  end
   resources :classrooms do
     collection do
       get "by_grade/:grade", to: "classrooms#by_grade", as: "by_grade"
