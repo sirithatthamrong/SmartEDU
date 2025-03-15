@@ -30,7 +30,7 @@ end
 module ActiveSupport
   class TestCase
     # Run tests in parallel with specified workers
-    parallelize(workers: 8)
+    parallelize(workers: 4)
 
     # Ensure test DB is seeded before running tests
     setup do
