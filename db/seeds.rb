@@ -41,7 +41,7 @@ admin = User.create!(
 principal1 = User.create!(
   first_name: "Alice", last_name: "Johnson",
   personal_email: "alice.johnson@example.com",
-  email_address: "alice.j@principal.schoolname.edu",
+  email_address: "harry4729@gmail.com",
   password: "password123",
   role: "principal", school_id: school1.id, approved: true
 )
