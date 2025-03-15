@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  get "main/index"
   get "payments/new"
   get "payments/create"
   get "teachers/index"
@@ -47,7 +46,7 @@ Rails.application.routes.draw do
 
   # Other Routes
   get "home/index"
-  resource :session
+  resource :session,  only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   resources :signup, only: %i[ new create ]
   resources :users, only: %i[ index ] do
