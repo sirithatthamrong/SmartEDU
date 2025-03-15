@@ -46,6 +46,8 @@ class StudentsTest < ApplicationSystemTestCase
   end
 
   def login_as_principal
+    visit root_url
+    click_on "Get Started"
     visit new_session_url
     fill_in "email_address", with: @principal.email_address
     fill_in "password", with: "password123"

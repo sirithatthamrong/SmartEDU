@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
+  get "main/index"
   get "payments/new"
   get "payments/create"
   get "teachers/index"
   get "teachers/destroy"
   resources :classrooms, only: [ :index, :show ]
+  root "main#index"
 
   resources :payments, only: [ :new, :create ] do
   collection do
@@ -56,7 +58,6 @@ Rails.application.routes.draw do
 
   get "login", to: "sessions#new", as: "login"
   get "up" => "rails/health#show", as: :rails_health_check
-  root "home#index"
 
   # Additional Student Actions
   resources :students do
