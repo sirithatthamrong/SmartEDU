@@ -3,6 +3,6 @@ class PaymentMailer < ApplicationMailer
 
   def receipt_email(payment)
     @payment = payment
-    mail(to: @payment.user.email_address, subject: "Payment Receipt")
+    mail(to: @payment.email, subject: "Payment Receipt")
   end
 end
