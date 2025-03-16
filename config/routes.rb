@@ -35,6 +35,9 @@ Rails.application.routes.draw do
 
   # Profile Routes
   get 'profile', to: 'profile#show'
+  post "/change_password", to: "users#change_password"
+  resource :profile, only: [:show, :update]
+  patch "/profile/update_password", to: "profile#update_password"
 
   # Students
   resources :students do
