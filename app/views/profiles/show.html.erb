@@ -1,18 +1,18 @@
 <div class="max-w-4xl mx-auto mt-8 bg-white shadow-lg rounded-xl p-8 border">
   <% content_for :title, "My Profile" %>
 
-  <!-- Profile Container -->
-  <div class="bg-gray-50 p-6 rounded-xl flex flex-col items-center">
+  <!-- Profile Container (White Background) -->
+  <div class="p-6 rounded-xl flex flex-col items-center">
 
     <% if current_user.student? && @student.present? %>
-      <!-- QR Code Section (Students Only) -->
-      <div class="bg-white p-6 rounded-xl shadow-md flex items-center justify-center">
+      <!-- QR Code Section (Still White) -->
+      <div class="bg-white p-6 rounded-xl flex items-center justify-center">
         <%= generate_qr_code(@student.uid) %>
       </div>
     <% end %>
 
-    <!-- User Info Section -->
-    <div class="mt-6 w-full bg-white p-6 rounded-xl shadow-md">
+    <!-- User Info Card -->
+    <div class="mt-6 w-full p-6 rounded-xl bg-gray-50">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
         <div>
@@ -41,10 +41,18 @@
           </div>
         <% end %>
 
+        <!-- School Email -->
         <div class="md:col-span-2">
-          <label for="user_email" class="block text-sm font-medium text-gray-700">Email</label>
-          <input id="user_email" class="input input-bordered w-full mt-2" type="email"
+          <label for="school_email" class="block text-sm font-medium text-gray-700">School Email</label>
+          <input id="school_email" class="input input-bordered w-full mt-2" type="email"
                  value="<%= current_user.email_address %>" readonly>
+        </div>
+
+        <!-- Personal Email -->
+        <div class="md:col-span-2">
+          <label for="personal_email" class="block text-sm font-medium text-gray-700">Personal Email</label>
+          <input id="personal_email" class="input input-bordered w-full mt-2" type="email"
+                 value="<%= current_user.personal_email %>" readonly>
         </div>
 
         <% if current_user.student? && @student.present? %>
