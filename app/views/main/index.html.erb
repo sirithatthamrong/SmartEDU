@@ -7,8 +7,25 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
+
+<!-- Navbar -->
+<!-- Navbar -->
+<div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
+  <div class="flex-1">
+    <span class="text-2xl font-bold flex items-center">
+      <%= render "shared/logo_text" %>
+      <i class="fas fa-chevron-right px-2 text-gray-600"></i>
+      <span class="text-gray-800"><%= content_for :title %></span>
+    </span>
+  </div>
+  <div class="flex-none">
+    <%= link_to 'Login', new_session_path, class: 'btn btn-primary px-8 py-2 text-xl' %>
+  </div>
+</div>
+
+
 <!-- Hero Section -->
-<div class="relative bg-gray-50 min-h-[500px] flex items-center justify-center">
+<div class="relative bg-gray-50 min-h-[500px] flex items-center justify-center mt-16">
   <%= image_tag 'smartedu.jpg', alt: 'SmartEdu Dashboard', class: 'absolute inset-0 w-full h-full object-cover opacity-40' %>
 
   <div class="relative text-center z-10 max-w-2xl mx-auto">
@@ -18,7 +35,7 @@
     </div>
     <p class="text-lg text-gray-700 mt-5">Effortless attendance tracking students for schools</p>
     <div class="mt-7 text-center">
-      <%= link_to 'Get Started', new_session_path, class: 'btn btn-primary mx-auto text-2xl' %>
+      <%= link_to 'Get Started', '#tier-section', class: 'btn btn-primary mx-auto text-2xl mb-5' %>
     </div>
   </div>
 </div>
@@ -41,19 +58,16 @@
     </div>
   </div>
 
-
   <!-- Pricing Section -->
-
-  <div class="container mx-auto py-16 px-6 text-center">
+  <div class="container mx-auto py-16 px-6 text-center" id="tier-section">
     <h2 class="text-5xl font-bold text-gray-800 mt-10">Tiers & Pricing</h2>
     <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8">
-
       <!-- Tier 1 -->
       <div class="p-6 bg-white rounded-lg shadow-md">
         <h3 class="text-4xl font-bold border-b-2 pb-2 border-gray-300">Tier 1</h3>
         <p class="text-gray-600 mt-2">Basic attendance tracking features</p>
         <p class="text-2xl font-bold text-gray-900 mt-4">
-           THB 200/student/year
+          THB 200/student/year
         </p>
         <button class="btn btn-secondary mt-6 px-6 py-2">Select Plan</button>
         <ul class="list-disc list-inside text-gray-600 mt-4">
@@ -76,20 +90,29 @@
           <li>Scan QR Code</li>
         </ul>
       </div>
-
     </div>
   </div>
-
-
 </div>
-
-
 
 <!-- Footer -->
 <footer class="bg-gray-800 text-white text-center py-6">
-  <p>&copy; 2025 SmartEdu. All rights reserved.</p>
+  <p>&copy; 2025 SmartEDU. All rights reserved.</p>
   <p>Contact: 01111111</p>
   <p>Email: smarteduccc@gmail.com</p>
 </footer>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const getStartedLink = document.querySelector('a[href="#tier-section"]');
+        if (getStartedLink) {
+            getStartedLink.addEventListener("click", function (event) {
+                event.preventDefault();
+                const tierSection = document.querySelector("#tier-section");
+                tierSection.scrollIntoView({ behavior: "smooth" });
+            });
+        }
+    });
+</script>
 </body>
 </html>
