@@ -9,17 +9,18 @@
 <body class="bg-gray-100">
 
 <!-- Navbar -->
-<!-- Navbar -->
 <div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
-  <div class="flex-1">
-    <span class="text-2xl font-bold flex items-center">
+  <div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
+    <div class="flex-1">
+    <span class="text-4xl font-bold flex items-center">
       <%= render "shared/logo_text" %>
       <i class="fas fa-chevron-right px-2 text-gray-600"></i>
       <span class="text-gray-800"><%= content_for :title %></span>
     </span>
-  </div>
+    </div>
   <div class="flex-none">
     <%= link_to 'Login', new_session_path, class: 'btn btn-primary px-8 py-2 text-xl' %>
+  </div>
   </div>
 </div>
 
@@ -35,7 +36,7 @@
     </div>
     <p class="text-lg text-gray-700 mt-5">Effortless attendance tracking students for schools</p>
     <div class="mt-7 text-center">
-      <%= link_to 'Get Started', '#tier-section', class: 'btn btn-primary mx-auto text-2xl mb-5' %>
+      <%= link_to 'Get Started', '#tier-section', class: 'btn btn-primary mx-auto text-2xl' %>
     </div>
   </div>
 </div>
