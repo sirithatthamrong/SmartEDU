@@ -7,6 +7,7 @@ class PaymentsController < ApplicationController
     last_name = params[:last_name]
     amount = params[:amount].to_i
     payment_method_id = params[:payment_method_id]
+    email = params[:email]
 
     begin
       payment_intent = Stripe::PaymentIntent.create({
@@ -24,13 +25,18 @@ class PaymentsController < ApplicationController
         user_id: current_user.id,
         stripe_payment_intent_id: payment_intent.id,
         last_name: last_name,
-        first_name: first_name
+        first_name: first_name,
+        email: email
       )
       session[:last_payment_id] = payment.id
 
 
       Rails.logger.info("Payment intent: #{payment_intent}")
       Rails.logger.info("Payment: #{payment}")
+
+      PaymentMailer.receipt_email(payment).deliver_later
+
+      Rails.logger.info("Received payment: #{@payment}")
 
       render json: { status: "success", payment: payment }, status: 200
 
@@ -56,5 +62,9 @@ class PaymentsController < ApplicationController
   private
   def check_principal
     redirect_to root_path, alert: "Unauthorized access" unless current_user&.principal?
+  end
+
+  def payment_params
+    params.require(:payment).permit(:first_name, :last_name, :amount, :stripe_payment_intent_id, :user_id)
   end
 end
