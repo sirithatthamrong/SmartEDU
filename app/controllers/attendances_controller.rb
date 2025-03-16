@@ -32,9 +32,6 @@ class AttendancesController < ApplicationController
 
   # POST /attendances or /attendances.json
   def create
-    Rails.logger.info("Creating Checkin")
-    Rails.logger.info(params)
-
     student = Student.find(params[:student_id])
 
     existing_attendance = Attendance.where(student: student)
@@ -73,49 +70,35 @@ class AttendancesController < ApplicationController
     # This will render app/views/admin/scan_qr.html.erb
   end
 
-  def checkin
-    uid = params[:uid]
-    hash = params[:hash]
+  def status
+    Rails.logger.info("Checking if student is checked in and authorized")
+    Rails.logger.info(params)
 
-    secret = Rails.application.credentials.secret_key_base
-    expected = Digest::SHA256.hexdigest("#{uid}|#{secret}")
+    student = Student.find_by(id: params[:attendance_id])
 
-    if hash != expected
-      render json: { success: false, message: "Invalid QR code" }
+    unless student
+      render json: { status: "error", message: "Student not found" }, status: :not_found
       return
     end
 
-    student = Student.find_by(uid: uid)
-    if student
-      CheckinService.checkin(student, current_user)
-      message = "Student checked in successfully at #{Time.current.strftime('%H:%M:%S')}."
-      respond_to do |format|
-        format.json { render json: { success: true, message: message } }
-        format.html { redirect_to admin_scan_qr_path, notice: message }
-      end
-    else
-      message = "Student not found."
-      respond_to do |format|
-        format.json { render json: { success: false, message: message } }
-        format.html { redirect_to admin_scan_qr_path, alert: message }
-      end
-    end
-  end
-
-  def check_if_checked_in
-    Rails.logger.info("Checking if student is checked in")
-    Rails.logger.info(params)
-    student = Student.find(params[:attendance_id])
-
     # Check if the student has already checked in today
-    existing_attendance = Attendance.where(student: student)
-                                    .where(created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day)
-                                    .first
-    if existing_attendance
-      render json: { checked_in: true }
-    else
-      render json: { checked_in: false }
-    end
+    checked_in = Attendance.exists?(
+      student: student,
+      created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day
+    )
+    # get the classroom id of the student
+    classroom_id = student.classroom_id
+    # get the teacher id of the classroom
+    homeroom = Homeroom.find_by(classroom_id: classroom_id)
+    teacher_id = homeroom&.teacher_id # Safe navigation operator prevents nil errors
+
+    Rails.logger.info("Teacher ID: #{teacher_id}")
+    Rails.logger.info("Current User ID: #{current_user&.id}")
+
+    # Check if the user is authorized
+    authorized = current_user.system? || (current_user.teacher? && current_user&.id == teacher_id)
+    Rails.logger.info("Authorized: #{authorized} Checked In: #{checked_in}")
+    render json: { checked_in: checked_in, authorized: authorized }
   end
 
   private
