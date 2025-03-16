@@ -15,10 +15,14 @@ class SessionsController < ApplicationController
     if user&.authenticate(params[:password])
       if user.approved?
         start_new_session_for(user)
+        if user.school.has_paid
         redirect_to after_authentication_url
+        else
+          redirect_to payments_new_path, notice: "Please pay to continue."
+        end
       else
         flash[:notice] = "Your account is pending approval."
-        redirect_to root_path
+        redirect_to root_url
       end
     else
       flash[:error] = "Invalid email or password."

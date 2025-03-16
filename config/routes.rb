@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   root "main#index"
   get "main/index"
 
-  resources :payments, only: [ :new, :create ] do
+  resources :payments  do
   collection do
     get "success", to: "payments#success"
     get "cancel", to: "payments#cancel"

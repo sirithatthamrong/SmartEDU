@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class StudentsTest < ApplicationSystemTestCase
   setup do
-    @school = School.create!(name: "Test School", address: "123 Main St")
+    @school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1)
 
     @principal = User.create!(
       first_name: "Principal",
