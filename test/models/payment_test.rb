@@ -4,6 +4,7 @@
 #
 #  id                       :integer          not null, primary key
 #  amount                   :integer          not null
+#  email                    :string
 #  first_name               :string
 #  last_name                :string
 #  status                   :string           default("pending"), not null

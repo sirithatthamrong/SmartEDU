@@ -9,7 +9,7 @@
 
       <!-- Dashboard -->
       <li>
-        <%= link_to root_path, class: "flex items-center gap-2" do %>
+        <%= link_to home_index_path, class: "flex items-center gap-2" do %>
           <i class="fas fa-tachometer-alt"></i> Dashboard
         <% end %>
       </li>
@@ -70,7 +70,7 @@
       <% end %>
 
       <!-- Scan QR Section -->
-      <% if current_user&.system? %>
+      <% if current_user&.system? || current_user&.principal? || current_user&.teacher? %>
         <li>
           <%= link_to scan_qr_attendances_path, class: "flex items-center gap-2" do %>
             <i class="fas fa-qrcode"></i> Scan QR Code
@@ -79,17 +79,13 @@
       <% end %>
 
       <!-- Grades Section -->
-      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
-        <li>
-          <% if current_user&.can_manage_teachers? || @classroom.present? %>
-            <%= link_to grading_classroom_path(@classroom || Classroom.first), class: "flex items-center gap-2" do %>
-              <i class="fas fa-graduation-cap"></i> Grades
-            <% end %>
-          <% else %>
-            <span class="text-gray-500">No Classroom Available</span>
+      <li>
+        <% if current_user&.can_manage_teachers? || @classroom.present? %>
+          <%= link_to grading_classroom_path(@classroom || Classroom.first), class: "flex items-center gap-2" do %>
+            <i class="fas fa-graduation-cap"></i> Grades
           <% end %>
-        </li>
-      <% end %>
+        <% end %>
+      </li>
 
       <!-- Payment Section -->
       <li>
