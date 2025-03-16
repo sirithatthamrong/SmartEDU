@@ -33,8 +33,8 @@ Rails.application.routes.draw do
     get "/check_if_checked_in", to: "attendances#check_if_checked_in"
   end
 
-  # Profile
-  get "/profile", to: "students#profile"
+  # Profile Routes
+  get 'profile', to: 'profile#show'
 
   # Students
   resources :students do

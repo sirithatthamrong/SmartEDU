@@ -20,20 +20,6 @@ class StudentsController < ApplicationController
     end
   end
 
-  def profile
-    Rails.logger.debug "Current User Email: #{ current_user.email_address }"
-    @student = Student.find_by(student_email_address: current_user.email_address)
-
-    if @student.nil?
-      Rails.logger.debug "No student found for email: #{ current_user.email_address }"
-      redirect_to root_path, alert: "Profile not found."
-      return
-    end
-
-    Rails.logger.debug "Student Found: #{ @student.name }"
-    render "profile"
-  end
-
   # GET /students/new
   def new
     @student = Student.new
