@@ -9,28 +9,6 @@ class SessionsController < ApplicationController
     redirect_to new_session_path
   end
 
-  # def create
-  #   user = User.find_by(email_address: params[:email_address].strip.downcase)
-  #
-  #   if user&.authenticate(params[:password])
-  #     if user.approved?
-  #       start_new_session_for(user)
-  #       if user.school.has_paid
-  #       redirect_to after_authentication_url
-  #       else
-  #         redirect_to payments_new_path, notice: "Please pay to continue."
-  #       end
-  #     else
-  #       flash[:notice] = "Your account is pending approval."
-  #       redirect_to root_url
-  #     end
-  #   else
-  #     flash[:error] = "Invalid email or password."
-  #     render :new, status: :unprocessable_entity
-  #   end
-  # end
-
-  # app/controllers/sessions_controller.rb
   def create
     user = User.find_by(email_address: params[:email_address].strip.downcase)
     if user
