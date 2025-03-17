@@ -8,12 +8,9 @@
 #  first_name               :string
 #  last_name                :string
 #  status                   :string           default("pending"), not null
-#  subscription_end         :datetime
-#  subscription_start       :datetime
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
 #  stripe_payment_intent_id :string           not null
-#  stripe_subscription_id   :string
 #  user_id                  :integer          not null
 #
 # Indexes
