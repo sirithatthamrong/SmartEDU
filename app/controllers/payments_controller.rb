@@ -8,7 +8,6 @@ class PaymentsController < ApplicationController
     last_name = params[:last_name]
     amount = params[:amount].to_i
     payment_method_id = params[:payment_method_id]
-    email = params[:email]
 
     Rails.logger.info("Current user is: #{current_user.inspect}")
     begin
@@ -27,8 +26,7 @@ class PaymentsController < ApplicationController
         user_id: current_user.id,
         stripe_payment_intent_id: payment_intent.id,
         last_name: last_name,
-        first_name: first_name,
-        email: email
+        first_name: first_name
       )
       session[:last_payment_id] = payment.id
 
@@ -40,6 +38,8 @@ class PaymentsController < ApplicationController
 
 
       PaymentMailer.receipt_email(payment).deliver_later
+
+      # redirect_to success_payments_url
 
       Rails.logger.info("Received payment: #{@payment}")
 
