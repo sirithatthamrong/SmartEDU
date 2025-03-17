@@ -3,7 +3,7 @@ require "test_helper"
 class HomeControllerTest < ActionDispatch::IntegrationTest
   test "should get index when logged in" do
     sign_in
-    get root_path
+    get home_index_url
     assert status, 200
     assert_includes @response.body, "Total Students"
   end
