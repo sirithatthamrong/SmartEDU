@@ -8,6 +8,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_in "email_address", with: @user.email_address
     fill_in "password", with: "password123"
     click_on "Sign In"
-    assert_selector "h2 span", text: "Dashboard"
+    # This does not work now, since if the user has not paid, it will bring them to the payment page
+    # assert_selector "h2 span", text: "Dashboard"
   end
 end

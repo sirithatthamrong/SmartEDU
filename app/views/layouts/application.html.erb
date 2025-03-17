@@ -18,7 +18,6 @@
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/icon.png">
 
-
   <%# Includes all stylesheet files %>
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -37,9 +36,9 @@
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 
 </head>
-<%#= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-<body class="<%= 'pt-10' if current_user&.approved? %>">
-<% if current_user&.approved? %>
+
+<body class="<%= 'pt-10' if current_user&.approved? && current_user&.school&.has_paid?%>">
+<% if current_user&.approved? && current_user&.school&.has_paid? %>
   <%= render "layouts/nav" %>
   <%= render "layouts/drawer" do %>
     <%= yield %>
@@ -47,5 +46,6 @@
 <% else %>
   <%= yield %>
 <% end %>
+
 </body>
 </html>
