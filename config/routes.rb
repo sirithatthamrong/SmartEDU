@@ -31,8 +31,9 @@ Rails.application.routes.draw do
       post "checkin", to: "attendances#checkin"
     end
   end
+
   resources :attendances, only: [ :create ] do
-    get "/check_if_checked_in", to: "attendances#check_if_checked_in"
+    get "/status", to: "attendances#status"
   end
 
   # Profile
@@ -47,7 +48,8 @@ Rails.application.routes.draw do
 
   # Other Routes
   get "home/index"
-  resource :session
+  get "logout", to: "sessions#destroy", as: :logout
+  resource :session,  only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   resources :signup, only: %i[ new create ]
   resources :users, only: %i[ index ] do
