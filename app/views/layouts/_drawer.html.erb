@@ -86,16 +86,6 @@
         <% end %>
       </li>
 
-      <!-- Payment Section -->
-<!--      <li>-->
-        <%# if current_user&.principal? %>
-          <%#= link_to payments_new_path do %>
-<!--            <i class="fas fa-shopping-cart"></i> Payment-->
-          <%# end %>
-        <%# end %>
-<!--      </li>-->
-
-
       <!-- Logout -->
       <li>
         <%= link_to logout_path, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>

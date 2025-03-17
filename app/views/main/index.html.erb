@@ -105,18 +105,9 @@
   <p>Email: smarteduccc@gmail.com</p>
 </footer>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
 
-        const getStartedLink = document.querySelector('a[href="#tier-section"]');
-        if (getStartedLink) {
-            getStartedLink.addEventListener("click", function (event) {
-                event.preventDefault();
-                const tierSection = document.querySelector("#tier-section");
-                tierSection.scrollIntoView({ behavior: "smooth" });
-            });
-        }
-    });
-</script>
 </body>
+
+<%= javascript_include_tag "controllers/main_scrolling" %>
+
 </html>
