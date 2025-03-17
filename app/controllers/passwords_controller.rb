@@ -17,14 +17,20 @@ class PasswordsController < ApplicationController
   end
 
   def update
-    if @user.update(params.permit(:password, :password_confirmation))
-      flash[:notice] = "Password has been reset."
-      redirect_to new_session_path
-    elsif params[:password] != params[:password_confirmation]
+    if params[:password] != params[:password_confirmation]
       flash[:error] = "Passwords did not match."
-      redirect_to edit_password_path(params[:token])
-    elsif params[:password].length < 8
+      return redirect_to edit_password_path(params[:token])
+    end
+
+    if params[:password].length < 8
       flash[:error] = "Password must be at least 8 characters long."
+      return redirect_to edit_password_path(params[:token])
+    end
+
+    if @user.update(params.permit(:password, :password_confirmation))
+      redirect_to new_session_path, notice: "Password has been reset."
+    else
+      flash[:error] = "There was an error updating your password."
       redirect_to edit_password_path(params[:token])
     end
   end
