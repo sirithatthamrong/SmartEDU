@@ -1,7 +1,5 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy ]
-  before_action :authorize_admin_or_principal!, except: [ :profile ]
-  before_action :authorize_student!, only: [ :profile ]
   include Pagy::Backend
 
   def index
@@ -18,20 +16,6 @@ class StudentsController < ApplicationController
       format.html { render "show" }
       format.json { render json: @student }
     end
-  end
-
-  def profile
-    Rails.logger.debug "Current User Email: #{ current_user.email_address }"
-    @student = Student.find_by(student_email_address: current_user.email_address)
-
-    if @student.nil?
-      Rails.logger.debug "No student found for email: #{ current_user.email_address }"
-      redirect_to root_path, alert: "Profile not found."
-      return
-    end
-
-    Rails.logger.debug "Student Found: #{ @student.name }"
-    render "profile"
   end
 
   # GET /students/new
