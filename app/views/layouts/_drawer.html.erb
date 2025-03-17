@@ -84,15 +84,6 @@
         <% end %>
       </li>
 
-      <!-- Payment Section -->
-      <li>
-        <% if current_user&.can_manage_teachers? || @classroom.present? %>
-          <%= link_to grading_classroom_path(@classroom || Classroom.first), class: "flex items-center gap-2" do %>
-            <i class="fas fa-graduation-cap"></i> Grades
-          <% end %>
-        <% end %>
-      </li>
-
       <!-- Logout -->
       <li>
         <%= link_to logout_path, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>
