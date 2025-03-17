@@ -1,7 +1,5 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy ]
-  before_action :authorize_admin_or_principal!, except: [ :profile ]
-  before_action :authorize_student!, only: [ :profile ]
   include Pagy::Backend
 
   def index
