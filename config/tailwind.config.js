@@ -25,4 +25,5 @@ module.exports = {
     themes: ["light", "dark", "coporate", "pastel"],
     darkTheme: "coporate", // name of one of the included themes for dark mode
   },
+
 };

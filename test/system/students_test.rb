@@ -2,7 +2,7 @@ require "application_system_test_case"
 
 class StudentsTest < ApplicationSystemTestCase
   setup do
-    @school = School.create!(name: "Test School", address: "123 Main St")
+    @school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1)
 
     @principal = User.create!(
       first_name: "Principal",
@@ -46,11 +46,12 @@ class StudentsTest < ApplicationSystemTestCase
   end
 
   def login_as_principal
-    visit new_session_url
+    visit new_session_path
+
     fill_in "email_address", with: @principal.email_address
     fill_in "password", with: "password123"
     click_on "Sign In"
-    assert_selector "h2 span", text: "Dashboard"
+    assert_selector "h2 span", text: "Dashboard", wait: 10
   end
 
   test "visiting the index" do

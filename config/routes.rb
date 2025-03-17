@@ -4,8 +4,10 @@ Rails.application.routes.draw do
   get "teachers/index"
   get "teachers/destroy"
   resources :classrooms, only: [ :index, :show ]
+  root "main#index"
+  get "main/index"
 
-  resources :payments, only: [ :new, :create ] do
+  resources :payments  do
   collection do
     get "success", to: "payments#success"
     get "cancel", to: "payments#cancel"
@@ -29,8 +31,9 @@ Rails.application.routes.draw do
       post "checkin", to: "attendances#checkin"
     end
   end
+
   resources :attendances, only: [ :create ] do
-    get "/check_if_checked_in", to: "attendances#check_if_checked_in"
+    get "/status", to: "attendances#status"
   end
 
   # Profile Routes
@@ -48,7 +51,8 @@ Rails.application.routes.draw do
 
   # Other Routes
   get "home/index"
-  resource :session
+  get "logout", to: "sessions#destroy", as: :logout
+  resource :session,  only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   resources :signup, only: %i[ new create ]
   resources :users, only: %i[ index ] do
@@ -59,7 +63,6 @@ Rails.application.routes.draw do
 
   get "login", to: "sessions#new", as: "login"
   get "up" => "rails/health#show", as: :rails_health_check
-  root "home#index"
 
   # Additional Student Actions
   resources :students do
