@@ -46,6 +46,7 @@ Rails.application.routes.draw do
 
   # Other Routes
   get "home/index"
+  get "logout", to: "sessions#destroy", as: :logout
   resource :session,  only: [ :new, :create, :destroy ]
   resources :passwords, param: :token
   resources :signup, only: %i[ new create ]
