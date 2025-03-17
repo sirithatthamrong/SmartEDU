@@ -86,15 +86,23 @@ class AttendancesController < ApplicationController
     end
 
     student = Student.find_by(uid: uid)
-    if student
-      CheckinService.checkin(student, current_user)
-      message = "Student checked in successfully at #{Time.current.strftime('%H:%M:%S')}."
+
+    if student.nil?
+      redirect_to root_path, alert: "Student not found."
+      return
+    end
+
+    attendance = Attendance.create(student: student, timestamp: Time.current, user: current_user)
+
+    if attendance.persisted?
+      AttendanceMailer.check_in_notification(student, attendance).deliver_later
+      message = "Student checked in successfully at #{Time.current.strftime('%H:%M:%S')}. Parent has been notified."
       respond_to do |format|
         format.json { render json: { success: true, message: message } }
         format.html { redirect_to admin_scan_qr_path, notice: message }
       end
     else
-      message = "Student not found."
+      message = "Check-in failed."
       respond_to do |format|
         format.json { render json: { success: false, message: message } }
         format.html { redirect_to admin_scan_qr_path, alert: message }
