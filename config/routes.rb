@@ -36,8 +36,11 @@ Rails.application.routes.draw do
     get "/status", to: "attendances#status"
   end
 
-  # Profile
-  get "/profile", to: "students#profile"
+  # Profile Routes
+  get "profile", to: "profile#show"
+  post "/change_password", to: "users#change_password"
+  resource :profile, only: [ :show, :update ]
+  patch "/profile/update_password", to: "profile#update_password"
 
   # Students
   resources :students do

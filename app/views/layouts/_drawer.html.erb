@@ -15,13 +15,11 @@
       </li>
 
       <!-- Profile -->
-      <% if current_user&.student? %>
         <li>
           <%= link_to profile_path, class: "flex items-center gap-2" do %>
             <i class="fas fa-user"></i> Profile
           <% end %>
         </li>
-      <% end %>
 
       <!-- Management Section -->
       <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
