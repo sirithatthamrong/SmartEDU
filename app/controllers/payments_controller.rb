@@ -8,6 +8,7 @@ class PaymentsController < ApplicationController
     last_name = params[:last_name]
     amount = params[:amount].to_i
     payment_method_id = params[:payment_method_id]
+    email = params[:email]
 
     Rails.logger.info("Current user is: #{current_user.inspect}")
     begin
@@ -26,7 +27,10 @@ class PaymentsController < ApplicationController
         user_id: current_user.id,
         stripe_payment_intent_id: payment_intent.id,
         last_name: last_name,
-        first_name: first_name
+        first_name: first_name,
+        email: email,
+        subscription_start: Time.zone.now,
+        subscription_end: Time.zone.now + 1.year
       )
       session[:last_payment_id] = payment.id
 

@@ -84,3 +84,10 @@ gem "tailwindcss-rails", "~> 3.3"
 gem "dotenv-rails", "~> 3.1"
 
 gem "stripe"
+
+gem "whenever", require: false
+
+group :test do
+  gem "rspec-rails"
+  gem "factory_bot_rails"
+end
