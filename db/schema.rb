@@ -49,8 +49,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_113304) do
     t.string "first_name"
     t.string "last_name"
     t.string "email"
-    t.datetime "subscription_start"
-    t.datetime "subscription_end"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -76,7 +74,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_113304) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "has_paid"
+    t.boolean "has_paid", default: false
     t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
@@ -94,7 +92,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_17_113304) do
     t.string "uid", null: false
     t.datetime "discarded_at"
     t.boolean "is_active", default: true, null: false
-    t.integer "grade"
+    t.integer "grade", null: false
     t.string "student_email_address", default: "student@example.com", null: false
     t.string "parent_email_address", default: "parent@example.com", null: false
     t.integer "classroom_id", null: false
