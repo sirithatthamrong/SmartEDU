@@ -4,7 +4,7 @@ class UserApprovalsTest < ApplicationSystemTestCase
   setup do
     @school = School.create!(name: "Test School", address: "123 Test St", has_paid: 1)
 
-    @user = User.create!(
+    @admin = User.create!(
       first_name: "Admin",
       last_name: "User",
       email_address: "admin@test.com",
@@ -14,7 +14,7 @@ class UserApprovalsTest < ApplicationSystemTestCase
       personal_email: "admin@personal.com"
     )
 
-    @user.update(
+    @admin.update(
       password: "password123"
     )
 
@@ -30,23 +30,14 @@ class UserApprovalsTest < ApplicationSystemTestCase
     )
   end
 
-  def login_as_admin
-    visit new_session_path
-
-    fill_in "email_address", with: @user.email_address
-    fill_in "password", with: "password123"
-    click_on "Sign In"
-    assert_selector "h2 span", text: "Dashboard", wait: 10
-  end
-
   test "visiting the index" do
-    login_as_admin
+    login_as(@admin)
     visit users_path
     assert_selector "h2", text: "Manage Users"
   end
 
   test "should be able to approve" do
-    login_as_admin
+    login_as(@admin)
     visit users_path
     assert_selector "h2", text: "Manage Users"
 
@@ -58,7 +49,7 @@ class UserApprovalsTest < ApplicationSystemTestCase
   end
 
   test "should be able to disapprove" do
-    login_as_admin
+    login_as(@admin)
     visit users_path
     assert_selector "h2", text: "Manage Users"
 
