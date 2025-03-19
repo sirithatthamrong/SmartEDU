@@ -80,4 +80,6 @@ Rails.application.configure do
     user_name: "smarteduccc@gmail.com",
     password: "gkaq bxvw hcoc kqwo"
   }
+
+  config.action_mailer.default_url_options = { host: "ccc.buggycode.space", protocol: "https" }
 end
