@@ -81,5 +81,5 @@ Rails.application.configure do
     password: "gkaq bxvw hcoc kqwo"
   }
 
-  config.action_mailer.default_url_options = { host: "ccc.buggycode.space", protocol: "https" }
+  # config.action_mailer.default_url_options = { host: "ccc.buggycode.space", protocol: "https" }
 end
