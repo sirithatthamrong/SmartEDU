@@ -5,15 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartEdu Attendance</title>
   <script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
-
+<body class="flex flex-col min-h-screen bg-gray-50">
 <div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
   <div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
     <div class="flex-1">
     <span class="text-4xl font-bold flex items-center">
       <%= render "shared/logo_text" %>
-      <i class="fas fa-chevron-right px-2 text-gray-600"></i>
       <span class="text-gray-800"><%= content_for :title %></span>
     </span>
     </div>
@@ -24,7 +24,7 @@
   </div>
 </div>
 
-<div class="pt-28">
+<div class="flex-grow pt-32 pb-20">
   <div class="student-card max-w-md mx-auto bg-white rounded-lg shadow-md p-6" data-turbo-permanent id="payment-wizard-container">
     <h1 class="student-title">New Payment</h1>
 
@@ -162,12 +162,6 @@
     </div>
   </div>
 </div>
-
-<footer class="bg-gray-800 text-white text-center py-6">
-  <p>&copy; 2025 SmartEDU. All rights reserved.</p>
-  <p>Contact: 01111111</p>
-  <p>Email: smarteduccc@gmail.com</p>
-</footer>
 
 
 <%= javascript_include_tag "https://js.stripe.com/v3/", "data-turbo-track": "reload" %>
@@ -379,6 +373,7 @@
             const submitButton = document.getElementById('submit-payment');
             submitButton.disabled = true;
             submitButton.textContent = 'Processing...';
+
 
             try {
                 const {paymentMethod, error} = await stripe.createPaymentMethod({
