@@ -4,7 +4,7 @@ class StudentsController < ApplicationController
 
   def index
     @classroom = Classroom.find_by(id: params[:classroom_id]) if params[:classroom_id].present?
-    @grades = Student.distinct.pluck(:grade).compact.sort
+    @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
     students_scope = Student.active
     students_scope = students_scope.where(grade: params[:grade]) if params[:grade].present?
     @pagy, @students = pagy(students_scope)
