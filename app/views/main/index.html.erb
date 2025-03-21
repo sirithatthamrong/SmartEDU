@@ -14,6 +14,7 @@
     <div class="flex-1">
     <span class="text-4xl font-bold flex items-center">
       <%= render "shared/logo_text" %>
+      <i class="fas fa-chevron-right px-2 text-gray-600"></i>
       <span class="text-gray-800"><%= content_for :title %></span>
     </span>
     </div>
@@ -69,7 +70,7 @@
         <p class="text-2xl font-bold text-gray-900 mt-4">
           THB 200/student/year
         </p>
-        <%= link_to 'Select Plan', new_payment_path, class: 'btn btn-secondary font-bold mt-4' %>
+        <%= link_to 'Select Plan', new_session_path, class: 'btn btn-secondary font-bold mt-4' %>
         <ul class="list-disc list-inside text-gray-600 mt-4">
           <li>Track student attendance</li>
         </ul>
@@ -82,7 +83,7 @@
         <p class="text-2xl font-bold text-gray-900 mt-4">
           THB 350/student/year
         </p>
-        <%= link_to 'Select Plan', new_payment_path, class: 'btn btn-secondary font-bold mt-4' %>
+        <%= link_to 'Select Plan', new_session_path, class: 'btn btn-secondary font-bold mt-4' %>
         <ul class="list-disc list-inside text-gray-600 mt-4">
           <li>Track student attendance</li>
           <li>Generate attendance reports</li>
