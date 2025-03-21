@@ -1,5 +1,5 @@
 require "application_system_test_case"
-
+require "test_helper"
 
 class AttendancesTest < ApplicationSystemTestCase
   setup do
@@ -19,20 +19,12 @@ class AttendancesTest < ApplicationSystemTestCase
       password: "password123"
     )
 
-    login_as_principal
+    login_as(@principal)
   end
 
   test "visiting the index" do
     visit attendances_url
     assert_selector "h2 span", text: "Attendances"
-  end
-  def login_as_principal
-    visit new_session_path
-
-    fill_in "email_address", with: @principal.email_address
-    fill_in "password", with: "password123"
-    click_on "Sign In"
-    assert_selector "h2 span", text: "Dashboard", wait: 10
   end
 
   # NOTE: This test will fail because the logic for creating student has changed
