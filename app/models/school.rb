@@ -6,6 +6,7 @@
 #
 #  id         :integer          not null, primary key
 #  address    :string           not null
+#  has_paid   :boolean          default(FALSE)
 #  name       :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null

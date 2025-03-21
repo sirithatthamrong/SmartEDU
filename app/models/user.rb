@@ -26,6 +26,8 @@
 #
 class User < ApplicationRecord
   has_secure_password
+  has_many :payments
+  belongs_to :school
 
   has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy

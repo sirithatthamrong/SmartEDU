@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_19_032119) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -48,6 +48,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
     t.datetime "updated_at", null: false
     t.string "first_name"
     t.string "last_name"
+    t.string "email"
+    t.datetime "subscription_start"
+    t.datetime "subscription_end"
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
@@ -73,6 +76,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_06_072356) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "has_paid", default: false
     t.index ["name"], name: "index_schools_on_name", unique: true
   end
 

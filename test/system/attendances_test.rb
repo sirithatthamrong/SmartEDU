@@ -1,10 +1,25 @@
 require "application_system_test_case"
+require "test_helper"
 
 class AttendancesTest < ApplicationSystemTestCase
   setup do
+    @school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1)
     @attendance = Attendance.first
     @student = Student.find(@attendance.student_id)
-    login
+    @principal = User.create!(
+      first_name: "Principal",
+      last_name: "Test",
+      personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
+      role: "principal",
+      password: "password123",
+      school_id: @school.id
+    )
+
+    @principal.update(
+      password: "password123"
+    )
+
+    login_as(@principal)
   end
 
   test "visiting the index" do
