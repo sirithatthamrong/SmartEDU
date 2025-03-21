@@ -32,6 +32,7 @@ class StudentsControllerTest < ActionDispatch::IntegrationTest
       personal_email: "test_student_#{SecureRandom.hex(4)}@gmail.com",
       role: "student",
       password: "password123",
+      approved: true,
       school_id: @eiei_school.id
     )
 

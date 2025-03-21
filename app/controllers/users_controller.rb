@@ -8,6 +8,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html
       format.js
+      format.json { render json: @pending_users }
     end
   end
 

@@ -1,7 +1,8 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
-require "./test/helpers/authentication_helper"
+require "./test/helpers/integration_test_helper"
+require "./test/helpers/system_test_helper"
 require "minitest/mock"
 
 def ci?
@@ -26,7 +27,7 @@ module SignInHelper
 end
 
 class ActionDispatch::IntegrationTest
-  include SignInHelper
+  include IntegrationTestHelper
 end
 
 module ActiveSupport
