@@ -2,6 +2,7 @@ class ApplicationController < ActionController::Base
   include Authentication
   helper :qr
 
+
   before_action :set_current_user
   before_action :set_classroom
 

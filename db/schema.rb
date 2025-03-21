@@ -76,7 +76,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_19_032119) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "has_paid", default: false
+    t.boolean "has_paid"
     t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
