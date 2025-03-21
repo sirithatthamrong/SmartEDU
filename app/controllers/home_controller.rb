@@ -17,6 +17,6 @@ class HomeController < ApplicationController
     @last_checkin = Attendance.joins(:student)
                               .where(students: { classroom_id: school_classrooms })
                               .maximum(:timestamp)
-    @total_teachers = User.where(role: "teacher", school_id: current_user.school_id).count
+    @total_teachers = User.where(role: "teacher", school_id: current_user.school_id, approved: true).count
   end
 end
