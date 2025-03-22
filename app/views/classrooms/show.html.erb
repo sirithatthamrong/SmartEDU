@@ -1,9 +1,9 @@
 <% content_for :title, "Classroom #{@classroom.class_id}" %>
 
-<h1 class="text-3xl font-bold text-center mb-6 mt-4">Students in Classroom <%= @classroom.class_id %></h1>
+<h1 class="text-4xl font-bold text-center mb-6 mt-4">Students in Classroom <%= @classroom.class_id %></h1>
 <div class="mx-auto bg-white p-6 rounded-lg shadow">
   <%= form_with url: attendances_path, method: :post, remote: true do %>
-    <table>
+    <table id="shared-table" class="entity-table" data-turbo=turbo="false">
       <thead>
       <tr>
         <th class="text-gray-1000 text-l">ID</th>
@@ -29,10 +29,11 @@
 </div>
 
 <div class="text-center mt-6">
-  <%= link_to "Back to Classrooms", by_grade_classrooms_path(@classroom.class_id.first), class: "text-blue-500 hover:underline" %>
+  <%= link_to "Back to Classrooms", by_grade_classrooms_path(@classroom.class_id.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc] mt-5 justify-center" %>
 </div>
 
 <%= javascript_include_tag "controllers/classroom_checkin_controller" %>
+
 
 <script>
     window.attendancesPath = "<%= attendances_path %>";

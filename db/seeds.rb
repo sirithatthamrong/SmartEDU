@@ -23,6 +23,7 @@ classroom1 = Classroom.create!(class_id: "5A", grade_level: 5, school_id: school
 classroom2 = Classroom.create!(class_id: "6B", grade_level: 6, school_id: school2.id)
 classroom3 = Classroom.create!(class_id: "6A", grade_level: 6, school_id: school1.id)
 
+
 puts "✅ Classrooms Created"
 
 # Create Admins
@@ -142,6 +143,8 @@ puts "✅ Students Created"
 Homeroom.create!(teacher_id: teacher1.id, classroom_id: classroom1.id)
 Homeroom.create!(teacher_id: teacher2.id, classroom_id: classroom2.id)
 Homeroom.create!(teacher_id: teacher3.id, classroom_id: classroom3.id)
+
+
 
 puts "✅ Homerooms Assigned"
 

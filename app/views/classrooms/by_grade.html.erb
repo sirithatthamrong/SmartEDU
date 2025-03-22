@@ -1,26 +1,33 @@
-<h1 class="text-3xl font-bold text-center mb-6">Classrooms for Grade <%= @grade %></h1>
+<div class="max-w-4xl mx-auto p-6">
+  <h1 class="text-4xl font-bold text-center mb-6 mt-4">Classrooms for Grade <%= @grade %></h1>
 
 
-<!--TODO: Fix this -->
-<div class="text-center mb-6">
-  <%= link_to "Back to Classrooms", classrooms_path, class: "text-blue-500 hover:underline" %>
-</div>
-<!--TODO: Fix this -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <% @classrooms.each do |classroom| %>
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
+        <%= link_to classroom_path(classroom), class: "block" do %>
+          <div class="p-5 bg-blue-50 border-b border-blue-100">
+            <h2 class="text-xl font-semibold">Classroom <%= classroom.class_id %></h2>
+          </div>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-  <% @classrooms.each do |classroom| %>
-    <div class="bg-white rounded-lg shadow-lg overflow-hidden cursor-pointer hover:shadow-2xl transition-shadow">
-      <%= link_to classroom_path(classroom), class: "block p-6" do %>
-        <h2 class="text-center text-2xl font-bold text-gray-700">Classroom <%= classroom.class_id %></h2>
-      <% end %>
-
-      <!-- Show students in the classroom -->
-      <div class="p-4">
-        <% if classroom.students.any? %>
-        <% else %>
-          <p class="text-gray-500">No students in this classroom.</p>
+          <div class="p-5">
+            <% if classroom.students.any? %>
+              <div class="text-sm text-gray-600">
+                <%= classroom.students.count %> students enrolled
+              </div>
+            <% else %>
+              <div class="text-sm text-gray-500 italic">
+                No students in this classroom.
+              </div>
+            <% end %>
+          </div>
         <% end %>
       </div>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
+
+  <div class="mb-10">
+    <%= link_to "Back to Grades", grading_classroom_path(Classroom.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc] mt-5 justify-center" %>
+<!--    bg-[#FFEAD2] text-black hover:bg-[#e6d3bc]-->
+  </div>
 </div>
