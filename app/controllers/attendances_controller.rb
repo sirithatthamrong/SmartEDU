@@ -13,18 +13,6 @@ class AttendancesController < ApplicationController
     # This will render app/views/attendances/show.html.erb
   end
 
-  # GET /attendances/new
-  def new
-    @q = Student.active.ransack(params[:q])
-    @students = @q.result(distinct: true)
-    @attendances = Attendance.order(timestamp: :desc).limit(10)
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
-  end
-
   # GET /attendances/1/edit
   def edit
     # This will render app/views/attendances/edit.html.erb
