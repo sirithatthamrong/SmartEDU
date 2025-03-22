@@ -95,8 +95,14 @@ class AttendancesController < ApplicationController
     attendance = Attendance.create(student: student, timestamp: Time.current, user: current_user)
 
     if attendance.persisted?
-      AttendanceMailer.check_in_notification(student, attendance).deliver_later
-      message = "Student checked in successfully at #{Time.current.strftime('%I:%M:%S')}. Parent has been notified."
+      if student.user.school == 2
+        AttendanceMailer.check_in_notification(student, attendance).deliver_later
+        message = "Student checked in successfully at #{Time.current.strftime('%I:%M:%S')}. Parent has been notified."
+      else
+        respond_to do |format|
+          format.json { render json: { success: false, message: message } }
+        end
+      end
 
       respond_to do |format|
         format.json { render json: { success: true, message: message } }
