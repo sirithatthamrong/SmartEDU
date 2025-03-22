@@ -26,7 +26,7 @@ class ClassroomsController < ApplicationController
   end
 
   def by_grade
-    @grade = params[:grade]
+    @grade = params[:grade].to_i
 
     if @grade.blank?
       flash[:alert] = "Grade is missing."
@@ -34,9 +34,8 @@ class ClassroomsController < ApplicationController
     end
 
     # Filter classrooms by grade and current user's school
-    @classrooms = Classroom.where("grade_level LIKE ?", "#{@grade}%")
-                           .where(school_id: current_user.school_id)
-                           .order(:class_id)
+    @classrooms = Classroom.where(school_id: current_user.school_id, grade_level: @grade).order(:class_id)
+
 
     if @classrooms.empty?
       flash[:notice] = "No classrooms found for grade #{@grade} in your school."

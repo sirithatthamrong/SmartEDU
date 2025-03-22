@@ -1,7 +1,13 @@
-<div class="max-w-4xl mx-auto p-6">
+<% content_for :title, "Classroom" %>
+<div class="max-w-10xl mx-auto p-6">
   <h1 class="text-4xl font-bold text-center mb-6 mt-4">Classrooms for Grade <%= @grade %></h1>
 
+  <div class="mb-6 pl-0">
+    <%= link_to "Back to Grades", grading_classroom_path(Classroom.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc] ml-0" %>
+  </div>
 
+
+  <div class="p-6 pt-0">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     <% @classrooms.each do |classroom| %>
       <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -25,9 +31,9 @@
       </div>
     <% end %>
   </div>
-
-  <div class="mb-10">
-    <%= link_to "Back to Grades", grading_classroom_path(Classroom.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc] mt-5 justify-center" %>
-<!--    bg-[#FFEAD2] text-black hover:bg-[#e6d3bc]-->
   </div>
+
+<!--  <div class="mb-10">-->
+    <%#= link_to "Back to Grades", grading_classroom_path(Classroom.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc] mt-5 left-align" %>
+<!--  </div>-->
 </div>

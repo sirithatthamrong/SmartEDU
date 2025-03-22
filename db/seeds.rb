@@ -170,3 +170,138 @@ Attendance.create!(student_id: student3.id, user_id: teacher3.id, timestamp: Tim
 
 puts "✅ Attendance Records Created"
 puts "✅ Seeding complete!"
+
+
+# ==================================================================
+# ============ Use for Testing Purposes ============================
+# ====== New Seeding Data for Many Grades & Students ===============
+# # ================================================================
+
+# puts "Seeding data..."
+#
+# # Only clear data in dev or test. In production, we skip this so we don't nuke real data.
+# if Rails.env.development? || Rails.env.test?
+#   puts "Clearing existing data (Development/Test ONLY)"
+#   Attendance.delete_all
+#   TeacherStudentRelationship.delete_all
+#   PrincipalTeacherRelationship.delete_all
+#   Homeroom.delete_all
+#   Student.delete_all
+#   User.delete_all
+#   Classroom.delete_all
+#   SchoolTier.delete_all
+#   School.delete_all
+# end
+#
+# # Create Schools
+# school1 = School.create!(name: "Piti Academy", address: "123 Main St, Bangkok", has_paid: 0)
+# school2 = School.create!(name: "Kanat Kitty School", address: "456 Algorithm Rd, Nakhon Pathom", has_paid: 0)
+#
+# # Create Classrooms for Grades 1-12
+# classrooms = []
+# (1..12).each do |grade|
+#   classrooms << Classroom.create!(class_id: "#{grade}A", grade_level: grade, school_id: school1.id)
+#   classrooms << Classroom.create!(class_id: "#{grade}B", grade_level: grade, school_id: school1.id)
+#   classrooms << Classroom.create!(class_id: "#{grade}C", grade_level: grade, school_id: school1.id)
+#   classrooms << Classroom.create!(class_id: "#{grade}B", grade_level: grade, school_id: school2.id)
+# end
+#
+# puts "✅ Classrooms Created"
+#
+# # Create Admins
+# admin = User.create!(
+#   email_address: "admin@example.com",
+#   personal_email: "admin.personal@example.com",
+#   first_name: "Admin",
+#   last_name: "User",
+#   password: "password123",
+#   role: "admin",
+#   approved: true,
+#   school_id: school1.id
+# )
+#
+# # Create Principals
+# principal1 = User.create!(
+#   first_name: "Alice", last_name: "Johnson",
+#   personal_email: "alice.johnson@example.com",
+#   email_address: "alice.j@principal.schoolname.edu",
+#   password: "password123",
+#   role: "principal", school_id: school1.id, approved: true
+# )
+# principal1.update!(password: "password123")
+#
+# principal2 = User.create!(
+#   first_name: "Bob", last_name: "Smith",
+#   personal_email: "bob.smith@example.com",
+#   email_address: "bob.s@principal.schoolname.edu",
+#   password: "password123",
+#   role: "principal", school_id: school2.id, approved: true
+# )
+# principal2.update!(password: "password123")
+#
+# # Create Teachers and Assign to Homerooms
+# teachers = []
+# (1..12).each do |grade|
+#   teacher = User.create!(
+#     first_name: "Teacher#{grade}", last_name: "Last#{grade}",
+#     personal_email: "teacher#{grade}@example.com",
+#     email_address: "teacher#{grade}@schoolname.edu",
+#     password: "password123",
+#     role: "teacher", school_id: school1.id, approved: true
+#   )
+#   teachers << teacher
+#   Homeroom.create!(teacher_id: teacher.id, classroom_id: classrooms[(grade - 1) * 2].id)
+# end
+#
+# puts "✅ Teachers and Homerooms Created"
+#
+# # Create Students
+# # Create Students
+# students = []
+# (1..12).each do |grade|
+#   student_user = User.create!(
+#     first_name: "Student#{grade}", last_name: "Last#{grade}",
+#     personal_email: "student#{grade}@example.com",
+#     email_address: "student#{grade}@example.com",
+#     password: "randomPassword",
+#     role: "student", school_id: school1.id
+#   )
+#
+#   # Find a classroom with matching grade level
+#   matching_classroom = classrooms.find { |c| c.grade_level == grade }
+#
+#   student = Student.create!(
+#     name: "Student#{grade} Last#{grade}",
+#     grade: grade,
+#     student_email_address: student_user.email_address,
+#     parent_email_address: "parent#{grade}@example.com",
+#     classroom_id: matching_classroom.id
+#   )
+#   students << student
+# end
+#
+# puts "✅ Students Created"
+#
+# # Assign Teacher-Student Relationships
+# students.each_with_index do |student, index|
+#   TeacherStudentRelationship.create!(teacher_id: teachers[index].id, student_id: student.id)
+# end
+#
+# # Create School Tiers
+# SchoolTier.create!(school_id: school1.id, tier: "Basic")
+# SchoolTier.create!(school_id: school2.id, tier: "Premium")
+#
+# # Create Principal-Teacher Relationships
+# teachers.each do |teacher|
+#   PrincipalTeacherRelationship.create!(principal_id: principal1.id, teacher_id: teacher.id)
+# end
+#
+# puts "✅ Relationships Established"
+#
+# # Create Attendance Records
+# students.each do |student|
+#   Attendance.create!(student_id: student.id, user_id: teachers.sample.id, timestamp: Time.current)
+# end
+#
+# puts "✅ Attendance Records Created"
+# puts "✅ Seeding complete!"

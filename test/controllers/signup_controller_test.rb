@@ -40,7 +40,7 @@ class SignupControllerTest < ActionDispatch::IntegrationTest
   #   user = User.last
   #   assert_match user.email_address, body
   #   assert_match "Hello #{user.first_name}", body
-  # endx
+  # end
 
   test "should not send email if signup fails" do
     assert_no_emails do

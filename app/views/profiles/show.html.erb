@@ -7,7 +7,7 @@
     <% if current_user.student? && @student.present? %>
       <!-- QR Code Section (Students Only) -->
       <div class="bg-white p-6 rounded-xl flex items-center justify-center">
-        <%= generate_qr_code(@student.uid) %>
+        <%= generate_qr_code(@student) %>
       </div>
     <% end %>
 
