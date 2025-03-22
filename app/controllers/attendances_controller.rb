@@ -75,39 +75,54 @@ class AttendancesController < ApplicationController
 
   # Check-in logic
   def checkin
-    uid = params[:uid]
-    hash = params[:hash]
+    qr_data = params[:qr_data] # Expecting "student_id|school_id"
+    student_id, scanned_school_id = qr_data.split("|").map(&:to_i)
 
-    secret = Rails.application.credentials.secret_key_base
-    expected = Digest::SHA256.hexdigest("#{uid}|#{secret}")
+    student = Student.find_by(id: student_id)
 
-    if hash != expected
-      render json: { success: false, message: "Invalid QR code" }
-      return
-    end
-
-    student = Student.find_by(uid: uid)
     if student.nil?
-      redirect_to root_path, alert: "Student not found."
+      render json: { success: false, message: "Invalid student ID." }, status: :unprocessable_entity
       return
     end
 
+    user = User.find_by(email_address: student.student_email_address)
+
+    if user.nil?
+      render json: { success: false, message: "Student's associated user not found." }, status: :unprocessable_entity
+      return
+    end
+
+    # Ensure the scanned school_id matches the user's school_id
+    if user.school_id != scanned_school_id
+      render json: { success: false, message: "School mismatch. Unauthorized check-in." }, status: :forbidden
+      return
+    end
+
+    # Ensure current user is from the same school
+    if current_user.school_id != user.school_id
+      render json: { success: false, message: "Unauthorized. School mismatch." }, status: :forbidden
+      return
+    end
+
+    # Prevent duplicate check-ins
+    existing_attendance = Attendance.find_by(
+      student: student,
+      created_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day
+    )
+
+    if existing_attendance
+      render json: { success: false, message: "Student already checked in today." }
+      return
+    end
+
+    # Create new attendance record
     attendance = Attendance.create(student: student, timestamp: Time.current, user: current_user)
 
     if attendance.persisted?
       AttendanceMailer.check_in_notification(student, attendance).deliver_later
-      message = "Student checked in successfully at #{Time.current.strftime('%I:%M:%S')}. Parent has been notified."
-
-      respond_to do |format|
-        format.json { render json: { success: true, message: message } }
-        format.html { redirect_to admin_scan_qr_path, notice: message }
-      end
+      render json: { success: true, message: "Student checked in successfully." }
     else
-      message = "Check-in failed."
-      respond_to do |format|
-        format.json { render json: { success: false, message: message } }
-        format.html { redirect_to admin_scan_qr_path, alert: message }
-      end
+      render json: { success: false, message: "Check-in failed." }, status: :internal_server_error
     end
   end
 
