@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   end
 
   # Attendances Routes
-  resources :attendances, only: [:index, :show, :create, :update, :destroy] do
+  resources :attendances, only: [:index, :show, :edit, :create, :update, :destroy] do
     collection do
       get "scan_qr", to: "attendances#scan_qr", as: "scan_qr"
       post "checkin", to: "attendances#checkin"
