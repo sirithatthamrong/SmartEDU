@@ -107,10 +107,25 @@ class AttendancesController < ApplicationController
     attendance = Attendance.create(student: student, timestamp: Time.current, user: current_user)
 
     if attendance.persisted?
-      AttendanceMailer.check_in_notification(student, attendance).deliver_later
-      render json: { success: true, message: "Student checked in successfully." }
+      if student.user.school == 2
+        AttendanceMailer.check_in_notification(student, attendance).deliver_later
+        message = "Student checked in successfully at #{Time.current.strftime('%I:%M:%S')}. Parent has been notified."
+      else
+        respond_to do |format|
+          format.json { render json: { success: false, message: message } }
+        end
+      end
+
+      respond_to do |format|
+        format.json { render json: { success: true, message: message } }
+        format.html { redirect_to admin_scan_qr_path, notice: message }
+      end
     else
-      render json: { success: false, message: "Check-in failed." }, status: :internal_server_error
+      message = "Check-in failed."
+      respond_to do |format|
+        format.json { render json: { success: false, message: message } }
+        format.html { redirect_to admin_scan_qr_path, alert: message }
+      end
     end
   end
 

@@ -64,7 +64,7 @@
       <% end %>
 
       <!-- Scan QR Section -->
-      <% if current_user&.system? || current_user&.principal? || current_user&.teacher? %>
+      <% if(current_user&.system? || current_user&.principal? || current_user&.teacher?) && current_user&.school.tier == 2 %>
         <li>
           <%= link_to scan_qr_attendances_path, class: "flex items-center gap-2" do %>
             <i class="fas fa-qrcode"></i> Scan QR Code
