@@ -1,7 +1,8 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
-require "./test/helpers/authentication_helper"
+require "./test/helpers/integration_test_helper"
+require "./test/helpers/system_test_helper"
 require "minitest/mock"
 
 def ci?
@@ -11,7 +12,9 @@ end
 module SignInHelper
   def sign_in
     user = User.find_by!(role: "principal")
+    Rails.logger.info("Signing in as #{user.email_address}")
     post session_path, params: { email_address: user.email_address, password: "password123", school_id: user.school_id }
+
     follow_redirect!
     assert_response :success, "Login failed: #{response.body}"
   end
@@ -24,7 +27,7 @@ module SignInHelper
 end
 
 class ActionDispatch::IntegrationTest
-  include SignInHelper
+  include IntegrationTestHelper
 end
 
 module ActiveSupport
@@ -42,7 +45,7 @@ module ActiveSupport
 
     def ensure_school_exists
       # Create a default test school if none exists
-      @test_school ||= School.first || School.create!(name: "Test School", address: "123 Test St")
+      @test_school ||= School.first || School.create!(name: "Test School", address: "123 Test St", has_paid: 1)
 
       # Ensure ALL test users (newly created or existing) have a school
       User.where(school_id: nil).find_each do |user|
