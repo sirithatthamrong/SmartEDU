@@ -10,7 +10,7 @@
     <!-- Small Clickable QR Code -->
     <figure class="p-5 flex justify-center">
       <%= link_to "#qr-modal", class: "cursor-pointer", data: { turbo_frame: "qr-modal" } do %>
-        <%= generate_qr_code(@student.uid) %>
+        <%= generate_qr_code(@student) %>
       <% end %>
     </figure>
 
