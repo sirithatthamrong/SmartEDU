@@ -3,10 +3,14 @@ class StudentsController < ApplicationController
   include Pagy::Backend
 
   def index
-    @classroom = Classroom.find_by(id: params[:classroom_id]) if params[:classroom_id].present?
+    @classroom = Classroom.find_by(id: params[:classroom_id], school_id: current_user.school_id) if params[:classroom_id].present?
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
-    students_scope = Student.active
+
+    school_classroom_ids = Classroom.where(school_id: current_user.school_id).pluck(:id)
+    students_scope = Student.active.where(classroom_id: school_classroom_ids)
     students_scope = students_scope.where(grade: params[:grade]) if params[:grade].present?
+    students_scope = students_scope.where(classroom_id: params[:classroom_id]) if params[:classroom_id].present?
+
     @pagy, @students = pagy(students_scope)
   end
 

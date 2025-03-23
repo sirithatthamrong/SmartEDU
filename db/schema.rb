@@ -95,7 +95,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_064023) do
     t.string "uid", null: false
     t.datetime "discarded_at"
     t.boolean "is_active", default: true, null: false
-    t.integer "grade", null: false
+    t.integer "grade"
     t.string "student_email_address", default: "student@example.com", null: false
     t.string "parent_email_address", default: "parent@example.com", null: false
     t.integer "classroom_id", null: false

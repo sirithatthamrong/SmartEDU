@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   get "payments/create"
   get "teachers/index"
   get "teachers/destroy"
-  resources :classrooms, only: [ :index, :show ]
   root "main#index"
   get "main/index"
 
