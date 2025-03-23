@@ -3,10 +3,13 @@ class ClassroomsController < ApplicationController
   before_action :authorize_admin_or_teacher_or_principal!
 
   def index
-    # Only show classrooms for the current user's school
-    @classrooms = Classroom.where(school_id: current_user.school_id).order(:class_id)
-  end
+      first_classroom = Classroom.find_by(school_id: current_user.school_id)
 
+      if first_classroom
+        redirect_to grading_classroom_path(first_classroom) and return
+      end
+    @classrooms = Classroom.where(school_id: current_user.school_id)
+    end
   def show
     # @classroom is already set by before_action
     # If students don't have school_id, we filter by classroom instead

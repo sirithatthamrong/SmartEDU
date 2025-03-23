@@ -54,7 +54,7 @@
           <% end %>
         </td>
         <td><%= student.grade %></td>
-        <td><%= student.classroom_id %></td>
+        <td><%= student.classroom&.class_id %></td>
         <td><%= student.student_email_address %></td>
         <td>
           <div class="flex space-x-2">

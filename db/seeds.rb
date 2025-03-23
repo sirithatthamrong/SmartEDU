@@ -15,8 +15,8 @@ if Rails.env.development? || Rails.env.test?
 end
 
 # Create Schools
-school1 = School.create!(name: "Piti Academy", address: "123 Main St, Bangkok", has_paid: 0)
-school2 = School.create!(name: "Kanat Kitty School", address: "456 Algorithm Rd, Nakhon Pathom", has_paid: 0)
+school1 = School.create!(name: "Piti Academy", address: "123 Main St, Bangkok", has_paid: 1)
+school2 = School.create!(name: "Kanat Kitty School", address: "456 Algorithm Rd, Nakhon Pathom", has_paid: 1)
 
 # Create Classrooms
 classroom1 = Classroom.create!(class_id: "5A", grade_level: 5, school_id: school1.id)
@@ -76,7 +76,7 @@ teacher2 = User.create!(
   personal_email: "jane.doe@example.com",
   email_address: "jane.d@teacher.schoolname.edu",
   password: "password123",
-  role: "teacher", school_id: school2.id, approved: false
+  role: "teacher", school_id: school2.id, approved: true
 )
 
 teacher3 = User.create!(
@@ -84,7 +84,7 @@ teacher3 = User.create!(
   personal_email: "mike.brown@example.com",
   email_address: "mike.b@teacher.schoolname.edu",
   password: "password123",
-  role: "teacher", school_id: school2.id, approved: false
+  role: "teacher", school_id: school2.id, approved: true
 )
 
 # 🎓 Create Student Users (Each Student **MUST** have a User record)
@@ -133,7 +133,7 @@ student3 = Student.create!(
   name: "Harry Singh",
   grade: 6,
   student_email_address: student3_user.email_address,
-  parent_email_address: "parent2@example.com",
+  parent_email_address: "parent3@example.com",
   classroom_id: classroom3.id
 )
 
@@ -160,6 +160,8 @@ TeacherStudentRelationship.create!(teacher_id: teacher3.id, student_id: student3
 # Create Principal-Teacher Relationships
 PrincipalTeacherRelationship.create!(principal_id: principal1.id, teacher_id: teacher1.id)
 PrincipalTeacherRelationship.create!(principal_id: principal2.id, teacher_id: teacher2.id)
+PrincipalTeacherRelationship.create!(principal_id: principal2.id, teacher_id: teacher3.id)
+
 
 puts "✅ Relationships Established"
 
@@ -239,7 +241,7 @@ puts "✅ Seeding complete!"
 # )
 # principal2.update!(password: "password123")
 #
-# # Create Teachers and Assign to Homerooms
+# # Create Teachers and Assign to Homerooms for school1
 # teachers = []
 # (1..12).each do |grade|
 #   teacher = User.create!(
@@ -250,48 +252,123 @@ puts "✅ Seeding complete!"
 #     role: "teacher", school_id: school1.id, approved: true
 #   )
 #   teachers << teacher
-#   Homeroom.create!(teacher_id: teacher.id, classroom_id: classrooms[(grade - 1) * 2].id)
+#   Homeroom.create!(teacher_id: teacher.id, classroom_id: classrooms[(grade - 1) * 4].id)
+# end
+#
+# # Create Teachers and Assign to Homerooms for school2
+# school2_teachers = []
+# (1..12).each do |grade|
+#   teacher = User.create!(
+#     first_name: "Teacher#{grade}S2", last_name: "Last#{grade}S2",
+#     personal_email: "teacher#{grade}s2@example.com",
+#     email_address: "teacher#{grade}s2@schoolname.edu",
+#     password: "password123",
+#     role: "teacher", school_id: school2.id, approved: true
+#   )
+#   school2_teachers << teacher
+#
+#   # Find classroom for this grade in school2
+#   school2_classroom = classrooms.find { |c| c.grade_level == grade && c.school_id == school2.id }
+#   Homeroom.create!(teacher_id: teacher.id, classroom_id: school2_classroom.id)
+#
+#   # Create relationship with principal2
+#   PrincipalTeacherRelationship.create!(principal_id: principal2.id, teacher_id: teacher.id)
 # end
 #
 # puts "✅ Teachers and Homerooms Created"
 #
 # # Create Students
-# # Create Students
 # students = []
+# student_count = 0
+#
+# # Create students for school1 (Piti Academy)
 # (1..12).each do |grade|
-#   student_user = User.create!(
-#     first_name: "Student#{grade}", last_name: "Last#{grade}",
-#     personal_email: "student#{grade}@example.com",
-#     email_address: "student#{grade}@example.com",
-#     password: "randomPassword",
-#     role: "student", school_id: school1.id
-#   )
+#   3.times do |i|
+#     student_count += 1
+#     student_user = User.create!(
+#       first_name: "Student#{student_count}",
+#       last_name: "School1Last#{student_count}",
+#       personal_email: "student#{student_count}@example.com",
+#       email_address: "student#{student_count}@example.com",
+#       password: "randomPassword",
+#       role: "student",
+#       school_id: school1.id
+#     )
 #
-#   # Find a classroom with matching grade level
-#   matching_classroom = classrooms.find { |c| c.grade_level == grade }
+#     # Find a classroom with matching grade level in school1
+#     matching_classroom = classrooms.find { |c| c.grade_level == grade && c.school_id == school1.id }
 #
-#   student = Student.create!(
-#     name: "Student#{grade} Last#{grade}",
-#     grade: grade,
-#     student_email_address: student_user.email_address,
-#     parent_email_address: "parent#{grade}@example.com",
-#     classroom_id: matching_classroom.id
-#   )
-#   students << student
+#     student = Student.create!(
+#       name: "Student#{student_count} School1Last#{student_count}",
+#       grade: grade,
+#       student_email_address: student_user.email_address,
+#       parent_email_address: "parent#{student_count}@example.com",
+#       classroom_id: matching_classroom.id
+#     )
+#     students << student
+#
+#     # Create teacher-student relationship
+#     teacher = teachers.find do |t|
+#       homeroom = Homeroom.find_by(teacher_id: t.id)
+#       if homeroom
+#         classroom = Classroom.find_by(id: homeroom.classroom_id)
+#         classroom && classroom.grade_level == grade
+#       end
+#     end
+#     if teacher
+#       TeacherStudentRelationship.create!(teacher_id: teacher.id, student_id: student_user.id)
+#     end
+#   end
+# end
+#
+# # Create students for school2 (Kanat Kitty School)
+# (1..12).each do |grade|
+#   2.times do |i|
+#     student_count += 1
+#     student_user = User.create!(
+#       first_name: "Student#{student_count}",
+#       last_name: "School2Last#{student_count}",
+#       personal_email: "student#{student_count}@example.com",
+#       email_address: "student#{student_count}@example.com",
+#       password: "randomPassword",
+#       role: "student",
+#       school_id: school2.id
+#     )
+#
+#     # Find a classroom with matching grade level in school2
+#     matching_classroom = classrooms.find { |c| c.grade_level == grade && c.school_id == school2.id }
+#
+#     student = Student.create!(
+#       name: "Student#{student_count} School2Last#{student_count}",
+#       grade: grade,
+#       student_email_address: student_user.email_address,
+#       parent_email_address: "parent#{student_count}@example.com",
+#       classroom_id: matching_classroom.id
+#     )
+#     students << student
+#
+#     # Create teacher-student relationship for school2
+#     teacher = school2_teachers.find do |t|
+#       homeroom = Homeroom.find_by(teacher_id: t.id)
+#       if homeroom
+#         classroom = Classroom.find_by(id: homeroom.classroom_id)
+#         classroom && classroom.grade_level == grade && classroom.school_id == school2.id
+#       end
+#     end
+#
+#     if teacher
+#       TeacherStudentRelationship.create!(teacher_id: teacher.id, student_id: student_user.id)
+#     end
+#   end
 # end
 #
 # puts "✅ Students Created"
-#
-# # Assign Teacher-Student Relationships
-# students.each_with_index do |student, index|
-#   TeacherStudentRelationship.create!(teacher_id: teachers[index].id, student_id: student.id)
-# end
 #
 # # Create School Tiers
 # SchoolTier.create!(school_id: school1.id, tier: "Basic")
 # SchoolTier.create!(school_id: school2.id, tier: "Premium")
 #
-# # Create Principal-Teacher Relationships
+# # Create Principal-Teacher Relationships for school1
 # teachers.each do |teacher|
 #   PrincipalTeacherRelationship.create!(principal_id: principal1.id, teacher_id: teacher.id)
 # end
@@ -300,7 +377,12 @@ puts "✅ Seeding complete!"
 #
 # # Create Attendance Records
 # students.each do |student|
-#   Attendance.create!(student_id: student.id, user_id: teachers.sample.id, timestamp: Time.current)
+#   if student.classroom.school_id == school1.id
+#     teacher = teachers.sample
+#   else
+#     teacher = school2_teachers.sample
+#   end
+#   Attendance.create!(student_id: student.id, user_id: teacher.id, timestamp: Time.current)
 # end
 #
 # puts "✅ Attendance Records Created"
