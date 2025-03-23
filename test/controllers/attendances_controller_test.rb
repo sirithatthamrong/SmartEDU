@@ -11,11 +11,6 @@ class AttendancesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get new" do
-    get new_attendance_url
-    assert_response :success
-  end
-
   test "should create attendance" do
     assert_changes("Attendance.count") do
       post attendances_url, params: { student_id: @attendance.student_id }

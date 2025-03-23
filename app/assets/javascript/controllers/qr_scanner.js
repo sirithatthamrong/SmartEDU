@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    let scanner = new Instascan.Scanner({video: document.getElementById("preview")});
+    let scanner = new Instascan.Scanner({ video: document.getElementById("preview") });
     let activeCamera = null;
     let scanning = true; // Ensure scanning is enabled at the start
     let qrFrame = document.getElementById("qr-frame");
@@ -14,14 +14,14 @@ document.addEventListener("DOMContentLoaded", function () {
         qrFrame.classList.add("flash-effect");
         setTimeout(() => qrFrame.classList.remove("flash-effect"), 500);
 
-        let parts = content.split(",");
+        let parts = content.split("|"); // New format: "student_id|school_id"
         if (parts.length !== 2) {
             showNotification("Invalid QR code! Please scan a valid check-in code.", "error");
             return resumeScanning();
         }
 
-        let [uid, hash] = parts.map(part => part.trim());
-        if (!uid || !hash) {
+        let [student_id, school_id] = parts.map(part => part.trim());
+        if (!student_id || !school_id) {
             showNotification("Invalid QR code! Missing required data.", "error");
             return resumeScanning();
         }
@@ -32,11 +32,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 "Content-Type": "application/json",
                 "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').content,
             },
-            body: JSON.stringify({uid: uid, hash: hash})
+            body: JSON.stringify({ qr_data: `${student_id}|${school_id}` }) // Send new format
         })
             .then(response => response.json())
             .then(data => {
-                showNotification(data.message || "Check-in failed!", "success");
+                showNotification(data.message || "Check-in failed!", data.success ? "success" : "error");
                 scanning = true;
             })
             .catch(error => {
@@ -64,7 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
     function resumeScanning() {
         scanning = true; // Allow scanning again immediately after delay
     }
-
 
     function showNotification(message, type) {
         let notification = document.createElement("div");
