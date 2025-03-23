@@ -32,7 +32,7 @@ async function initializeDataTable() {
         pageLength: 10,
         language: {
             search: "",
-            searchPlaceholder: "Search students...",
+            searchPlaceholder: "Search by name...",
         },
         initComplete: function () {
             styleDataTableElements();
