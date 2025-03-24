@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get "settings/show"
+  get "settings/update"
   get "payments/new"
   get "payments/create"
   get "teachers/index"
@@ -79,4 +81,8 @@ Rails.application.routes.draw do
   # Teachers & Users
   resources :teachers, only: [ :index, :destroy ]
   resources :users, only: [ :index, :destroy ]
+
+  # Settings (Themes)
+  get "/settings", to: "settings#show"
+  patch "/settings", to: "settings#update"
 end

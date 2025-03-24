@@ -81,6 +81,15 @@
         <% end %>
       </li>
 
+      <!-- Settings Section -->
+      <% if current_user&.admin? || current_user&.principal? %>
+        <li>
+          <%= link_to settings_path, class: "flex items-center gap-2" do %>
+            <i class="fas fa-cogs"></i> Settings
+          <% end %>
+        </li>
+      <% end %>
+
       <!-- Logout -->
       <li>
         <%= link_to logout_path, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>

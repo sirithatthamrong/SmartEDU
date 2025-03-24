@@ -1,0 +1,36 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: color_themes
+#
+#  id              :integer          not null, primary key
+#  accent_color    :string
+#  neutral_color   :string
+#  primary_color   :string
+#  secondary_color :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  school_id       :integer          not null
+#
+# Indexes
+#
+#  index_color_themes_on_school_id  (school_id)
+#
+# Foreign Keys
+#
+#  school_id  (school_id => schools.id)
+#
+one:
+  school: one
+  primary_color: MyString
+  secondary_color: MyString
+  accent_color: MyString
+  neutral_color: MyString
+
+two:
+  school: two
+  primary_color: MyString
+  secondary_color: MyString
+  accent_color: MyString
+  neutral_color: MyString

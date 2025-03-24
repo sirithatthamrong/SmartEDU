@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="html" data-theme="pastel">
 <head>
+  <% if current_user&.school&.color_theme.present? %>
+    <style>
+        :root {
+            --primary: <%= current_user.school.color_theme.primary_color %>;
+            --secondary: <%= current_user.school.color_theme.secondary_color %>;
+            --accent: <%= current_user.school.color_theme.accent_color %>;
+            --neutral: <%= current_user.school.color_theme.neutral_color %>;
+        }
+    </style>
+  <% end %>
   <title><%= content_for(:title) || "Schooler" %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">

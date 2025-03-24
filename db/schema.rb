@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_21_064023) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_23_013748) do
   create_table "Users", force: :cascade do |t|
     t.string "email_address", null: false
     t.string "password_digest", null: false
@@ -44,6 +44,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_064023) do
     t.datetime "updated_at", null: false
     t.integer "school_id"
     t.index ["school_id", "class_id"], name: "index_classrooms_on_school_id_and_class_id", unique: true
+  end
+
+  create_table "color_themes", force: :cascade do |t|
+    t.integer "school_id", null: false
+    t.string "primary_color"
+    t.string "secondary_color"
+    t.string "accent_color"
+    t.string "neutral_color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_color_themes_on_school_id"
   end
 
   create_table "homerooms", force: :cascade do |t|
@@ -131,6 +142,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_21_064023) do
   add_foreign_key "Users", "schools"
   add_foreign_key "attendances", "students"
   add_foreign_key "attendances", "users"
+  add_foreign_key "color_themes", "schools"
   add_foreign_key "homerooms", "classrooms"
   add_foreign_key "homerooms", "users", column: "teacher_id"
   add_foreign_key "payments", "users"
