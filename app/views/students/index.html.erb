@@ -6,19 +6,6 @@
 
   <!-- Filter + Button -->
   <div class="flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-4 md:space-y-0 px-4 md:px-6 justify-end space-x-4 px-6">
-    <!-- Filter by Grade -->
-    <div class="flex items-center justify-end space-x-4 mt-2">
-      <label for="grade" class="text-center">Filter by Grade:</label>
-      <%= form_with(url: students_path, method: :get, local: true, class: "inline-block", id: "gradeFilterForm") do %>
-        <select name="grade" id="grade" class="border rounded-xl px-3 py-2">
-          <option value="">All Grades</option>
-          <% @grades.each do |grade| %>
-            <option value="<%= grade %>" <%= "selected" if params[:grade] == grade.to_s %>><%= grade %></option>
-          <% end %>
-        </select>
-      <% end %>
-    </div>
-
     <!-- Buttons -->
     <% if current_user&.can_manage_teachers? %>
       <div class="flex flex-wrap items-center gap-2">
@@ -34,6 +21,19 @@
         <% end %>
       </div>
     <% end %>
+
+    <!-- Filter by Grade -->
+    <div class="flex items-center justify-end space-x-4 mt-2">
+      <label for="grade" class="text-center">Filter by Grade:</label>
+      <%= form_with(url: students_path, method: :get, local: true, class: "inline-block", id: "gradeFilterForm") do %>
+        <select name="grade" id="grade" class="border rounded-xl px-3 py-2">
+          <option value="">All Grades</option>
+          <% @grades.each do |grade| %>
+            <option value="<%= grade %>" <%= "selected" if params[:grade] == grade.to_s %>><%= grade %></option>
+          <% end %>
+        </select>
+      <% end %>
+    </div>
   </div>
 
   <!-- Student Table -->
