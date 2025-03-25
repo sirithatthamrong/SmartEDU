@@ -13,12 +13,6 @@ module.exports = {
       fontFamily: {
         sans: ["Inter var", ...defaultTheme.fontFamily.sans],
       },
-      colors: {
-        primary: 'var(--primary)',
-        secondary: 'var(--secondary)',
-        tertiary: 'var(--tertiary)',
-        accent: 'var(--accent)',
-      },
     },
   },
   plugins: [
@@ -26,18 +20,33 @@ module.exports = {
     require("daisyui"),
   ],
   // daisyui: {
-  //   themes: ["light", "dark", "pastel"], // optional preset themes
-  //   darkTheme: "dark", // if you use dark mode
-  // },
+  //   themes: [
+  //     {
+  //       pastel: {
+  //         "primary": "hsl(var(--p) / <alpha-value>)",
+  //         "secondary": "hsl(var(--s) / <alpha-value>)",
+  //         "accent": "hsl(var(--a) / <alpha-value>)",
+  //         "base-100": "hsl(var(--bc) / <alpha-value>)",
+  //       },
+  //     },
+  //   ],
+  //   defaultTheme: "pastel",
+  // }
+  daisyui: {
+    themes: ["light", "dark", "pastel"],
+    darkTheme: "dark", // if you use dark mode
+  },
   daisyui: {
     themes: [
       {
         mytheme: {
           "primary": "var(--primary)",
           "secondary": "var(--secondary)",
-          "tertiary": "var(--tertiary)",
           "accent": "var(--accent)",
-          "base-100": "#FFFFFF",
+          "base-100": "var(--base-100)",
+          "base-200": "var(--base-200)",
+          "base-300": "var(--base-300)",
+          "base-content": "var(--background)",
           "info": "#3ABFF8",
           "success": "#36D399",
           "warning": "#FBBD23",
@@ -45,5 +54,7 @@ module.exports = {
         },
       },
     ],
+    defaultTheme: "mytheme",
   },
+
 };

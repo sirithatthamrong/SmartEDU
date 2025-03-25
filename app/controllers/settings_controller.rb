@@ -30,8 +30,8 @@ class SettingsController < ApplicationController
     {
       primary_color: "#8294C4",
       secondary_color: "#ACB1D6",
-      tertiary_color: "#DBDFEA",
       accent_color: "#FFEAD2",
+      background_color: "#FFFFFF"
     }
   end
 
@@ -39,8 +39,8 @@ class SettingsController < ApplicationController
     params.require(:color_theme).permit(
       :primary_color,
       :secondary_color,
-      :tertiary_color,
       :accent_color,
+      :background_color,
     )
   end
 

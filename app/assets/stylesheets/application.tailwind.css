@@ -1,11 +1,10 @@
 @import "pages/students.css";
 @import "pages/approval.css";
+@import "tailwindcss";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/*
 
 @layer components {
   .btn-primary {
@@ -13,7 +12,6 @@
   }
 }
 
-*/
 .pagy {
     @apply flex space-x-1 font-semibold text-sm text-gray-500;
 
@@ -63,4 +61,23 @@ th, td {
 
 .animate-fade {
     animation: fade 0.5s ease-in-out;
+}
+
+/* Global theme-aware button styles using CSS variables */
+[data-theme="mytheme"] .btn-primary {
+    background-color: var(--primary) !important;
+    color: white !important;
+    border: none;
+}
+
+[data-theme="mytheme"] .btn-secondary {
+    background-color: var(--secondary) !important;
+    color: white !important;
+    border: none;
+}
+
+[data-theme="mytheme"] .btn-accent {
+    background-color: var(--accent) !important;
+    color: white !important;
+    border: none;
 }

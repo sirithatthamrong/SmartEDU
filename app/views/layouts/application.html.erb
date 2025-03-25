@@ -1,7 +1,18 @@
 <!DOCTYPE html>
-<html lang="html" data-theme="pastel">
+<html lang="html" data-theme="mytheme">
 <head>
+  <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+  <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
   <% if current_user&.school&.color_theme.present? %>
+    <style>
+        :root {
+            --primary: <%= current_user.school.color_theme.primary_color %>;
+            --secondary: <%= current_user.school.color_theme.secondary_color %>;
+            --accent: <%= current_user.school.color_theme.accent_color %>;
+            --background: <%= current_user.school.color_theme.background_color %>;
+        }
+    </style>
   <% end %>
   <title><%= content_for(:title) || "Schooler" %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">

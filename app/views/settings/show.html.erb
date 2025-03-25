@@ -13,8 +13,8 @@
       <% {
            "Primary" => @color_theme.primary_color,
            "Secondary" => @color_theme.secondary_color,
-           "Tertiary" => @color_theme.tertiary_color,
-           "Accent" => @color_theme.accent_color
+           "Accent" => @color_theme.accent_color,
+           "Background" => @color_theme.background_color
          }.each do |label, hex| %>
         <div class="rounded-lg shadow p-4 text-center border" style="background-color: <%= hex %>;">
           <div class="text-sm font-semibold text-gray-700 bg-white bg-opacity-80 rounded px-2 inline-block mb-2"><%= label %></div>
@@ -79,13 +79,13 @@
             </div>
 
             <div class="pt-4 text-center">
-              <a href="#" class="hover:underline" style="color: <%= @color_theme.secondary_color %>;">
+              <a href="#" class="hover:underline" style="color: <%= @color_theme.primary_color %>;">
                 Forgot password?
               </a>
             </div>
 
             <div class="pt-4 text-center">
-              <a href="#" class="hover:underline" style="color: <%= @color_theme.tertiary_color %>;">
+              <a href="#" class="hover:underline" style="color: <%= @color_theme.secondary_color %>;">
                 Back to home
               </a>
             </div>
