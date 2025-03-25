@@ -32,7 +32,6 @@ class SettingsController < ApplicationController
       secondary_color: "#ACB1D6",
       tertiary_color: "#DBDFEA",
       accent_color: "#FFEAD2",
-      background_color: "#FFFFFF"
     }
   end
 
@@ -42,8 +41,6 @@ class SettingsController < ApplicationController
       :secondary_color,
       :tertiary_color,
       :accent_color,
-      :background_color,
-      :neutral_color
     )
   end
 

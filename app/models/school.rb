@@ -30,8 +30,7 @@ class School < ApplicationRecord
       primary_color: "#8294C4",
       secondary_color: "#ACB1D6",
       tertiary_color: "#DBDFEA",
-      accent_color: "#FFEAD2",
-      background_color: "#FFFFFF"
+      accent: "#FFEAD2"
     )
   end
 end

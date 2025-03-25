@@ -6,7 +6,6 @@ class CreateColorThemes < ActiveRecord::Migration[8.0]
       t.string :secondary_color
       t.string :tertiary_color
       t.string :accent_color
-      t.string :background_color
 
       t.timestamps
     end

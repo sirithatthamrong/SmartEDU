@@ -16,8 +16,8 @@ module.exports = {
       colors: {
         primary: 'var(--primary)',
         secondary: 'var(--secondary)',
+        tertiary: 'var(--tertiary)',
         accent: 'var(--accent)',
-        neutral: 'var(--neutral)',
       },
     },
   },
@@ -25,8 +25,25 @@ module.exports = {
     require("@tailwindcss/typography"),
     require("daisyui"),
   ],
+  // daisyui: {
+  //   themes: ["light", "dark", "pastel"], // optional preset themes
+  //   darkTheme: "dark", // if you use dark mode
+  // },
   daisyui: {
-    themes: ["light", "dark", "pastel"], // optional preset themes
-    darkTheme: "dark", // if you use dark mode
+    themes: [
+      {
+        mytheme: {
+          "primary": "var(--primary)",
+          "secondary": "var(--secondary)",
+          "tertiary": "var(--tertiary)",
+          "accent": "var(--accent)",
+          "base-100": "#FFFFFF",
+          "info": "#3ABFF8",
+          "success": "#36D399",
+          "warning": "#FBBD23",
+          "error": "#F87272",
+        },
+      },
+    ],
   },
 };

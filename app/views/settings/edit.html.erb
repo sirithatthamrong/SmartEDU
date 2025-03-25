@@ -25,11 +25,6 @@
           <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
         </div>
 
-        <div class="mb-4">
-          <%= f.label :background_color, "Background Color", class: "block font-semibold mb-1" %>
-          <%= f.color_field :background_color, id: "background-color", class: "w-full h-12 p-2 rounded" %>
-        </div>
-
         <div class="flex gap-4 mt-6">
           <%= f.submit "Apply & Save", class: "btn btn-primary" %>
           <%= link_to "Back", settings_path, class: "btn btn-secondary" %>
@@ -38,8 +33,9 @@
     </div>
 
     <!-- Right: Live Preview -->
-    <div id="preview-bg" class="min-h-[32rem] flex flex-col md:flex-row items-center justify-center rounded-xl overflow-hidden shadow-xl w-full" style="background: linear-gradient(to right, #FFEAD2, #8294C4);">
-      <!-- Logo Section -->
+    <div id="preview-bg"
+         class="min-h-[32rem] flex flex-col md:flex-row items-center justify-center p-6 gap-4 rounded-xl overflow-hidden shadow-xl w-full"
+         style="background: linear-gradient(to right, <%= @color_theme.accent_color %>, <%= @color_theme.primary_color %>);">      <!-- Logo Section -->
       <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
         <div class="max-w-md w-full text-center md:text-left">
           <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
@@ -59,13 +55,13 @@
               <input
                 type="email"
                 placeholder="Enter your email address"
-                class="preview-input input input-bordered w-full mb-2 mt-2"
+                class="input input-bordered w-full mb-2 mt-2"
                 disabled
               >
               <input
                 type="password"
                 placeholder="Enter your password"
-                class="preview-input input input-bordered w-full mb-2"
+                class="input input-bordered w-full mb-2"
                 disabled
               >
               <!-- Sign In button (Primary) -->
