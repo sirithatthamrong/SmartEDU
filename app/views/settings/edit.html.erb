@@ -36,16 +36,69 @@
   </div>
 
   <!-- Right: Live Preview -->
-  <div>
-    <h2 class="text-xl font-semibold mb-4">Live Preview</h2>
+  <div id="preview-bg" class="min-h-[32rem] flex flex-col md:flex-row items-center justify-center rounded-xl overflow-hidden shadow-xl w-full" style="background: linear-gradient(to right, #FFEAD2, #8294C4);">
+    <!-- Logo Section -->
+    <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
+      <div class="max-w-md w-full text-center md:text-left">
+        <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
+        <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
+          <%= render "shared/logo_text" %>
+        </div>
+      </div>
+    </div>
 
-    <div class="p-6 rounded-2xl shadow-xl space-y-4" id="preview-bg">
-      <h3 class="text-2xl font-bold" id="preview-header">This is a header</h3>
-      <p id="preview-text">Here’s some preview text using your secondary color.</p>
+    <!-- Sign In Preview Section -->
+    <div class="flex justify-start w-full md:w-1/2 px-6">
+      <div class="max-w-md w-full">
+        <div id="preview-card" class="student-card max-w-md w-full p-8 bg-white rounded-2xl shadow-2xl">
+          <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
 
-      <div class="flex gap-3">
-        <button class="btn" id="preview-primary-btn">Primary Button</button>
-        <button class="btn" id="preview-tertiary-btn">Tertiary Button</button>
+          <form action="#" method="post" autocomplete="on">
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              class="preview-input input input-bordered w-full mb-2 mt-2"
+              disabled
+            >
+            <input
+              type="password"
+              placeholder="Enter your password"
+              class="preview-input input input-bordered w-full mb-2"
+              disabled
+            >
+            <!-- Sign In button (Primary) -->
+            <button
+              class="btn w-full mt-4"
+              id="preview-primary-btn"
+              type="button"
+            >
+              Sign In
+            </button>
+          </form>
+
+          <div class="mt-2">
+            <!-- Sign Up button (Accent) -->
+            <button
+              type="button"
+              class="btn w-full py-3 font-semibold transition-all duration-300"
+              id="preview-accent-btn"
+            >
+              Sign Up
+            </button>
+          </div>
+
+          <div class="pt-4 text-center">
+            <a href="#" id="preview-secondary-link" class="hover:underline">
+              Forgot password?
+            </a>
+          </div>
+
+          <div class="pt-4 text-center">
+            <a href="#" id="preview-tertiary-link" class="hover:underline">
+              Back to home
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </div>
