@@ -37,7 +37,14 @@ class SettingsController < ApplicationController
   end
 
   def color_theme_params
-    params.require(:color_theme).permit(:primary_color, :secondary_color, :accent_color, :neutral_color)
+    params.require(:color_theme).permit(
+      :primary_color,
+      :secondary_color,
+      :tertiary_color,
+      :accent_color,
+      :background_color,
+      :neutral_color
+    )
   end
 
   def authorize_admin_or_principal!

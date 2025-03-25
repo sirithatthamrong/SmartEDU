@@ -1,102 +1,105 @@
-<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
-  <!-- Left: Form -->
-  <div>
-    <h1 class="text-3xl font-bold mb-4">Customize Theme</h1>
+<div class="p-6">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <!-- Left: Form -->
+    <div>
+      <h1 class="text-3xl font-bold mb-4">Customize Theme</h1>
 
-    <%= form_with model: @color_theme, url: settings_path, method: :patch do |f| %>
-      <div class="mb-4">
-        <%= f.label :primary_color, "Primary Color", class: "block font-semibold mb-1" %>
-        <%= f.color_field :primary_color, id: "primary-color", class: "w-full h-12 p-2 rounded" %>
-      </div>
-
-      <div class="mb-4">
-        <%= f.label :secondary_color, "Secondary Color", class: "block font-semibold mb-1" %>
-        <%= f.color_field :secondary_color, id: "secondary-color", class: "w-full h-12 p-2 rounded" %>
-      </div>
-
-      <div class="mb-4">
-        <%= f.label :tertiary_color, "Tertiary Color", class: "block font-semibold mb-1" %>
-        <%= f.color_field :tertiary_color, id: "tertiary-color", class: "w-full h-12 p-2 rounded" %>
-      </div>
-
-      <div class="mb-4">
-        <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
-        <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
-      </div>
-
-      <div class="mb-4">
-        <%= f.label :background_color, "Background Color", class: "block font-semibold mb-1" %>
-        <%= f.color_field :background_color, id: "background-color", class: "w-full h-12 p-2 rounded" %>
-      </div>
-
-      <div class="flex gap-4 mt-6">
-        <%= f.submit "Apply & Save", class: "btn btn-primary" %>
-      </div>
-    <% end %>
-  </div>
-
-  <!-- Right: Live Preview -->
-  <div id="preview-bg" class="min-h-[32rem] flex flex-col md:flex-row items-center justify-center rounded-xl overflow-hidden shadow-xl w-full" style="background: linear-gradient(to right, #FFEAD2, #8294C4);">
-    <!-- Logo Section -->
-    <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
-      <div class="max-w-md w-full text-center md:text-left">
-        <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
-        <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
-          <%= render "shared/logo_text" %>
+      <%= form_with model: @color_theme, url: settings_path, method: :patch do |f| %>
+        <div class="mb-4">
+          <%= f.label :primary_color, "Primary Color", class: "block font-semibold mb-1" %>
+          <%= f.color_field :primary_color, id: "primary-color", class: "w-full h-12 p-2 rounded" %>
         </div>
-      </div>
+
+        <div class="mb-4">
+          <%= f.label :secondary_color, "Secondary Color", class: "block font-semibold mb-1" %>
+          <%= f.color_field :secondary_color, id: "secondary-color", class: "w-full h-12 p-2 rounded" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :tertiary_color, "Tertiary Color", class: "block font-semibold mb-1" %>
+          <%= f.color_field :tertiary_color, id: "tertiary-color", class: "w-full h-12 p-2 rounded" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
+          <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
+        </div>
+
+        <div class="mb-4">
+          <%= f.label :background_color, "Background Color", class: "block font-semibold mb-1" %>
+          <%= f.color_field :background_color, id: "background-color", class: "w-full h-12 p-2 rounded" %>
+        </div>
+
+        <div class="flex gap-4 mt-6">
+          <%= f.submit "Apply & Save", class: "btn btn-primary" %>
+          <%= link_to "Back", settings_path, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
     </div>
 
-    <!-- Sign In Preview Section -->
-    <div class="flex justify-start w-full md:w-1/2 px-6">
-      <div class="max-w-md w-full">
-        <div id="preview-card" class="student-card max-w-md w-full p-8 bg-white rounded-2xl shadow-2xl">
-          <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
-
-          <form action="#" method="post" autocomplete="on">
-            <input
-              type="email"
-              placeholder="Enter your email address"
-              class="preview-input input input-bordered w-full mb-2 mt-2"
-              disabled
-            >
-            <input
-              type="password"
-              placeholder="Enter your password"
-              class="preview-input input input-bordered w-full mb-2"
-              disabled
-            >
-            <!-- Sign In button (Primary) -->
-            <button
-              class="btn w-full mt-4"
-              id="preview-primary-btn"
-              type="button"
-            >
-              Sign In
-            </button>
-          </form>
-
-          <div class="mt-2">
-            <!-- Sign Up button (Accent) -->
-            <button
-              type="button"
-              class="btn w-full py-3 font-semibold transition-all duration-300"
-              id="preview-accent-btn"
-            >
-              Sign Up
-            </button>
+    <!-- Right: Live Preview -->
+    <div id="preview-bg" class="min-h-[32rem] flex flex-col md:flex-row items-center justify-center rounded-xl overflow-hidden shadow-xl w-full" style="background: linear-gradient(to right, #FFEAD2, #8294C4);">
+      <!-- Logo Section -->
+      <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
+        <div class="max-w-md w-full text-center md:text-left">
+          <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
+          <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
+            <%= render "shared/logo_text" %>
           </div>
+        </div>
+      </div>
 
-          <div class="pt-4 text-center">
-            <a href="#" id="preview-secondary-link" class="hover:underline">
-              Forgot password?
-            </a>
-          </div>
+      <!-- Sign In Preview Section -->
+      <div class="flex justify-start w-full md:w-1/2 px-6">
+        <div class="max-w-md w-full">
+          <div id="preview-card" class="student-card max-w-md w-full p-8 bg-white rounded-2xl shadow-2xl">
+            <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
 
-          <div class="pt-4 text-center">
-            <a href="#" id="preview-tertiary-link" class="hover:underline">
-              Back to home
-            </a>
+            <form action="#" method="post" autocomplete="on">
+              <input
+                type="email"
+                placeholder="Enter your email address"
+                class="preview-input input input-bordered w-full mb-2 mt-2"
+                disabled
+              >
+              <input
+                type="password"
+                placeholder="Enter your password"
+                class="preview-input input input-bordered w-full mb-2"
+                disabled
+              >
+              <!-- Sign In button (Primary) -->
+              <button
+                class="btn w-full mt-4"
+                id="preview-primary-btn"
+                type="button"
+              >
+                Sign In
+              </button>
+            </form>
+
+            <div class="mt-2">
+              <!-- Sign Up button (Accent) -->
+              <button
+                type="button"
+                class="btn w-full py-3 font-semibold transition-all duration-300"
+                id="preview-accent-btn"
+              >
+                Sign Up
+              </button>
+            </div>
+
+            <div class="pt-4 text-center">
+              <a href="#" id="preview-secondary-link" class="hover:underline">
+                Forgot password?
+              </a>
+            </div>
+
+            <div class="pt-4 text-center">
+              <a href="#" id="preview-tertiary-link" class="hover:underline">
+                Back to home
+              </a>
+            </div>
           </div>
         </div>
       </div>
