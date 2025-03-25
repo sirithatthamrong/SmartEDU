@@ -4,8 +4,9 @@ class CreateColorThemes < ActiveRecord::Migration[8.0]
       t.references :school, null: false, foreign_key: true
       t.string :primary_color
       t.string :secondary_color
+      t.string :tertiary_color
       t.string :accent_color
-      t.string :neutral_color
+      t.string :background_color
 
       t.timestamps
     end

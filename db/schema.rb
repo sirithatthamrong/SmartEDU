@@ -50,8 +50,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_013748) do
     t.integer "school_id", null: false
     t.string "primary_color"
     t.string "secondary_color"
+    t.string "tertiary_color"
     t.string "accent_color"
-    t.string "neutral_color"
+    t.string "background_color"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["school_id"], name: "index_color_themes_on_school_id"

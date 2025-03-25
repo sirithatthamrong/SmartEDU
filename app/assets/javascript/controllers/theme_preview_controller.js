@@ -1,43 +1,43 @@
 // app/javascript/controllers/theme_preview_controller.js
 document.addEventListener("DOMContentLoaded", function () {
-    // Grab all input elements
-    const primaryInput   = document.getElementById("primary-color");
-    const secondaryInput = document.getElementById("secondary-color");
-    const accentInput    = document.getElementById("accent-color");
-    const neutralInput   = document.getElementById("neutral-color");
+    // Input fields
+    const primaryInput     = document.getElementById("primary-color");
+    const secondaryInput   = document.getElementById("secondary-color");
+    const tertiaryInput    = document.getElementById("tertiary-color");
+    const accentInput      = document.getElementById("accent-color");
+    const backgroundInput  = document.getElementById("background-color");
 
-    // Grab preview elements
-    const previewHeader = document.getElementById("preview-header");
-    const previewText   = document.getElementById("preview-text");
-    const previewBg     = document.getElementById("preview-bg");
-    const primaryBtn    = document.getElementById("preview-primary-btn");
-    const accentBtn     = document.getElementById("preview-accent-btn");
+    // Preview elements
+    const previewHeader    = document.getElementById("preview-header");
+    const previewText      = document.getElementById("preview-text");
+    const previewBg        = document.getElementById("preview-bg");
+    const primaryBtn       = document.getElementById("preview-primary-btn");
+    const tertiaryBtn      = document.getElementById("preview-tertiary-btn");
 
-    // A helper function to update the preview area
     function updatePreview() {
-        const primary   = primaryInput?.value || "#000000";
-        const secondary = secondaryInput?.value || "#000000";
-        const accent    = accentInput?.value || "#000000";
-        const neutral   = neutralInput?.value || "#FFFFFF";
+        const primary    = primaryInput?.value     || "#000000";
+        const secondary  = secondaryInput?.value   || "#000000";
+        const tertiary   = tertiaryInput?.value    || "#000000";
+        const accent     = accentInput?.value      || "#000000";
+        const background = backgroundInput?.value  || "#FFFFFF";
 
         previewHeader.style.color = primary;
         previewText.style.color   = secondary;
-        previewBg.style.backgroundColor = neutral;
+        previewBg.style.backgroundColor = background;
 
         primaryBtn.style.backgroundColor = primary;
-        primaryBtn.style.color = "#FFFFFF"; // or pick a contrasting color
+        primaryBtn.style.color = "#FFFFFF";
 
-        accentBtn.style.backgroundColor = accent;
-        accentBtn.style.color = "#000000"; // or pick a contrasting color
+        tertiaryBtn.style.backgroundColor = tertiary;
+        tertiaryBtn.style.color = "#000000";
     }
 
-    // Listen for changes on each color input
-    [primaryInput, secondaryInput, accentInput, neutralInput].forEach(input => {
+    // Add listeners
+    [primaryInput, secondaryInput, tertiaryInput, accentInput, backgroundInput].forEach(input => {
         if (input) {
             input.addEventListener("input", updatePreview);
         }
     });
 
-    // Run once on page load, so the preview matches any existing saved colors
     updatePreview();
 });
