@@ -1,5 +1,6 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy ]
+  skip_before_action :set_student, only: [:classrooms_by_grade]
   include Pagy::Backend
 
   def index
@@ -163,6 +164,12 @@ class StudentsController < ApplicationController
       format.html { redirect_to students_path, notice: "#{ @student.name } was successfully archived." }
       format.json { head :no_content }
     end
+  end
+
+  def classrooms_by_grade
+    @grade = params[:grade].to_i
+    @classrooms = Classroom.where(school_id: current_user.school_id, grade_level: @grade).order(:class_id)
+    render json: @classrooms.select(:id, :class_id)
   end
 
   private
