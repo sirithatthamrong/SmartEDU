@@ -1,6 +1,6 @@
 class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy ]
-  skip_before_action :set_student, only: [:classrooms_by_grade]
+  skip_before_action :set_student, only: [ :classrooms_by_grade ]
   include Pagy::Backend
 
   def index
