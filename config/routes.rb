@@ -83,6 +83,5 @@ Rails.application.routes.draw do
   resources :users, only: [ :index, :destroy ]
 
   # Settings (Themes)
-  get "/settings", to: "settings#show"
-  patch "/settings", to: "settings#update"
+  resource :settings, only: [:show, :edit, :update]
 end

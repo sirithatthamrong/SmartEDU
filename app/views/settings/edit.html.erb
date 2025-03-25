@@ -1,0 +1,50 @@
+<%# app/views/settings/edit.html.erb %>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+  <!-- Left: Color Form -->
+  <div>
+    <h1 class="text-3xl font-bold mb-4">Customize Theme</h1>
+
+    <%= form_with model: @color_theme, url: settings_path, method: :patch do |f| %>
+      <div class="mb-4">
+        <%= f.label :primary_color, "Primary Color", class: "block font-semibold mb-1" %>
+        <%= f.color_field :primary_color, id: "primary-color", class: "w-full h-12 p-2 rounded" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :secondary_color, "Secondary Color", class: "block font-semibold mb-1" %>
+        <%= f.color_field :secondary_color, id: "secondary-color", class: "w-full h-12 p-2 rounded" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
+        <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
+      </div>
+
+      <div class="mb-4">
+        <%= f.label :neutral_color, "Neutral Color", class: "block font-semibold mb-1" %>
+        <%= f.color_field :neutral_color, id: "neutral-color", class: "w-full h-12 p-2 rounded" %>
+      </div>
+
+      <div class="flex gap-4 mt-6">
+        <!-- Removed the "Try" button; only "Apply & Save" remains -->
+        <%= f.submit "Apply & Save", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Right: Live Preview -->
+  <div>
+    <h2 class="text-xl font-semibold mb-4">Live Preview</h2>
+
+    <div class="p-6 rounded-2xl shadow-xl space-y-4" id="preview-bg">
+      <h3 class="text-2xl font-bold" id="preview-header">This is a header</h3>
+      <p id="preview-text">Here’s some preview text using your secondary color.</p>
+
+      <div class="flex gap-3">
+        <button class="btn" id="preview-primary-btn">Primary Button</button>
+        <button class="btn" id="preview-accent-btn">Accent Button</button>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_include_tag "controllers/theme_preview_controller" %>

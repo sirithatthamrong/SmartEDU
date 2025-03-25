@@ -2,14 +2,6 @@
 <html lang="html" data-theme="pastel">
 <head>
   <% if current_user&.school&.color_theme.present? %>
-    <style>
-        :root {
-            --primary: <%= current_user.school.color_theme.primary_color %>;
-            --secondary: <%= current_user.school.color_theme.secondary_color %>;
-            --accent: <%= current_user.school.color_theme.accent_color %>;
-            --neutral: <%= current_user.school.color_theme.neutral_color %>;
-        }
-    </style>
   <% end %>
   <title><%= content_for(:title) || "Schooler" %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -46,7 +38,6 @@
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 
 </head>
-
 <body class="<%= 'pt-10' if current_user&.approved? && current_user&.school&.has_paid?%>">
 <% if current_user&.approved? && current_user&.school&.has_paid? %>
   <%= render "layouts/nav" %>
@@ -56,6 +47,5 @@
 <% else %>
   <%= yield %>
 <% end %>
-
 </body>
 </html>

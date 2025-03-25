@@ -1,0 +1,12 @@
+<h1 class="text-2xl font-bold mb-4">Current Theme</h1>
+
+<ul class="space-y-2">
+  <li>Primary: <span style="color:<%= @color_theme.primary_color %>"><%= @color_theme.primary_color %></span></li>
+  <li>Secondary: <span style="color:<%= @color_theme.secondary_color %>"><%= @color_theme.secondary_color %></span></li>
+  <li>Accent: <span style="color:<%= @color_theme.accent_color %>"><%= @color_theme.accent_color %></span></li>
+  <li>Neutral: <span style="color:<%= @color_theme.neutral_color %>"><%= @color_theme.neutral_color %></span></li>
+</ul>
+
+<div class="mt-6">
+  <%= link_to "Edit Theme", edit_settings_path, class: "btn btn-primary" %>
+</div>
