@@ -89,4 +89,3 @@ function styleDataTableElements() {
 }
 
 initializeDataTable().then(r => console.log("DataTable initialized!"));
-
