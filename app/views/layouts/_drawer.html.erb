@@ -22,7 +22,7 @@
         </li>
 
       <!-- Management Section -->
-      <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
+         <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
         <li>
           <details>
             <summary class="font-semibold flex items-center gap-2">
@@ -42,6 +42,11 @@
                     <i class="fas fa-chalkboard-teacher"></i> Manage Teachers
                   <% end %></li>
               <% end %>
+              <% if current_user&.can_manage_teachers? %>
+                <li><%= link_to manage_classrooms_path, class: "flex items-center gap-2" do %>
+                    <i class="fas fa-chalkboard-teacher"></i> Manage Classroom
+                  <% end %></li>
+                <% end %>
             </ul>
           </details>
         </li>
@@ -73,14 +78,34 @@
       <% end %>
 
       <!-- Grades Section -->
+      <!-- Grades Section -->
       <li>
-        <% if  @classroom.present? || current_user&.teacher? || current_user&.principal? || current_user&.admin? %>
-          <%= link_to grading_classroom_path(@classroom || Classroom.first), class: "flex items-center gap-2" do %>
-            <i class="fas fa-graduation-cap"></i> Grades
+        <% if current_user&.teacher? || current_user&.principal? || current_user&.admin? %>
+          <%
+            # Safer approach with multiple fallbacks
+            classroom_link = if @classroom.present?
+                               grading_classroom_path(@classroom) rescue nil
+                             else
+                               classroom = Classroom.where(school_id: current_user.school_id).first
+                               classroom.present? ? (grading_classroom_path(classroom) rescue nil) : nil
+                             end
+          %>
+
+          <% if classroom_link.present? %>
+            <%= link_to classroom_link, class: "flex items-center gap-2" do %>
+              <i class="fas fa-graduation-cap"></i> Grades
+            <% end %>
+          <% else %>
+      <span class="flex items-center gap-2 text-gray-400 cursor-not-allowed">
+        <i class="fas fa-graduation-cap"></i> Grades
+      </span>
           <% end %>
+        <% else %>
+    <span class="flex items-center gap-2 text-gray-400 cursor-not-allowed">
+      <i class="fas fa-graduation-cap"></i> Grades
+    </span>
         <% end %>
       </li>
-
       <!-- Logout -->
       <li>
         <%= link_to logout_path, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>
