@@ -61,7 +61,7 @@ class StudentsTest < ApplicationSystemTestCase
 
   test "should create student" do
     visit students_url
-    click_on "New student"
+    click_on "Create New student"
 
     fill_in "First Name", with: "Hello"
     fill_in "Last Name", with: "World"
