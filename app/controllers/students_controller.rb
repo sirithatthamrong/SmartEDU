@@ -2,6 +2,7 @@ class StudentsController < ApplicationController
   before_action :set_student, only: %i[ show edit update destroy ]
   skip_before_action :set_student, only: [ :classrooms_by_grade ]
   include Pagy::Backend
+  require "csv"
 
   def index
     @classroom = Classroom.find_by(id: params[:classroom_id], school_id: current_user.school_id) if params[:classroom_id].present?
@@ -23,7 +24,6 @@ class StudentsController < ApplicationController
     end
   end
 
-  # GET /students/new
   def new
     @student = Student.new
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
@@ -163,6 +163,87 @@ class StudentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to students_path, notice: "#{ @student.name } was successfully archived." }
       format.json { head :no_content }
+    end
+  end
+
+  def download_csv_template
+    headers = [ "First Name", "Last Name", "Grade", "Classroom", "Personal Email Address", "Parent Email Address" ]
+
+    csv_data = CSV.generate(headers: true) do |csv|
+      csv << headers
+    end
+
+    send_data csv_data, filename: "student_import_template.csv", type: "text/csv"
+  end
+
+  def import_csv
+    file = params[:csv_file]
+
+    unless file&.content_type&.include?("csv")
+      redirect_to students_path, alert: "Please upload a valid CSV file." and return
+    end
+
+    csv = CSV.parse(file.read, headers: true)
+    failed_rows = []
+    imported_students = []
+
+    ActiveRecord::Base.transaction do
+      csv.each_with_index do |row, index|
+        begin
+          first_name = row["First Name"]&.strip
+          last_name = row["Last Name"]&.strip
+          grade = row["Grade"]&.strip
+          class_id = row["Classroom"]&.strip
+          personal_email = row["Personal Email Address"]&.strip
+          parent_email = row["Parent Email Address"]&.strip
+
+          classroom = Classroom.find_by(class_id: class_id, grade_level: grade, school_id: current_user.school_id)
+          raise "Invalid classroom or grade" if classroom.nil?
+
+          user = User.new(
+            first_name: first_name,
+            last_name: last_name,
+            personal_email: personal_email,
+            role: "student",
+            school_id: current_user.school_id,
+            password: SecureRandom.hex(8)
+          )
+
+          unless user.valid?
+            raise "User validation failed: #{user.errors.full_messages.join(", ")}"
+          end
+
+          user.save!
+
+          student = Student.new(
+            name: "#{first_name} #{last_name}",
+            grade: grade,
+            classroom_id: classroom.id,
+            student_email_address: user.email_address,
+            parent_email_address: parent_email
+          )
+
+          unless student.valid?
+            raise "Student validation failed: #{student.errors.full_messages.join(", ")}"
+          end
+
+          student.save!
+          update_teacher_student_relationships(student)
+          imported_students << student
+
+        rescue => e
+          failed_rows << { row_number: index + 2, error: e.message } # +2 for header + 1-based index
+          raise ActiveRecord::Rollback
+        end
+      end
+    end
+
+    if failed_rows.empty?
+      redirect_to students_path, notice: "Successfully imported #{imported_students.count} students."
+    else
+      error_list = failed_rows.map { |f| "Row #{f[:row_number]}: #{f[:error]}" }.join("<br>")
+      flash[:error] = "Import failed. #{error_list}".html_safe
+      redirect_to students_path
     end
   end
 
