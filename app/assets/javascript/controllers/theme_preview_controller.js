@@ -74,9 +74,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const baseThemeSelect = document.querySelector('select[name="base_color_scheme"]');
-    if (baseThemeSelect) {
-        baseThemeSelect.addEventListener("change", (e) => {
+    const baseThemeRadios = document.querySelectorAll('input[name="base_color_scheme"]');
+    baseThemeRadios.forEach(radio => {
+        radio.addEventListener("change", (e) => {
             if (e.target.value === "light") {
                 base100Input.value     = "#ffffff";
                 base200Input.value     = "#f8f8f8";
@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             updatePreview();
         });
-    }
+    });
 
-    updatePreview(); // Initial call
+    updatePreview();
 });

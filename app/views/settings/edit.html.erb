@@ -5,25 +5,37 @@
       <h1 class="text-3xl font-bold mb-4">Customize Theme</h1>
 
       <%= form_with model: @color_theme, url: settings_path, method: :patch do |f| %>
-        <div class="mb-4">
-          <%= f.label :primary_color, "Primary Color", class: "block font-semibold mb-1" %>
-          <%= f.color_field :primary_color, id: "primary-color", class: "w-full h-12 p-2 rounded" %>
-        </div>
+        <div class="space-y-4">
+          <div>
+            <%= f.label :primary_color, "Primary Color", class: "block font-semibold mb-1" %>
+            <%= f.color_field :primary_color, id: "primary-color", class: "w-full h-12 p-2 rounded" %>
+          </div>
 
-        <div class="mb-4">
-          <%= f.label :secondary_color, "Secondary Color", class: "block font-semibold mb-1" %>
-          <%= f.color_field :secondary_color, id: "secondary-color", class: "w-full h-12 p-2 rounded" %>
-        </div>
+          <div>
+            <%= f.label :secondary_color, "Secondary Color", class: "block font-semibold mb-1" %>
+            <%= f.color_field :secondary_color, id: "secondary-color", class: "w-full h-12 p-2 rounded" %>
+          </div>
 
-        <div class="mb-4">
-          <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
-          <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
-        </div>
-        <div class="mb-4">
-          <label for="base-color-scheme" class="block font-semibold mb-1">Base Color</label>
-          <%= select_tag :base_color_scheme, options_for_select([["Light", "light"], ["Dark", "dark"]]), class: "select w-full" %>
-        </div>
+          <div>
+            <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
+            <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
+          </div>
+          <div class="space-y-2">
+            <p class="block font-semibold mb-1">Base Color</p>
 
+            <div class="flex gap-6 items-center">
+              <label for="base_color_scheme_light" class="flex items-center gap-2 cursor-pointer">
+                <%= radio_button_tag :base_color_scheme, "light", @color_theme.base_100_color == "#ffffff", id: "base_color_scheme_light", class: "form-radio text-primary h-5 w-5" %>
+                <span>Light</span>
+              </label>
+
+              <label for="base_color_scheme_dark" class="flex items-center gap-2 cursor-pointer">
+                <%= radio_button_tag :base_color_scheme, "dark", @color_theme.base_100_color != "#ffffff", id: "base_color_scheme_dark", class: "form-radio text-primary h-5 w-5" %>
+                <span>Dark</span>
+              </label>
+            </div>
+          </div>
+        </div>
         <%= hidden_field_tag "base-100", @color_theme.base_100_color, id: "base-100-color" %>
         <%= hidden_field_tag "base-200", @color_theme.base_200_color, id: "base-200-color" %>
         <%= hidden_field_tag "base-300", @color_theme.base_300_color, id: "base-300-color" %>
@@ -106,6 +118,7 @@
       </div>
     </div>
   </div>
+</div>
 </div>
 
 <%= javascript_include_tag "controllers/theme_preview_controller" %>

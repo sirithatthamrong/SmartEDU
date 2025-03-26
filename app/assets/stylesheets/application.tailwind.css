@@ -31,7 +31,11 @@
         @apply outline-none ring-2 ring-primary;
     }
     select {
-        @apply border border-neutral text-neutral-content bg-[var(--base-100)] rounded-full px-4 py-2;
+        @apply w-full h-12 px-4 py-2 rounded-full border border-neutral text-neutral-content bg-[var(--base-100)];
+    }
+
+    select:focus {
+        @apply outline-none ring-2 ring-primary;
     }
 }
 
