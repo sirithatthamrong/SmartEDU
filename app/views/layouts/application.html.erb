@@ -6,11 +6,30 @@
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
   <% if current_user&.school&.color_theme.present? %>
     <style>
-        :root {
+        [data-theme="mytheme"] {
             --primary: <%= current_user.school.color_theme.primary_color %>;
+            --primary-content: #f3faff;
             --secondary: <%= current_user.school.color_theme.secondary_color %>;
+            --secondary-content: #f1fbfb;
             --accent: <%= current_user.school.color_theme.accent_color %>;
-            --background: <%= current_user.school.color_theme.background_color %>;
+            --accent-content: #00182a;
+            --neutral: #6b8a9e;
+            --neutral-content: #f3faff;
+
+            --base-100: <%= current_user.school.color_theme.base_100_color %>;
+            --base-200: <%= current_user.school.color_theme.base_200_color %>;
+            --base-300: <%= current_user.school.color_theme.base_300_color %>;
+            --base-500: <%= current_user.school.color_theme.base_500_color %>;
+            --base-content: <%= current_user.school.color_theme.base_content_color || "#1f2937" %>;
+
+            --info: #3ABFF8;
+            --info-content: #f3fbff;
+            --success: #36D399;
+            --success-content: #f3fbf6;
+            --warning: #ffd45e;
+            --warning-content: #221300;
+            --error: #F87272;
+            --error-content: #fff6f4;
         }
     </style>
   <% end %>

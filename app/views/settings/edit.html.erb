@@ -19,11 +19,16 @@
           <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
           <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
         </div>
-
         <div class="mb-4">
-          <%= f.label :background_color, "Bbackground Color", class: "block font-semibold mb-1" %>
-          <%= f.color_field :background_color, id: "background-color", class: "w-full h-12 p-2 rounded" %>
+          <label for="base-color-scheme" class="block font-semibold mb-1">Base Color</label>
+          <%= select_tag :base_color_scheme, options_for_select([["Light", "light"], ["Dark", "dark"]]), class: "select w-full" %>
         </div>
+
+        <%= hidden_field_tag "base-100", @color_theme.base_100_color, id: "base-100-color" %>
+        <%= hidden_field_tag "base-200", @color_theme.base_200_color, id: "base-200-color" %>
+        <%= hidden_field_tag "base-300", @color_theme.base_300_color, id: "base-300-color" %>
+        <%= hidden_field_tag "base-500", @color_theme.base_500_color, id: "base-500-color" %>
+        <%= hidden_field_tag "base-content", @color_theme.base_content_color, id: "base-content-color" %>
 
         <div class="flex gap-4 mt-6">
           <%= f.submit "Apply & Save", class: "btn btn-primary" %>

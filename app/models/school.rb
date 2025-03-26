@@ -29,8 +29,14 @@ class School < ApplicationRecord
     create_color_theme!(
       primary_color: "#8294C4",
       secondary_color: "#ACB1D6",
-      accent: "#FFEAD2",
-      backgroud: "#FFFFFF"
+      accent_color: "#FFEAD2",
+      base_100_color: "#FFFFFF",
+      base_200_color: "#F8F8F8",
+      base_300_color: "#C6C6C6",
+      base_500_color: "#d0d0d0",
+      base_content_color: "#00182A",
+      neutral_color: "#6B8A9E",
+      neutral_content_color: "#F3FAFF"
     )
   end
 end
