@@ -2,6 +2,46 @@ class ClassroomsController < ApplicationController
   before_action :set_classroom, only: [ :show, :grading ]
   before_action :authorize_admin_or_teacher_or_principal!
 
+
+  def new
+    @classroom = Classroom.new
+    @available_teachers = User.where(school_id: current_user.school_id)
+                              .where(role: "teacher")
+  end
+
+def create
+  @classroom = Classroom.new(classroom_params)
+  @classroom.school_id = current_user.school_id
+
+  if Classroom.exists?(class_id: @classroom.class_id, school_id: @classroom.school_id)
+    flash[:error] = "Grade Classroom already exists."
+    @available_teachers = User.where(school_id: current_user.school_id)
+                              .where(role: "teacher")
+    redirect_to manage_classrooms_path
+    nil
+    # render :new
+  elsif @classroom.save
+    # Create the homeroom association with the teacher
+    Homeroom.create!(
+      classroom_id: @classroom.id,
+      teacher_id: params[:classroom][:teacher_id]
+    )
+
+    redirect_to manage_classrooms_path, notice: "Classroom was successfully created."
+  else
+    @available_teachers = User.where(school_id: current_user.school_id)
+                              .where(role: "teacher")
+    render :new
+  end
+end
+  def manage
+    # get all the classrooms for the current user's school
+    @get_all_classrooms = Classroom.where(school_id: current_user.school_id)
+    @homerooms = Homeroom.where(classroom_id: @get_all_classrooms.pluck(:id))
+                         .includes(:teacher_user)
+                         .index_by(&:classroom_id)
+    @student_counts = Student.where(classroom_id: @get_all_classrooms.pluck(:id)).group(:classroom_id).count
+  end
   def index
       first_classroom = Classroom.find_by(school_id: current_user.school_id)
 
@@ -17,15 +57,18 @@ class ClassroomsController < ApplicationController
   end
 
   def grading
-    # @classroom is already set by before_action
-    # Use classroom association to filter students instead of directly by school_id
-    @grades = Student.joins(:classroom)
-                     .where(classrooms: { school_id: current_user.school_id })
-                     .distinct
-                     .where.not(grade: nil)
-                     .pluck(:grade)
-                     .compact
-                     .sort
+    # Get unique grade levels from classrooms in the current school
+    @grades = Classroom.where(school_id: current_user.school_id)
+                       .distinct
+                       .pluck(:grade_level)
+                       .compact
+                       .sort
+
+    Rails.logger.debug "Grades: #{@grades.inspect}"
+
+    # If you need caching, use the last updated classroom
+    @last_update = Classroom.where(school_id: current_user.school_id).maximum(:updated_at)
+    fresh_when(etag: @last_update) if @last_update
   end
 
   def by_grade
@@ -64,5 +107,8 @@ class ClassroomsController < ApplicationController
     unless current_user&.admin? || current_user&.teacher? || current_user&.principal?
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
+  end
+  def classroom_params
+    params.require(:classroom).permit(:grade_level, :class_id)
   end
 end

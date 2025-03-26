@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :classrooms do
     collection do
       get "by_grade/:grade", to: "classrooms#by_grade", as: "by_grade"
+      get :manage
     end
     member do
       get :grading
