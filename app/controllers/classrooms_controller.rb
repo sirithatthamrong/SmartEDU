@@ -39,7 +39,6 @@ class ClassroomsController < ApplicationController
     # Filter classrooms by grade and current user's school
     @classrooms = Classroom.where(school_id: current_user.school_id, grade_level: @grade).order(:class_id)
 
-
     if @classrooms.empty?
       flash[:notice] = "No classrooms found for grade #{@grade} in your school."
       redirect_to classrooms_path and return
