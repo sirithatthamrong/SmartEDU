@@ -58,6 +58,8 @@ Rails.application.routes.draw do
   # Students Routes
   resources :students do
     collection do
+      get :download_csv_template
+      post :import_csv
       post :mark_attendance
       get :classrooms_by_grade
       get :manage
