@@ -1,17 +1,5 @@
-<div id="<%= dom_id attendance %>">
-  <p>
-    <strong>Student:</strong>
-    <%= attendance.student_id %>
-  </p>
-
-  <p>
-    <strong>Timestamp:</strong>
-    <%= attendance.timestamp %>
-  </p>
-
-  <p>
-    <strong>User:</strong>
-    <%= attendance.user_id %>
-  </p>
-
+  <div class="card-body" id="<%= dom_id attendance %>">
+    <h2 class="card-title text-xl font-bold"> Student ID: <%= attendance.student_id %></h2>
+    <p class="text-gray-700"><span class="font-semibold"> Timestamp: <%= attendance.timestamp %></p>
+    <p class="text-gray-700"><span class="font-semibold"> User: <%= attendance.user_id %></p>
 </div>
