@@ -1,0 +1,60 @@
+<%= render "shared/confirmation_modal" %>
+<div>
+  <h2 class="card-title text-xl font-bold">Grade <%= @classroom.grade_level %> - <%= @classroom.class_id %></h2>
+
+  <div class="mt-4 space-y-2">
+    <p class="text-gray-700"><span class="font-semibold">Class ID:</span> <%= @classroom.class_id %></p>
+    <p class="text-gray-700"><span class="font-semibold">Grade Level:</span> <%= @classroom.grade_level %></p>
+    <p class="text-gray-700">
+      <span class="font-semibold">Homeroom Teacher:</span>
+      <% homeroom = @homerooms[@classroom.id] %>
+      <% if homeroom&.teacher_user %>
+        <%= "#{homeroom.teacher_user.first_name} #{homeroom.teacher_user.last_name}" %>
+      <% else %>
+        Not Assigned
+      <% end %>
+    </p>
+    <p class="text-gray-700"><span class="font-semibold">Total Students:</span> <%= @students.count %></p>
+  </div>
+
+  <% if @students.any? %>
+    <div class="mt-6">
+      <h3 class="font-bold text-lg mb-2">Students in this class</h3>
+      <div class="overflow-x-auto">
+        <table id="shared-table" class="entity-table" data-turbo="false">
+          <thead>
+          <tr class="bg-gray-100">
+            <th class="text-left p-2">Name</th>
+            <th class="text-left p-2">ID</th>
+          </tr>
+          </thead>
+          <tbody>
+          <% @students.each do |student| %>
+            <tr class="border-t">
+              <td class="p-2"><%= student.name %></td>
+              <td class="p-2"><%= student.id %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% else %>
+    <p class="mt-4 text-gray-500">No students assigned to this class.</p>
+  <% end %>
+
+  <div class="mt-6 flex justify-center space-x-4">
+    <% if current_user&.can_manage_teachers? %>
+      <%= link_to "#", class: "entity-btn entity-btn-secondary text-center" do %>
+        <i class="fas fa-edit"></i> Edit
+      <% end %>
+
+      <button class="entity-btn entity-btn-delete" onclick="openDeleteModal(<%= @classroom.id %>)">
+        <i class="fas fa-trash-alt"></i> Delete
+      </button>
+    <% end %>
+  </div>
+</div>
+
+<%= javascript_include_tag "controllers/archive_entity_controller", "data-turbo-track": "reload" %>
+<%= javascript_include_tag "controllers/classroom_modal_controller", "data-turbo-track": "reload" %>

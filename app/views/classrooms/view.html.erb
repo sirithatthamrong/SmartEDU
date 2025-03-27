@@ -1,0 +1,16 @@
+<%= render "shared/notice" %>
+<%= render "shared/confirmation_modal" %>
+
+<% content_for :title, "Classroom Details" %>
+
+<div class="student-card max-w-md mx-auto mt-4">
+  <div class="mb-4">
+    <%= link_to manage_classrooms_path, class: "entity-btn back-btn text-black" do %>
+      <i class="fas fa-arrow-left"></i> Back to All Classrooms
+    <% end %>
+  </div>
+
+  <div class="student-card max-w-2xl mx-auto bg-white rounded-lg shadow-md">
+    <%= render "classroom_view" %>
+  </div>
+</div>

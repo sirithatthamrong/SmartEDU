@@ -9,7 +9,42 @@ class ClassroomsController < ApplicationController
                               .where(role: "teacher")
   end
 
-def create
+  def view
+    @classroom = Classroom.find_by(id: params[:id])
+
+    # Handle the case when classroom is not found
+    if @classroom.nil?
+      flash[:alert] = "Classroom not found"
+      redirect_to manage_classrooms_path and return
+    end
+
+    # Now it's safe to use @classroom.id
+    @students = Student.where(classroom_id: @classroom.id)
+                       .order(:name)
+    @homerooms = Homeroom.where(classroom_id: @classroom.id)
+                         .includes(:teacher_user)
+                         .index_by(&:classroom_id)
+  end
+
+  def destroy
+    classroom = Classroom.find_by(id: params[:id], school_id: current_user.school_id)
+
+    if classroom
+      if classroom.students.any?
+        flash[:errors] = "Classroom cannot be deleted because it has students. Please reassign students to other existing classrooms."
+        redirect_to manage_classrooms_path
+
+      else
+        Homeroom.where(classroom_id: classroom.id).delete_all
+        classroom.destroy
+        redirect_to manage_classrooms_path, notice: "Classroom was successfully deleted."
+      end
+    else
+      render json: { error: "Classroom not found" }, status: :not_found
+    end
+  end
+
+  def create
   @classroom = Classroom.new(classroom_params)
   @classroom.school_id = current_user.school_id
 
@@ -91,6 +126,8 @@ end
     Rails.logger.debug "DEBUG: @classrooms count = #{@classrooms.count}"
     Rails.logger.debug "DEBUG: School ID = #{current_user.school_id}"
   end
+
+
 
   private
 
