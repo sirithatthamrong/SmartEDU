@@ -30,25 +30,19 @@ class ClassroomsController < ApplicationController
     classroom = Classroom.find_by(id: params[:id], school_id: current_user.school_id)
 
     if classroom
-      # Delete all dependent records
-      classroom.students.each do |student|
-        Attendance.where(student_id: student.id).delete_all
-        TeacherStudentRelationship.where(student_id: student.id).delete_all
-        student.teacher_student_relationships.destroy_all
-        student.destroy
+      if classroom.students.any?
+        flash[:errors] = "Classroom cannot be deleted because it has students. Please reassign students to other existing classrooms."
+        redirect_to manage_classrooms_path
+
+      else
+        Homeroom.where(classroom_id: classroom.id).delete_all
+        classroom.destroy
+        redirect_to manage_classrooms_path, notice: "Classroom was successfully deleted."
       end
-
-      Homeroom.where(classroom_id: classroom.id).delete_all
-
-      classroom.destroy
-      render json: { success: "Classroom deleted" }, status: :ok
     else
       render json: { error: "Classroom not found" }, status: :not_found
     end
   end
-
-
-
 
   def create
   @classroom = Classroom.new(classroom_params)
