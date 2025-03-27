@@ -31,7 +31,7 @@ class User < ApplicationRecord
 
   has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy
-  has_many :students, primary_key: :email_address, foreign_key: :student_email_address
+  has_many :students, primary_key: :email_address, foreign_key: :student_email_address, dependent: :destroy
   has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
   has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
   has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy

@@ -2,7 +2,7 @@
 
 <% content_for :title, "Manage Classrooms" %>
 
-<div class="flex justify-end p-5">
+<div class="flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-4 md:space-y-0 px-4 md:px-6 justify-end space-x-4 px-6">
   <% if current_user&.can_manage_teachers? %>
     <%= link_to "New Classroom", new_classroom_path, class: "entity-btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc]" %>
   <% end %>
@@ -30,7 +30,7 @@
           <td>
             <% homeroom = @homerooms[classroom.id] %>
             <% if homeroom&.teacher_user %>
-              <%= "#{homeroom.teacher_user.first_name} #{homeroom.teacher_user.last_name}" || "Not Assigned" %>
+              <%= "#{homeroom.teacher_user.first_name} #{homeroom.teacher_user.last_name}" %>
             <% else %>
               Not Assigned
             <% end %>
@@ -38,7 +38,7 @@
           <td><%= @student_counts[classroom.id] || 0 %></td>
           <td>
             <div class="flex space-x-2">
-              <%= link_to "#", class: "hover:text-blue-500 text-blue-700" do %>
+              <%= link_to view_classroom_path(classroom), class: "hover:text-blue-500 text-blue-700" do %>
                 <i class="fas fa-eye" title="Show"></i> View
               <% end %>
               <% if current_user&.can_manage_teachers? %>
