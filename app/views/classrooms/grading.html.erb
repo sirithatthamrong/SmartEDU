@@ -1,19 +1,16 @@
 <% content_for :title, "Grades" %>
 
-<h1 class="text-3xl font-bold text-center mb-6">All Grades</h1>
+<div class="container mx-auto px-4 py-6">
+  <h1 class="text-4xl font-bold text-center mb-6">All Grades</h1>
 
-<div class="text-center mb-6">
 
-  <%= link_to "See all classrooms", classrooms_path, class: "class: inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded " %>
-
-</div>
-
-<div class="flex space-x-4 overflow-x-auto px-4">
-  <% @grades.each do |grade| %>
-    <div class="flex-shrink-0">
-      <%= link_to by_grade_classrooms_path(grade), class: "inline-block bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded" do %>
-        Grade <%= grade %>
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+    <% @grades.each do |grade| %>
+      <%= link_to by_grade_classrooms_path(grade), class: "block" do %>
+        <div class="bg-blue-50 border-b border-blue-100 hover:bg-gray-300 rounded-xl p-6 text-center transition duration-200 shadow-md hover:shadow-lg hover:bg-blue-50">
+          <span class="text-lg font-bold text-gray-700">G.<%= grade %></span>
+        </div>
       <% end %>
-    </div>
     <% end %>
+  </div>
 </div>

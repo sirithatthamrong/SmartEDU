@@ -3,7 +3,6 @@ Rails.application.routes.draw do
   get "payments/create"
   get "teachers/index"
   get "teachers/destroy"
-  resources :classrooms, only: [ :index, :show ]
   root "main#index"
   get "main/index"
 
@@ -13,9 +12,11 @@ Rails.application.routes.draw do
     get "cancel", to: "payments#cancel"
   end
   end
+
   resources :classrooms do
     collection do
       get "by_grade/:grade", to: "classrooms#by_grade", as: "by_grade"
+      get :manage
     end
     member do
       get :grading
@@ -25,15 +26,12 @@ Rails.application.routes.draw do
   end
 
   # Attendances Routes
-  resources :attendances do
+  resources :attendances, only: [ :index, :show, :edit, :create, :update, :destroy ] do
     collection do
       get "scan_qr", to: "attendances#scan_qr", as: "scan_qr"
       post "checkin", to: "attendances#checkin"
+      get "status", to: "attendances#status"
     end
-  end
-
-  resources :attendances, only: [ :create ] do
-    get "/status", to: "attendances#status"
   end
 
   # Profile Routes
@@ -41,13 +39,6 @@ Rails.application.routes.draw do
   post "/change_password", to: "users#change_password"
   resource :profile, only: [ :show, :update ]
   patch "/profile/update_password", to: "profile#update_password"
-
-  # Students
-  resources :students do
-    collection do
-      post "mark_attendance"
-    end
-  end
 
   # Other Routes
   get "home/index"
@@ -64,15 +55,19 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: "login"
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Additional Student Actions
+  # Students Routes
   resources :students do
+    collection do
+      get :download_csv_template
+      post :import_csv
+      post :mark_attendance
+      get :classrooms_by_grade
+      get :manage
+    end
     member do
       patch :toggle_status
       patch :archive
       patch :activate
-    end
-    collection do
-      get :manage
     end
   end
 

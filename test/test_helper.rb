@@ -29,7 +29,7 @@ module ActiveSupport
 
     def ensure_school_exists
       # Create a default test school if none exists
-      @test_school ||= School.first || School.create!(name: "Test School", address: "123 Test St")
+      @test_school ||= School.first || School.create!(name: "Test School", address: "123 Test St", has_paid: 1)
 
       # Ensure ALL test users (newly created or existing) have a school
       User.where(school_id: nil).find_each do |user|

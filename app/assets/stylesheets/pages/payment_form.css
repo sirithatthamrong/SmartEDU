@@ -83,3 +83,7 @@
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
+.payment-footer {
+    @apply bg-gray-800 text-white text-center py-6 mt-auto;
+}

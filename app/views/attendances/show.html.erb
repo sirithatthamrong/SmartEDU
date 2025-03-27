@@ -1,30 +1,21 @@
-<p style="color: green"><%= notice %></p>
+<%= render "shared/notice" %>
+<% content_for :title, "Student Attendance" %>
 
-<div class="mt-2">
-  <h1 class="student-title">Student Attendance</h1>
-</div>
-
-<div class="student-card max-w-md mx-auto mt-2 p-4 border rounded-lg shadow-lg">
-
-  <!-- Back & Edit Buttons in the Same Line -->
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <!-- Back Button (Left) -->
-    <%= link_to attendances_path, class: "btn" do %>
+<div class="student-card max-w-md mx-auto mt-4">
+  <div class="mt-4">
+    <%= link_to students_path, class: "entity-btn back-btn text-black" do %>
       <i class="fas fa-arrow-left"></i> Back
     <% end %>
+  </div>
 
-    <!-- Edit Button (Right) -->
+  <div class="mt-4">
+    <%= render @attendance %>
+  </div>
+  <div class="mt-8 flex justify-center space-x-4">
+
     <%= link_to edit_attendance_path(@attendance), class: "btn btn-primary" do %>
       <i class="fas fa-edit"></i> Edit
     <% end %>
-  </div>
-
-  <div class="mt-8">
-    <%= render @attendance %>
-  </div>
-
-  <!-- Delete button centered below -->
-  <div class="mt-8 flex justify-center space-x-4">
     <%= button_to @attendance, method: :delete, class: "btn btn-error" do %>
       <i class="fas fa-trash"></i> Delete
     <% end %>
