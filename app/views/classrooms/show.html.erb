@@ -1,35 +1,40 @@
 <% content_for :title, "Classroom #{@classroom.class_id}" %>
 
-<h1 class="text-3xl font-bold text-center mb-6 mt-4">Students in Classroom <%= @classroom.class_id %></h1>
-<div class="mx-auto bg-white p-6 rounded-lg shadow">
-  <%= form_with url: attendances_path, method: :post, remote: true do %>
-    <table>
-      <thead>
-      <tr>
-        <th class="text-gray-1000 text-l">ID</th>
-        <th class="text-gray-1000 text-l">Name</th>
-        <th class="text-gray-1000 text-l">Check-In</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @students.each do |student| %>
-        <tr class="text-lg font-medium" data-content="<%= student.name %>">
-          <td class="text-gray-800"><%= student.id %></td>
-          <td class="text-gray-800"><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
-          <td>
-            <button class="check-in-btn btn btn-m" data-student-id="<%= student.id %>">
-              Check-In
-            </button>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  <% end %>
-</div>
+<h1 class="text-3xl md:text-4xl font-bold text-center mb-6 mt-4">
+  Students in Classroom <%= @classroom.class_id %>
+</h1>
 
-<div class="text-center mt-6">
-  <%= link_to "Back to Classrooms", by_grade_classrooms_path(@classroom.class_id.first), class: "text-blue-500 hover:underline" %>
+<div class="mx-auto bg-white p-4 md:p-6 rounded-lg max-w-full overflow-x-auto">
+  <div class="mb-4">
+    <%= link_to "← Back to Classrooms", by_grade_classrooms_path(@classroom.class_id.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc]" %>
+  </div>
+
+  <%= form_with url: attendances_path, method: :post, remote: true do %>
+    <div class="overflow-x-auto">
+      <table id="shared-table" class="entity-table" data-turbo=turbo="false">
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Check-In</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @students.each do |student| %>
+          <tr data-content="<%= student.name %>">
+            <td class="text-gray-800"><%= student.id %></td>
+            <td class="text-gray-800"><%= highlight(student.name, params.dig(:q, :name_cont)) %></td>
+            <td>
+              <button class="check-in-btn btn btn-m" data-student-id="<%= student.id %>">
+                Check-In
+              </button>
+            </td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
 </div>
 
 <%= javascript_include_tag "controllers/classroom_checkin_controller" %>

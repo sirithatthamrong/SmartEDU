@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_19_032119) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_23_044204) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -77,6 +77,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_19_032119) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "has_paid"
+    t.integer "tier", default: 1
     t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
@@ -136,6 +137,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_19_032119) do
   add_foreign_key "principal_teacher_relationships", "users", column: "teacher_id"
   add_foreign_key "school_tiers", "schools"
   add_foreign_key "sessions", "users"
+  add_foreign_key "students", "classrooms"
   add_foreign_key "students", "classrooms"
   add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "teacher_student_relationships", "users", column: "student_id"

@@ -1,0 +1,37 @@
+<%= form_with(model: classroom, class: 'form-control', local: true) do |form| %>
+  <div>
+    <%= form.label :grade_level, "Grade Level", class: 'text-gray-700 font-semibold' %>
+    <%= form.select :grade_level,
+                    options_for_select((1..12).map { |i| [i, i] }, classroom.grade_level),
+                    { prompt: "Select Grade" },
+                    class: 'input input-bordered w-full mb-2',
+                    required: true %>
+  </div>
+
+  <div>
+    <%= form.label :class_id, "Section (A, B, C, etc.)", class: 'text-gray-700 font-semibold' %>
+    <%= form.text_field :section_name,
+                        value: classroom.class_id ? classroom.class_id.gsub(/^\d+/, '') : '',
+                        class: 'input input-bordered w-full mb-2',
+                        required: true,
+                        maxlength: 2 %>
+    <%= form.hidden_field :class_id, id: 'classroom_full_class_id' %>
+  </div>
+
+  <div>
+    <%= form.label :teacher_id, "Homeroom Teacher", class: 'text-gray-700 font-semibold' %>
+    <%= form.collection_select :teacher_id,
+                               @available_teachers,
+                               :id,
+                               ->(t) { "#{t.first_name} #{t.last_name}" },
+                               { prompt: "Select Teacher" },
+                               class: 'input input-bordered w-full mb-2',
+                               required: true %>
+  </div>
+
+  <div class="form-control mt-6">
+    <%= form.submit class: 'entity-btn entity-btn-secondary text-center' %>
+  </div>
+<% end %>
+
+<%= javascript_include_tag "controllers/new_classroom_form" %>
