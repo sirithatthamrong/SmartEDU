@@ -20,7 +20,7 @@ module.exports = {
     require("daisyui"),
   ],
   daisyui: {
-    themes: [
+    themes: [ "pastel",
       {
         mytheme: {
           "primary": "var(--primary)",

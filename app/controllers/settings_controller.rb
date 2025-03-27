@@ -37,7 +37,8 @@ class SettingsController < ApplicationController
     end
 
     if @color_theme.update(color_theme_params)
-      redirect_to settings_path, notice: "Theme updated successfully."
+      flash.now[:notice] = "Theme updated successfully."
+      render :edit, status: :ok
     else
       render :edit, status: :unprocessable_entity
     end

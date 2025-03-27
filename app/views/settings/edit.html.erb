@@ -1,3 +1,6 @@
+<%= render "shared/notice" %>
+<% content_for :title, "Settings" %>
+
 <div class="p-6">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Left: Form -->
@@ -95,7 +98,7 @@
               <!-- Sign Up button (Accent) -->
               <button
                 type="button"
-                class="btn w-full py-3 font-semibold transition-all duration-300"
+                class="btn btn-accent w-full py-3 font-semibold transition-all duration-300"
                 id="preview-accent-btn"
               >
                 Sign Up
@@ -118,7 +121,6 @@
       </div>
     </div>
   </div>
-</div>
 </div>
 
 <%= javascript_include_tag "controllers/theme_preview_controller" %>
