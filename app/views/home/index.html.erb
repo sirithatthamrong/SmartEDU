@@ -1,18 +1,27 @@
 <% content_for :title, "Dashboard" %>
 
 <div class="container mx-auto py-10">
+  <!-- Title + Subtitle -->
+  <div class="text-center mb-10">
+    <h1 class="text-[#1f2937] text-3xl font-bold text-gray-800 mb-2">
+      <%= @school&.name || "Unnamed School" %> Dashboard
+    </h1>
+    <p class="text-gray-500 text-lg">An overview of student engagement and attendance trends</p>
+  </div>
+
   <!-- Stats Cards -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+
     <!-- Total Students -->
     <% if !current_user.student? %>
       <%= link_to students_path, class: "block" do %>
         <div class="bg-white shadow-lg rounded-xl p-6 text-center border border-gray-200 hover:bg-[#DCEAF7] transition cursor-pointer ease-in-out">
           <i class="fa-solid fa-user-graduate text-blue-600 text-6xl mb-3"></i>
           <h3 class="text-lg font-semibold text-gray-700">Total Students</h3>
-          <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@total_students) %></p>
+          <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@students[:total]) %></p>
           <p class="text-gray-500 mt-1">
-            Active: <span class="text-green-500 font-semibold"><%= @active_students %></span>
-            | Inactive: <span class="text-red-500 font-semibold"><%= @inactive_students %></span>
+            Active: <span class="text-green-500 font-semibold"><%= @students[:active] %></span>
+            | Inactive: <span class="text-red-500 font-semibold"><%= @students[:inactive] %></span>
           </p>
         </div>
       <% end %>
@@ -20,10 +29,10 @@
       <div class="bg-white shadow-lg rounded-xl p-6 text-center border border-gray-200">
         <i class="fa-solid fa-user-graduate text-blue-600 text-6xl mb-3"></i>
         <h3 class="text-lg font-semibold text-gray-700">Total Students</h3>
-        <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@total_students) %></p>
+        <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@students[:total]) %></p>
         <p class="text-gray-500 mt-1">
-          Active: <span class="text-green-500 font-semibold"><%= @active_students %></span>
-          | Inactive: <span class="text-red-500 font-semibold"><%= @inactive_students %></span>
+          Active: <span class="text-green-500 font-semibold"><%= @students[:active] %></span>
+          | Inactive: <span class="text-red-500 font-semibold"><%= @students[:inactive] %></span>
         </p>
       </div>
     <% end %>
@@ -34,7 +43,7 @@
         <div class="bg-white shadow-lg rounded-xl p-6 text-center border border-gray-200 hover:bg-[#DCEAF7] transition cursor-pointer ease-in-out">
           <i class="fa-solid fa-chalkboard-teacher text-yellow-500 text-6xl mb-3"></i>
           <h3 class="text-lg font-semibold text-gray-700">Total Teachers</h3>
-          <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@total_teachers) %></p>
+          <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@teachers[:total]) %></p>
           <p class="text-gray-500 mt-1">Teachers in this school</p>
         </div>
       <% end %>
@@ -42,7 +51,7 @@
       <div class="bg-white shadow-lg rounded-xl p-6 text-center border border-gray-200">
         <i class="fa-solid fa-chalkboard-teacher text-yellow-500 text-6xl mb-3"></i>
         <h3 class="text-lg font-semibold text-gray-700">Total Teachers</h3>
-        <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@total_teachers) %></p>
+        <p class="text-5xl font-bold text-gray-900"><%= number_with_delimiter(@teachers[:total]) %></p>
         <p class="text-gray-500 mt-1">Teachers in this school</p>
       </div>
     <% end %>
@@ -52,12 +61,12 @@
       <i class="fa-solid fa-user-check text-green-500 text-6xl mb-3"></i>
       <h3 class="text-lg font-semibold text-gray-700">Check-Ins</h3>
       <p class="text-4xl font-bold text-gray-900">
-        <%= number_with_delimiter(@checkins_today) %> <span class="text-base text-gray-600 pr-4">today </span>
+        <%= number_with_delimiter(@attendance[:checkins_today]) %> <span class="text-base text-gray-600 pr-4">today</span>
         <span class="text-lg text-gray-900 pr-4">|</span>
-        <%= number_with_delimiter(@checkins_this_month) %> <span class="text-base text-gray-600">this month</span>
+        <%= number_with_delimiter(@attendance[:checkins_this_month]) %> <span class="text-base text-gray-600">this month</span>
       </p>
       <p class="text-gray-500 mt-1">
-        Last Check-in: <%= @last_checkin.nil? ? 'N/A' : time_ago_in_words(@last_checkin) %> ago
+        Last Check-in: <%= @attendance[:last_checkin].nil? ? 'N/A' : time_ago_in_words(@attendance[:last_checkin]) %> ago
       </p>
     </div>
 
@@ -66,11 +75,11 @@
       <i class="fa-solid fa-chart-line text-purple-500 text-6xl mb-3"></i>
       <h3 class="text-lg font-semibold text-gray-700">Attendance Rate</h3>
       <p class="text-4xl font-bold text-gray-900">
-        <%= @attendance_rate_today %>% <span class="text-base text-gray-600 pr-4">today</span>
+        <%= @attendance[:rates][:today] %>% <span class="text-base text-gray-600 pr-4">today</span>
         <span class="text-lg text-gray-900 pr-4">|</span>
-        <%= @attendance_rate_month %>% <span class="text-base text-gray-600 pr-4">this month</span>
+        <%= @attendance[:rates][:month] %>% <span class="text-base text-gray-600 pr-4">this month</span>
         <span class="text-lg text-gray-900 pr-4">|</span>
-        <%= @attendance_rate %>% <span class="text-base text-gray-600">overall</span>
+        <%= @attendance[:rates][:overall] %>% <span class="text-base text-gray-600">overall</span>
       </p>
       <p class="text-gray-500 mt-1">Based on active students</p>
     </div>
