@@ -22,4 +22,6 @@ class Classroom < ApplicationRecord
   validates :grade_level, presence: true
   validates :school_id, presence: true
   validates :class_id, uniqueness: { scope: :school_id, message: "Class ID must be unique within the school" }
+  has_many :students, dependent: :destroy
+  has_many :homerooms, dependent: :destroy
 end
