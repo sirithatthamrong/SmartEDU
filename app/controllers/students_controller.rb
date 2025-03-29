@@ -4,6 +4,22 @@ class StudentsController < ApplicationController
   include Pagy::Backend
   require "csv"
 
+  CSV_HEADER_FIRST_NAME = "First Name"
+  CSV_HEADER_LAST_NAME = "Last Name"
+  CSV_HEADER_GRADE = "Grade"
+  CSV_HEADER_CLASSROOM = "Classroom"
+  CSV_HEADER_PERSONAL_EMAIL = "Personal Email Address"
+  CSV_HEADER_PARENT_EMAIL = "Parent Email Address"
+
+  CSV_HEADERS = [
+    CSV_HEADER_FIRST_NAME,
+    CSV_HEADER_LAST_NAME,
+    CSV_HEADER_GRADE,
+    CSV_HEADER_CLASSROOM,
+    CSV_HEADER_PERSONAL_EMAIL,
+    CSV_HEADER_PARENT_EMAIL
+  ]
+
   def index
     @classroom = Classroom.find_by(id: params[:classroom_id], school_id: current_user.school_id) if params[:classroom_id].present?
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
@@ -167,11 +183,10 @@ class StudentsController < ApplicationController
   end
 
   def download_csv_template
-    headers = [ "First Name", "Last Name", "Grade", "Classroom", "Personal Email Address", "Parent Email Address" ]
     example = [ "Example: John", "Doe", "1", "1A", "john.doe@example.com", "parent@example.com" ]
 
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << headers
+      csv << CSV_HEADERS
       csv << example
     end
 
@@ -185,12 +200,11 @@ class StudentsController < ApplicationController
       redirect_to students_path, alert: "Please upload a valid CSV file." and return
     end
 
-    expected_headers = [ "First Name", "Last Name", "Grade", "Classroom", "Personal Email Address", "Parent Email Address" ]
     csv = CSV.parse(file.read, headers: true)
 
     # 1. Validate column headers
-    if csv.headers != expected_headers
-      flash[:error] = "CSV headers must exactly match: #{expected_headers.join(', ')}"
+    if csv.headers != CSV_HEADERS
+      flash[:error] = "CSV headers must exactly match: #{CSV_HEADERS.join(', ')}"
       redirect_to students_path and return
     end
 
@@ -203,12 +217,12 @@ class StudentsController < ApplicationController
         next if index == 0
 
         begin
-          first_name = row["First Name"]&.strip
-          last_name = row["Last Name"]&.strip
-          grade = row["Grade"]&.strip
-          class_id = row["Classroom"]&.strip
-          personal_email = row["Personal Email Address"]&.strip
-          parent_email = row["Parent Email Address"]&.strip
+          first_name = row[CSV_HEADER_FIRST_NAME]&.strip
+          last_name = row[CSV_HEADER_LAST_NAME]&.strip
+          grade = row[CSV_HEADER_GRADE]&.strip
+          class_id = row[CSV_HEADER_CLASSROOM]&.strip
+          personal_email = row[CSV_HEADER_PERSONAL_EMAIL]&.strip
+          parent_email = row[CSV_HEADER_PARENT_EMAIL]&.strip
 
           classroom = Classroom.find_by(class_id: class_id, grade_level: grade, school_id: current_user.school_id)
           raise "Invalid classroom or grade" if classroom.nil?
