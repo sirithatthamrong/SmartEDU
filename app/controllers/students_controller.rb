@@ -168,9 +168,11 @@ class StudentsController < ApplicationController
 
   def download_csv_template
     headers = [ "First Name", "Last Name", "Grade", "Classroom", "Personal Email Address", "Parent Email Address" ]
+    example = [ "Example: John", "Doe", "1", "1A", "john.doe@example.com", "parent@example.com" ]
 
     csv_data = CSV.generate(headers: true) do |csv|
       csv << headers
+      csv << example
     end
 
     send_data csv_data, filename: "student_import_template.csv", type: "text/csv"
@@ -183,12 +185,23 @@ class StudentsController < ApplicationController
       redirect_to students_path, alert: "Please upload a valid CSV file." and return
     end
 
+    expected_headers = [ "First Name", "Last Name", "Grade", "Classroom", "Personal Email Address", "Parent Email Address" ]
     csv = CSV.parse(file.read, headers: true)
+
+    # 1. Validate column headers
+    if csv.headers != expected_headers
+      flash[:error] = "CSV headers must exactly match: #{expected_headers.join(', ')}"
+      redirect_to students_path and return
+    end
+
     failed_rows = []
     imported_students = []
 
     ActiveRecord::Base.transaction do
       csv.each_with_index do |row, index|
+        # 2. Skip the example row (row 2 in this case)
+        next if index == 0
+
         begin
           first_name = row["First Name"]&.strip
           last_name = row["Last Name"]&.strip
@@ -210,7 +223,7 @@ class StudentsController < ApplicationController
           )
 
           unless user.valid?
-            raise "User validation failed: #{user.errors.full_messages.join(", ")}"
+            raise "User validation failed: #{user.errors.full_messages.join(', ')}"
           end
 
           user.save!
@@ -224,7 +237,7 @@ class StudentsController < ApplicationController
           )
 
           unless student.valid?
-            raise "Student validation failed: #{student.errors.full_messages.join(", ")}"
+            raise "Student validation failed: #{student.errors.full_messages.join(', ')}"
           end
 
           student.save!
@@ -232,7 +245,7 @@ class StudentsController < ApplicationController
           imported_students << student
 
         rescue => e
-          failed_rows << { row_number: index + 2, error: e.message } # +2 for header + 1-based index
+          failed_rows << { row_number: index + 2, error: e.message } # +2 accounts for 0-based index + header row
           raise ActiveRecord::Rollback
         end
       end
