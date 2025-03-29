@@ -1,142 +1,177 @@
 class ClassroomsController < ApplicationController
-  before_action :set_classroom, only: [ :show, :grading ]
+  before_action :set_classroom, only: %i[show grading]
   before_action :authorize_admin_or_teacher_or_principal!
-
 
   def new
     @classroom = Classroom.new
-    @available_teachers = User.where(school_id: current_user.school_id)
-                              .where(role: "teacher")
+    @available_teachers = fetch_available_teachers
   end
 
   def view
     @classroom = Classroom.find_by(id: params[:id])
-
-    # Handle the case when classroom is not found
-    if @classroom.nil?
+    unless @classroom
       flash[:alert] = "Classroom not found"
-      redirect_to manage_classrooms_path and return
+      return redirect_to manage_classrooms_path
     end
 
-    # Now it's safe to use @classroom.id
-    @students = Student.where(classroom_id: @classroom.id)
-                       .order(:name)
-    @homerooms = Homeroom.where(classroom_id: @classroom.id)
-                         .includes(:teacher_user)
+    @students = Student.where(classroom_id: @classroom.id).order(:name)
+    @homerooms = Homeroom.includes(:teacher_user)
+                         .where(classroom_id: @classroom.id)
                          .index_by(&:classroom_id)
   end
 
   def destroy
-    classroom = Classroom.find_by(id: params[:id], school_id: current_user.school_id)
+    classroom = fetch_classroom_by_id
 
     if classroom
-      if classroom.students.any?
-        flash[:errors] = "Classroom cannot be deleted because it has students. Please reassign students to other existing classrooms."
-        redirect_to manage_classrooms_path
-
-      else
-        Homeroom.where(classroom_id: classroom.id).delete_all
-        classroom.destroy
-        redirect_to manage_classrooms_path, notice: "Classroom was successfully deleted."
+      if classroom.students.exists?
+        flash[:errors] = "Classroom cannot be deleted because it has students. Please reassign them first."
+        return redirect_to manage_classrooms_path
       end
+
+      Homeroom.where(classroom_id: classroom.id).delete_all
+      classroom.destroy!
+      redirect_to manage_classrooms_path, notice: "Classroom was successfully deleted."
     else
       render json: { error: "Classroom not found" }, status: :not_found
     end
   end
 
   def create
-  @classroom = Classroom.new(classroom_params)
-  @classroom.school_id = current_user.school_id
+    @classroom = Classroom.new(classroom_params.merge(school_id: current_user.school_id))
 
-  if Classroom.exists?(class_id: @classroom.class_id, school_id: @classroom.school_id)
-    flash[:error] = "Grade Classroom already exists."
-    @available_teachers = User.where(school_id: current_user.school_id)
-                              .where(role: "teacher")
-    redirect_to manage_classrooms_path
-    nil
-    # render :new
-  elsif @classroom.save
-    # Create the homeroom association with the teacher
-    Homeroom.create!(
-      classroom_id: @classroom.id,
-      teacher_id: params[:classroom][:teacher_id]
-    )
-
-    redirect_to manage_classrooms_path, notice: "Classroom was successfully created."
-  else
-    @available_teachers = User.where(school_id: current_user.school_id)
-                              .where(role: "teacher")
-    render :new
-  end
-end
-  def manage
-    # get all the classrooms for the current user's school
-    @get_all_classrooms = Classroom.where(school_id: current_user.school_id)
-    @homerooms = Homeroom.where(classroom_id: @get_all_classrooms.pluck(:id))
-                         .includes(:teacher_user)
-                         .index_by(&:classroom_id)
-    @student_counts = Student.where(classroom_id: @get_all_classrooms.pluck(:id)).group(:classroom_id).count
-  end
-  def index
-      first_classroom = Classroom.find_by(school_id: current_user.school_id)
-
-      if first_classroom
-        redirect_to grading_classroom_path(first_classroom) and return
-      end
-    @classrooms = Classroom.where(school_id: current_user.school_id)
+    if Classroom.exists?(class_id: @classroom.class_id, school_id: @classroom.school_id)
+      flash[:error] = "Grade Classroom already exists."
+      return redirect_to manage_classrooms_path
     end
+
+    if @classroom.save
+      Homeroom.create!(classroom_id: @classroom.id, teacher_id: params[:classroom][:teacher_id])
+      redirect_to manage_classrooms_path, notice: "Classroom was successfully created."
+    else
+      @available_teachers = fetch_available_teachers
+      render :new
+    end
+  end
+
+  def manage
+    @get_all_classrooms = fetch_classrooms_by_school
+
+    if @get_all_classrooms.present?
+      classroom_ids = @get_all_classrooms.ids
+
+      @homerooms = Homeroom.includes(:teacher_user)
+                           .where(classroom_id: classroom_ids)
+                           .index_by(&:classroom_id)
+
+      @student_counts = Student.where(classroom_id: classroom_ids)
+                               .group(:classroom_id)
+                               .count
+    else
+      @homerooms = {}
+      @student_counts = {}
+    end
+  end
+
+  def index
+    first_classroom = fetch_classrooms_by_school.first
+
+    return redirect_to grading_classroom_path(first_classroom) if first_classroom
+
+    @classrooms = fetch_classrooms_by_school
+  end
+
   def show
-    # @classroom is already set by before_action
-    # If students don't have school_id, we filter by classroom instead
-    @students = @classroom.students.where(grade: @classroom.grade_level).order(:name)
+    @students = Student.where(grade: @classroom.grade_level).order(:name)
   end
 
   def grading
-    # Get unique grade levels from classrooms in the current school
-    @grades = Classroom.where(school_id: current_user.school_id)
-                       .distinct
-                       .pluck(:grade_level)
-                       .compact
-                       .sort
+    @grades = fetch_classrooms_by_school.distinct
+                                        .pluck(:grade_level)
+                                        .compact
+                                        .sort
 
-    Rails.logger.debug "Grades: #{@grades.inspect}"
-
-    # If you need caching, use the last updated classroom
-    @last_update = Classroom.where(school_id: current_user.school_id).maximum(:updated_at)
+    @last_update = fetch_classrooms_by_school.maximum(:updated_at)
     fresh_when(etag: @last_update) if @last_update
   end
 
   def by_grade
     @grade = params[:grade].to_i
 
-    if @grade.blank?
+    if @grade.zero?
       flash[:alert] = "Grade is missing."
-      redirect_to classrooms_path and return
+      return redirect_to classrooms_path
     end
 
-    # Filter classrooms by grade and current user's school
-    @classrooms = Classroom.where(school_id: current_user.school_id, grade_level: @grade).order(:class_id)
+    @classrooms = Classroom.where(school_id: current_user.school_id, grade_level: @grade)
+                           .order(:class_id)
 
     if @classrooms.empty?
       flash[:notice] = "No classrooms found for grade #{@grade} in your school."
-      redirect_to classrooms_path and return
+      return redirect_to classrooms_path
     end
 
-    Rails.logger.debug "DEBUG: @grade = #{@grade}"
-    Rails.logger.debug "DEBUG: @classrooms count = #{@classrooms.count}"
-    Rails.logger.debug "DEBUG: School ID = #{current_user.school_id}"
+    Rails.logger.debug { "DEBUG: @grade = #{@grade}, @classrooms count = #{@classrooms.count}, School ID = #{current_user.school_id}" }
   end
 
+  def update
+    @classroom = fetch_classroom_by_id
 
+    unless @classroom
+      flash[:alert] = "Classroom not found or you don't have access."
+      return redirect_to manage_classrooms_path
+    end
+
+    if Classroom.where(school_id: current_user.school_id, class_id: @classroom.class_id)
+                .where.not(id: @classroom.id)
+                .exists?
+      flash[:error] = "Grade Classroom already exists."
+      @available_teachers = fetch_available_teachers
+      return render :edit
+    end
+
+    if @classroom.update(classroom_params)
+      homeroom = Homeroom.find_or_initialize_by(classroom_id: @classroom.id)
+      homeroom.update!(teacher_id: params[:classroom][:teacher_id])
+
+      redirect_to manage_classrooms_path, notice: "Classroom was successfully updated."
+    else
+      @available_teachers = fetch_available_teachers
+      render :edit
+    end
+  end
+
+  def edit
+    @classroom = fetch_classroom_by_id
+
+    unless @classroom
+      flash[:alert] = "Classroom not found or you don't have access."
+      return redirect_to manage_classrooms_path
+    end
+
+    @available_teachers = fetch_available_teachers
+  end
 
   private
 
-  def set_classroom
-    @classroom = Classroom.find_by(id: params[:id], school_id: current_user.school_id)
+  def fetch_available_teachers
+    User.where(school_id: current_user.school_id, role: "teacher")
+  end
 
-    if @classroom.nil?
-      flash[:alert] = "Classroom not found or you don't have access to this classroom."
-      redirect_to classrooms_path and return
+  def fetch_classroom_by_id
+    Classroom.find_by(id: params[:id], school_id: current_user.school_id)
+  end
+
+  def fetch_classrooms_by_school
+    Classroom.where(school_id: current_user.school_id)
+  end
+
+  def set_classroom
+    @classroom = fetch_classroom_by_id
+
+    unless @classroom
+      flash[:alert] = "Classroom not found or you don't have access."
+      redirect_to classrooms_path
     end
   end
 
@@ -145,6 +180,7 @@ end
       redirect_to root_path, alert: "You are not authorized to access this page."
     end
   end
+
   def classroom_params
     params.require(:classroom).permit(:grade_level, :class_id)
   end

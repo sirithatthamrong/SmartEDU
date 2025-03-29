@@ -42,7 +42,7 @@
                 <i class="fas fa-eye" title="Show"></i> View
               <% end %>
               <% if current_user&.can_manage_teachers? %>
-                <%= link_to "#", class: "hover:text-yellow-500 text-yellow-700" do %>
+                <%= link_to edit_classroom_path(classroom), class: "hover:text-yellow-500 text-yellow-700" do %>
                   <i class="fas fa-edit" title="Edit"></i> Edit
                 <% end %>
               <% end %>
