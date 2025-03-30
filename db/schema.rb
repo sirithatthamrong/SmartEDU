@@ -48,9 +48,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_013748) do
 
   create_table "color_themes", force: :cascade do |t|
     t.integer "school_id", null: false
+    t.string "theme_name", null: false
     t.string "primary_color"
+    t.string "primary_content_color"
     t.string "secondary_color"
+    t.string "secondary_content_color"
     t.string "accent_color"
+    t.string "accent_content_color"
     t.string "base_100_color"
     t.string "base_200_color"
     t.string "base_300_color"

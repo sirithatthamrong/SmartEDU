@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="html" data-theme="mytheme">
+<html lang="html" data-theme="<%= current_user&.school&.color_theme&.theme_name || "mytheme" %>">
 <head>
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
