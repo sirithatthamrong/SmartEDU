@@ -77,14 +77,14 @@ class StudentsTest < ApplicationSystemTestCase
     visit student_url(@student)
     click_on "Edit", match: :first
     fill_in "First Name", with: "Edited"
-    fill_in "Last Name", with: "Student"
+    fill_in "Last Name", with: "StudentName"
     select @classroom.grade_level.to_s, from: "grade-select"
     select @classroom.class_id, from: "classroom-select"
-    fill_in "Personal Email Address", with: @student.student_email_address
+    fill_in "Personal Email Address", with: @user.email_address
     fill_in "Parent Email Address", with: @student.parent_email_address
 
     click_on "Update Student"
-    assert_text "Edited Student was successfully updated."
+    assert_text "Edited StudentName was successfully updated."
     click_on "Back"
   end
 
