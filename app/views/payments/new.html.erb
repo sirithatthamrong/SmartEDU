@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,30 +87,45 @@
       </div>
 
       <!-- Step 2: Amount -->
-      <div class="hidden py-5" id="step-2">
-        <h2 class="text-2xl font-bold mb-6">Payment Amount</h2>
-        <div class="mb-5">
-          <label class="block mb-2 font-medium">Choose Tier</label>
-          <label>
-            <input type="radio" name="tier" value="200" checked onchange="calculateTierAmount()" />
-            Tier 1
-          </label>
-          <label class="ml-4">
-            <input type="radio" name="tier" value="350" onchange="calculateTierAmount()" />
-            Tier 2
-          </label>
+      <div class="hidden py-5 px-6 bg-white rounded-lg shadow-md" id="step-2">
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">Payment Amount</h2>
+
+        <!-- Tier Selection -->
+        <div class="mb-6">
+          <label class="block text-lg font-medium mb-3 text-gray-700">Choose Tier</label>
+
+          <div class="space-y-4">
+            <!-- Tier 1 -->
+            <label class="block p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="tier" value="200" checked class="mr-2" onchange="calculateTierAmount()" />
+              <span class="font-semibold text-gray-900">Tier 1</span>
+              <p class="text-sm text-gray-600">200 Baht per student</p>
+              <p class="text-sm text-gray-500">Manual Checking Attendance</p>
+            </label>
+
+            <!-- Tier 2 -->
+            <label class="block p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+              <input type="radio" name="tier" value="350" class="mr-2" onchange="calculateTierAmount()" />
+              <span class="font-semibold text-gray-900">Tier 2</span>
+              <p class="text-sm text-gray-600">350 Baht per student</p>
+              <p class="text-sm text-gray-500">Automatic Checking Attendance with QR Code</p>
+              <p class="text-sm text-gray-500">Parent Notifications through Emailing</p>
+            </label>
+          </div>
         </div>
-        <div class="mb-5">
-          <label for="student_count" class="block mb-2 font-medium">Number of Students</label>
+
+        <!-- Student Count Input -->
+        <div class="mb-6">
+          <label for="student_count" class="block text-lg font-medium mb-2 text-gray-700">Number of Students</label>
           <input
-              type="number" id="student_count"
-              name="student_count" min="1"
-              class="w-full p-3 border border-gray-300 rounded-md"
-              required
-              oninput="calculateTierAmount()"
+              type="number" id="student_count" name="student_count"
+              min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              required oninput="calculateTierAmount()"
               />
         </div>
+
         <input type="hidden" id="amount" name="amount" value="0" />
+
 
         <div class="flex justify-between mt-8">
           <button type="button" id="prev-to-1" class="btn">Back</button>
@@ -140,19 +156,40 @@
           <div class="mb-5 border-b border-gray-100 pb-3">
             <h3 class="text-lg font-semibold mb-2">Personal Information</h3>
             <p><strong>Name:</strong> <span id="review-name" class="ml-2"></span></p>
+            <p><strong>Email:</strong> <span id="review-email" class="ml-2"></span></p>
+            <p><strong>School Name:</strong> <span id="review-school-name" class="ml-2"></span></p>
+            <p><strong>School Address:</strong> <span id="review-school-address" class="ml-2"></span></p>
+            <p><strong>Tier:</strong> <span id="review-tier" class="ml-2"></span></p>
           </div>
           <div class="mb-5 border-b border-gray-100 pb-3">
             <h3 class="text-lg font-semibold mb-2">Amount</h3>
-            <p><strong>Total:</strong> <span class="ml-2">$<span id="review-amount"></span></span></p>
+            <p><strong>Total:</strong> <span class="ml-2">฿<span id="review-amount"></span></span></p>
           </div>
           <div class="mb-5 border-b border-gray-100 pb-3">
             <h3 class="text-lg font-semibold mb-2">Payment Method</h3>
-            <p> Credit Card <span id="review-card-last4" class="font-mono"></span></p>
+            <p> Credit Card <span id="review-card-last4"></span></p>
           </div>
-          <div class="mb-5 border-b border-gray-100 pb-3">
-            <h3 class="text-lg font-semibold mb-2">Email</h3>
-            <p> Email <span id="review-email" class="font-mono"></span></p>
-          </div>
+<!--          <div class="mb-5 border-b border-gray-100 pb-3">-->
+<!--            <h3 class="text-lg font-semibold mb-2">Email</h3>-->
+<!--            <p> Email <span id="review-email"></span></p>-->
+<!--          </div>-->
+
+<!--          <div class="mb-5 border-b border-gray-100 pb-3">-->
+<!--            <h3 class="text-lg font-semibold mb-2">School Name</h3>-->
+<!--            <p> School Name <span id="review-school-name" ></span></p>-->
+<!--          </div>-->
+
+<!--          <div class="mb-5 border-b border-gray-100 pb-3">-->
+<!--            <h3 class="text-lg font-semibold mb-2">School Address</h3>-->
+<!--            <p> School Address <span id="review-school-address"></span></p>-->
+<!--          </div>-->
+
+<!--          <div class="mb-5 border-b border-gray-100 pb-3">-->
+<!--            <h3 class="text-lg font-semibold mb-2">Tier</h3>-->
+<!--            <p> Selected Tier <span id="review-tier" ></span></p>-->
+<!--          </div>-->
+
+
         </div>
         <div class="flex justify-between mt-8">
           <button type="button" id="prev-to-3" class="btn">Back</button>
@@ -180,6 +217,7 @@
         const tier = parseInt(document.querySelector('input[name="tier"]:checked').value, 10) || 0;
         const studentCount = parseInt(document.getElementById('student_count').value, 10) || 0;
         document.getElementById('amount').value = tier * studentCount;
+        document.getElementById('tier').value = tier;
     }
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -348,11 +386,22 @@
             const email = document.getElementById('email').value;
             const schoolName = document.getElementById('school_name').value;
             const schoolAddress = document.getElementById('school_address').value;
+            let tier = document.querySelector('input[name="tier"]:checked').value;
+
+           if (tier === 200) {
+               tier = "Basic";
+           } else if (tier == 350) {
+               tier = "Premium";
+           }
+
+
 
             document.getElementById('review-name').textContent = `${firstName} ${lastName}`;
-            // Remove the division by 100 to display correct amount
-            document.getElementById('review-amount').textContent = amount;
+            document.getElementById('review-amount').textContent = amount
             document.getElementById('review-email').textContent = email;
+            document.getElementById('review-school-name').textContent = schoolName;
+            document.getElementById('review-school-address').textContent = schoolAddress;
+            document.getElementById('review-tier').textContent = tier;
 
             if (last4) {
                 document.getElementById('review-card-last4').textContent = "****" + last4;
@@ -369,6 +418,7 @@
             const email = document.getElementById('email').value;
             const schoolName = document.getElementById('school_name').value;
             const schoolAddress = document.getElementById('school_address').value;
+            const tier = document.querySelector('input[name="tier"]:checked').value;
 
             const submitButton = document.getElementById('submit-payment');
             submitButton.disabled = true;
@@ -405,7 +455,8 @@
                         payment_method_id: paymentMethod.id,
                         email : email,
                         schoolAddress: schoolAddress,
-                        school_name: schoolName
+                        school_name: schoolName,
+                        tier: tier
                     }),
                 });
 

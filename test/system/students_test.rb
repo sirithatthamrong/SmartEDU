@@ -3,6 +3,7 @@ require "application_system_test_case"
 class StudentsTest < ApplicationSystemTestCase
   setup do
     @school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1)
+    @school.update(subscription_end: 1.month.from_now)
 
     @principal = User.create!(
       first_name: "Principal",

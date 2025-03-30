@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   collection do
     get "success", to: "payments#success"
     get "cancel", to: "payments#cancel"
+    get "renew", to: "payments#renew"
   end
   end
 

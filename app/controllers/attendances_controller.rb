@@ -185,7 +185,7 @@ class AttendancesController < ApplicationController
 
   def authorize_admin_or_principal_or_system_or_teacher!
     unless current_user.admin? || current_user.principal? || current_user.system? || current_user.teacher?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 end

@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 
   def authorize_admin!
     unless current_user.admin?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 end
