@@ -1,4 +1,5 @@
 class HomeController < ApplicationController
+  before_action :check_subscription
   ATTENDANCE_TIMESTAMP_CONDITION = "attendances.timestamp >= ?".freeze
 
   def index
@@ -46,5 +47,13 @@ class HomeController < ApplicationController
       month: total_possible_checkins_this_month.zero? ? 0 : ((@attendance[:unique_checkins_this_month].to_f / total_possible_checkins_this_month) * 100).round(1),
       overall: total_possible_checkins.zero? ? 0 : ((@attendance[:unique_attendance_days].to_f / total_possible_checkins) * 100).round(1)
     }
+  end
+  private
+  def check_subscription
+    if current_user&.school &&
+      current_user.school.subscription_end.present? &&
+      current_user.school.subscription_end < Time.current
+      redirect_to new_payment_path, alert: "Your school subscription has expired. Please renew."
+    end
   end
 end

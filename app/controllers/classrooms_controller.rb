@@ -177,7 +177,7 @@ class ClassroomsController < ApplicationController
 
   def authorize_admin_or_teacher_or_principal!
     unless current_user&.admin? || current_user&.teacher? || current_user&.principal?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 
