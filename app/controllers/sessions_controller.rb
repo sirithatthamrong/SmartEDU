@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_url, alert: "Try again later." }
 
   def new
+    # This is the login page
   end
 
   def show
@@ -30,13 +31,11 @@ class SessionsController < ApplicationController
           redirect_to root_url
         end
       else
-        Rails.logger.debug "Password authentication failed for user: #{user.email_address}"
         flash[:error] = "Invalid email or password."
         render :new, status: :unprocessable_entity
       end
     else
-      Rails.logger.debug "User not found with email: #{params[:email_address].strip.downcase}"
-      flash[:error] = "Invalid email or password."
+      flash[:error] = "Invalid username or password."
       render :new, status: :unprocessable_entity
     end
   end
