@@ -80,7 +80,7 @@ class StudentsTest < ApplicationSystemTestCase
     fill_in "Last Name", with: "StudentName"
     select @classroom.grade_level.to_s, from: "grade-select"
     select @classroom.class_id, from: "classroom-select"
-    fill_in "Personal Email Address", with: @user.email_address
+    fill_in "Personal Email Address", with: "#{SecureRandom.hex(8)}@example.com"
     fill_in "Parent Email Address", with: @student.parent_email_address
 
     click_on "Update Student"
