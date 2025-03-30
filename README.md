@@ -3,8 +3,6 @@
 SmartEDU is a modern school check-in and management system built with Ruby on Rails. It supports multiple schools, a
 streamlined student/teacher registration process, approval workflows, QR code check-in, and role-based dashboards.
 
----
-
 ## Table of Contents
 
 - [Features](#features)
@@ -12,8 +10,6 @@ streamlined student/teacher registration process, approval workflows, QR code ch
 - [System Requirements](#system-requirements)
 - [Setup Instructions](#setup-instructions)
 - [How to Run the Test Suite](#how-to-run-the-test-suite)
-
----
 
 ## Features
 
@@ -27,8 +23,6 @@ streamlined student/teacher registration process, approval workflows, QR code ch
 - Admin interface for both school-level and system-level management
 - Attendance reports with in/out logs for parents
 
----
-
 ## Tech Stack
 
 - **Ruby version:** 3.3.6
@@ -36,8 +30,6 @@ streamlined student/teacher registration process, approval workflows, QR code ch
 - **Frontend:** Tailwind CSS (via `app/assets/builds/tailwind.css`)
 - **Deployment:** Kamal
 - **Others:** Hotwire (Turbo/Stimulus), Devise (authentication), RSpec (testing)
-
----
 
 ## System Requirements
 
@@ -49,8 +41,6 @@ Make sure the following dependencies are installed:
 - Node.js & Yarn (for JS bundling)
 - Kamal (for deployment)
 - Git, SSH access (for deployment)
-
----
 
 ## Setup Instructions
 
@@ -83,8 +73,6 @@ bin/rails server
 ```
 
 Visit `http://localhost:3000` in your browser to access the application.
-
----
 
 ## How to Run the Test Suite
 
