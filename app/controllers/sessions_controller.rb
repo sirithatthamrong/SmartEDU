@@ -24,7 +24,7 @@ class SessionsController < ApplicationController
           else
             if user.role == "admin" || user.role == "principal"
               flash[:alert] = "Your school subscription has expired. Please renew."
-              redirect_to new_payment_path
+              redirect_to renew_payments_url
             else
               flash[:alert] = "Your school subscription has expired. Please contact your admin."
               redirect_to root_url

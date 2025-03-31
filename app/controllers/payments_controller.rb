@@ -1,5 +1,5 @@
 class PaymentsController < ApplicationController
-  allow_unauthenticated_access only: %i[new create success cancel]
+  allow_unauthenticated_access only: %i[new create cancel]
 
   def new
     @user = current_user || User.new
@@ -12,15 +12,41 @@ class PaymentsController < ApplicationController
 
 
   def renew
-    @user = current_user || User.new
+    @user = current_user
     @school = current_user&.school
     @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
+
     if @school && @school.subscription_end.present? && @school.subscription_end < Time.current
       flash.now[:notice] = "Your school subscription has expired. Please renew."
     end
-    render :new
+
+    render :renew
   end
 
+  def renew_payment
+    Rails.logger.info "Renewing payment in this fuunction here"
+    disable_login_credentials_callback
+    ActiveRecord::Base.transaction do
+      school = create_or_update_school
+      @user = find_or_create_user(school)
+      payment = process_payment(@user)
+
+      update_school_subscription(school, payment)
+
+      setup_session(payment, @user)
+      Rails.logger.info "Sending receipt for payment ID: #{payment.id}"
+      send_receipt(payment)
+
+
+      render json: { status: "success", payment: payment }, status: 200
+    end
+
+
+  rescue Stripe::StripeError => e
+    handle_stripe_error(e)
+  rescue ActiveRecord::RecordInvalid => e
+    handle_record_invalid(e)
+  end
   def create
     school = School.find_by(name: params[:school_name])
     if school && school.subscription_end.present? &&
@@ -75,13 +101,12 @@ class PaymentsController < ApplicationController
   private
 
   def update_school_subscription(school, payment)
-    if params[:renew] == "true" && school.subscription_end&.future?
+    if school.subscription_end&.future?
       new_end_date = school.subscription_end + 1.year
     else
-      new_end_date = Time.zone.now + 1.year
+      new_end_date = (school.subscription_end || Time.zone.now) + 1.year
     end
 
-    # Update the school's subscription end date
     school.update(
       subscription_end: new_end_date,
       has_paid: 1
@@ -168,6 +193,7 @@ class PaymentsController < ApplicationController
   end
 
   def send_receipt(payment)
+    Rails.logger.info "Inside send_receipt method for payment ID: #{payment.id}"
     PaymentMailer.receipt_email(payment).deliver_now
   end
 
