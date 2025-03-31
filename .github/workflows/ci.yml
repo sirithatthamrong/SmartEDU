@@ -119,7 +119,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
-            -Dsonar.projectKey=sirithatthamrong \
+            -Dsonar.projectKey=sirithatthamrong_SmartEDU \
             -Dsonar.organization=lingg \
             -Dsonar.sources=. \
             -Dsonar.host.url=https://sonarcloud.io \
