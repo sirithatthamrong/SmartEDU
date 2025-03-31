@@ -37,7 +37,6 @@ class PaymentsController < ApplicationController
       Rails.logger.info "Sending receipt for payment ID: #{payment.id}"
       send_receipt(payment)
 
-
       render json: { status: "success", payment: payment }, status: 200
     end
 
@@ -52,7 +51,7 @@ class PaymentsController < ApplicationController
     disable_login_credentials_callback
 
     ActiveRecord::Base.transaction do
-      school = create_school
+      school = create_or_update_school
       @user = find_or_create_user(school)
       payment = process_payment(@user)
 
@@ -62,7 +61,7 @@ class PaymentsController < ApplicationController
       render json: { status: "success", payment: payment }, status: 200
     end
 
-    send_credentials_email if @user&.persisted? && !current_user
+    send_credentials_email
     enable_login_credentials_callback
 
   rescue Stripe::StripeError => e
@@ -95,7 +94,7 @@ class PaymentsController < ApplicationController
     if school.subscription_end&.future?
       new_end_date = school.subscription_end + 1.year
     else
-      new_end_date = (school.subscription_end || Time.zone.now) + 1.year
+      new_end_date = Time.zone.now + 1.year
     end
 
     school.update(
@@ -117,6 +116,7 @@ class PaymentsController < ApplicationController
         s.address = params[:schoolAddress]
         s.has_paid = 1
         s.tier = params[:tier].to_i == 200 ? 1 : 2
+        s.subscription_end = Time.zone.now + 1.year
       end
       if school.persisted?
         school.update(tier: params[:tier].to_i == 200 ? 1 : 2)
@@ -207,5 +207,9 @@ class PaymentsController < ApplicationController
 
   def enable_login_credentials_callback
     User.set_callback(:create, :after, :send_login_credentials) if User.method_defined?(:send_login_credentials)
+  end
+  def log_incoming_params
+    Rails.logger.debug("Received params from payment first page: #{params.inspect}")
+    Rails.logger.debug("Received params unsafe: #{params.to_unsafe_h}")
   end
 end

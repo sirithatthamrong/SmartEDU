@@ -1,3 +1,5 @@
+<%render 'shared/notice' %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -97,7 +99,7 @@
             <!-- Tier 1 -->
             <label class="block p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
               <input type="radio" name="tier" value="200" checked class="mr-2" onchange="calculateTierAmount()" />
-              <span class="font-semibold text-gray-900">Tier 1</span>
+              <span class="font-semibold text-gray-900">Basic</span>
               <p class="text-sm text-gray-600">200 Baht per student</p>
               <p class="text-sm text-gray-500">Manual Checking Attendance</p>
             </label>
@@ -105,7 +107,7 @@
             <!-- Tier 2 -->
             <label class="block p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
               <input type="radio" name="tier" value="350" class="mr-2" onchange="calculateTierAmount()" />
-              <span class="font-semibold text-gray-900">Tier 2</span>
+              <span class="font-semibold text-gray-900">Premium</span>
               <p class="text-sm text-gray-600">350 Baht per student</p>
               <p class="text-sm text-gray-500">Automatic Checking Attendance with QR Code</p>
               <p class="text-sm text-gray-500">Parent Notifications through Emailing</p>
@@ -118,7 +120,7 @@
           <label for="student_count" class="block text-lg font-medium mb-2 text-gray-700">Number of Students</label>
           <input
             type="number" id="student_count" name="student_count"
-            min="1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+            min="1" class="input input-bordered w-full"
             required oninput="calculateTierAmount()"
             />
         </div>
@@ -347,9 +349,9 @@
                 } else {
                     displayError.textContent = '';
                     cardComplete = event.complete;
-                    if (event.complete && event.value?.card?.last4) {
+                    if (event.complete && event.value.card) {
                         last4 = event.value.card.last4;
-                        console.log(last4);
+                        console.log("Card Last 4", last4);
                     }
                 }
             });
@@ -364,9 +366,9 @@
             const schoolAddress = document.getElementById('school_address').value;
             let tier = document.querySelector('input[name="tier"]:checked').value;
 
-            if (tier === 200) {
+            if (tier === "200") {
                 tier = "Basic";
-            } else if (tier == 350) {
+            } else if (tier == "350") {
                 tier = "Premium";
             }
 
@@ -378,10 +380,8 @@
             document.getElementById('review-school-name').textContent = schoolName;
             document.getElementById('review-school-address').textContent = schoolAddress;
             document.getElementById('review-tier').textContent = tier;
+            document.getElementById('review-card-last4').textContent = last4 ? `(**** **** **** ${last4})` : "";
 
-            if (last4) {
-                document.getElementById('review-card-last4').textContent = "****" + last4;
-            }
         }
 
 
