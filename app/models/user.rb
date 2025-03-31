@@ -31,12 +31,12 @@ class User < ApplicationRecord
 
   has_many :attendances, dependent: :destroy
   has_many :sessions, dependent: :destroy
-  has_many :students, primary_key: :email_address, foreign_key: :student_email_address
+  has_many :students, primary_key: :email_address, foreign_key: :student_email_address, dependent: :destroy
   has_many :homerooms, foreign_key: :teacher_id, dependent: :destroy
   has_many :principal_teacher_relationships, foreign_key: :teacher_id, dependent: :destroy
   has_many :teacher_student_relationships, foreign_key: :teacher_id, dependent: :destroy
 
-  before_validation :generate_school_email, on: :create
+  before_validation :generate_school_username, on: :create
   before_validation :generate_password, on: :create
   after_create :send_login_credentials
 
@@ -94,26 +94,25 @@ class User < ApplicationRecord
     role.in?(%w[teacher admin])
   end
 
-  def generate_school_email
+  def generate_school_username
     return if email_address.present?
     return if first_name.blank? || last_name.blank? || school_id.blank?
 
     first_name_part = first_name.strip.downcase.gsub(/\s+/, "")
     last_name_part = last_name.strip.downcase.gsub(/\s+/, "")[0..2] # First 3 letters of last name
-    school_name = School.find(school_id).name.downcase.gsub(/\s+/, "") # Removes spaces
+    school_id_part = self.school_id
+    year_entered = Time.current.year
 
-    school_domain = "#{role.downcase}.#{school_name}.edu"
-
-    base_email = "#{first_name_part}.#{last_name_part}@#{school_domain}"
-    unique_email = base_email
+    base_username = "#{first_name_part}#{last_name_part}#{school_id_part}#{year_entered}"
+    unique_username = base_username
     counter = 1
 
-    while User.exists?(email_address: unique_email)
-      unique_email = "#{first_name_part}.#{last_name_part}#{counter}@#{school_domain}"
+    while User.exists?(email_address: unique_username)
+      unique_username = "#{base_username}#{counter}"
       counter += 1
     end
 
-    self.email_address = unique_email
+    self.email_address = unique_username
   end
 
   def generate_password

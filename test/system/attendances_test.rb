@@ -4,6 +4,7 @@ require "test_helper"
 class AttendancesTest < ApplicationSystemTestCase
   setup do
     @school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1)
+    @school.update(subscription_end: 1.month.from_now)
     @attendance = Attendance.first
     @student = Student.find(@attendance.student_id)
     @principal = User.create!(

@@ -59,7 +59,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
 
     sign_in_with_parameter(regular_user)
     get users_path
-    assert_redirected_to root_path
+    assert_redirected_to home_index_url
     assert_equal "You are not authorized to access this page.", flash[:alert]
   end
 

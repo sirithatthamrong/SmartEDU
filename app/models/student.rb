@@ -29,6 +29,7 @@ class Student < ApplicationRecord
   belongs_to :user, primary_key: :email_address, foreign_key: :student_email_address
   belongs_to :classroom
 
+
   validates :grade, presence: true
   validates :classroom_id, presence: true
   validates :student_email_address, presence: true, uniqueness: true

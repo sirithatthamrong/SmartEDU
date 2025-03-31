@@ -13,18 +13,6 @@ class AttendancesController < ApplicationController
     # This will render app/views/attendances/show.html.erb
   end
 
-  # GET /attendances/new
-  def new
-    @q = Student.active.ransack(params[:q])
-    @students = @q.result(distinct: true)
-    @attendances = Attendance.order(timestamp: :desc).limit(10)
-
-    respond_to do |format|
-      format.html
-      format.turbo_stream
-    end
-  end
-
   # GET /attendances/1/edit
   def edit
     # This will render app/views/attendances/edit.html.erb
@@ -197,7 +185,7 @@ class AttendancesController < ApplicationController
 
   def authorize_admin_or_principal_or_system_or_teacher!
     unless current_user.admin? || current_user.principal? || current_user.system? || current_user.teacher?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 end
