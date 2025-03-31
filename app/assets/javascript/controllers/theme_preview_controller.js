@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return luminance > 0.5 ? "#000000" : "#ffffff";
     }
 
-    function applyThemeToPreview({ primary, secondary, accent, base100, base200, baseContent }) {
+    function applyThemeToPreview({primary, secondary, accent, base100, base200, baseContent}) {
         const primaryContent = getContrastingTextColor(primary);
         const secondaryContent = getContrastingTextColor(secondary);
         const accentContent = getContrastingTextColor(accent);
@@ -71,11 +71,39 @@ document.addEventListener("DOMContentLoaded", function () {
         // Extra preview styling
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
+
+        const previewForgotLink = document.getElementById("preview-secondary-link");
+        const previewHomeLink = document.getElementById("preview-tertiary-link");
+
+        if (previewForgotLink) {
+            previewForgotLink.style.color = primary;
+        }
+
+        if (previewHomeLink) {
+            previewHomeLink.style.color = secondary;
+        }
+
         previewInputs.forEach(input => {
             input.style.borderColor = base500Input?.value || "#d0d0d0";
-            input.style.color = base500Input?.value || "#d0d0d0";
             input.style.backgroundColor = base100;
             input.style.caretColor = base500Input?.value || "#d0d0d0";
+
+            // Hardcoded input text color
+            input.style.color = "#9ca3af"; // Tailwind gray-400, good on light and dark
+
+            // Clean up old style block if it exists
+            const existingStyle = document.getElementById("dynamic-placeholder-style");
+            if (existingStyle) existingStyle.remove();
+
+            // Hardcoded placeholder style
+            const style = document.createElement("style");
+            style.id = "dynamic-placeholder-style";
+            style.innerHTML = `
+      #preview-bg input::placeholder {
+        color: #9ca3af !important; /* Tailwind gray-400 */
+      }
+    `;
+            document.head.appendChild(style);
         });
     }
 
