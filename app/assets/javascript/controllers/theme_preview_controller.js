@@ -88,14 +88,11 @@ document.addEventListener("DOMContentLoaded", function () {
             input.style.backgroundColor = base100;
             input.style.caretColor = base500Input?.value || "#d0d0d0";
 
-            // Hardcoded input text color
-            input.style.color = "#9ca3af"; // Tailwind gray-400, good on light and dark
+            input.style.color = "#9ca3af";
 
-            // Clean up old style block if it exists
             const existingStyle = document.getElementById("dynamic-placeholder-style");
             if (existingStyle) existingStyle.remove();
 
-            // Hardcoded placeholder style
             const style = document.createElement("style");
             style.id = "dynamic-placeholder-style";
             style.innerHTML = `
