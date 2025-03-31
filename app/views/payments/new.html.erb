@@ -122,9 +122,7 @@
               required oninput="calculateTierAmount()"
               />
         </div>
-
         <input type="hidden" id="amount" name="amount" value="0" />
-
 
         <div class="flex justify-between mt-8">
           <button type="button" id="prev-to-1" class="btn">Back</button>
@@ -196,7 +194,6 @@
         const tier = parseInt(document.querySelector('input[name="tier"]:checked').value, 10) || 0;
         const studentCount = parseInt(document.getElementById('student_count').value, 10) || 0;
         document.getElementById('amount').value = tier * studentCount;
-        document.getElementById('tier').value = tier;
     }
 
     document.addEventListener("DOMContentLoaded", function () {

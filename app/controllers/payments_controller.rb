@@ -48,22 +48,13 @@ class PaymentsController < ApplicationController
     handle_record_invalid(e)
   end
   def create
-    school = School.find_by(name: params[:school_name])
-    if school && school.subscription_end.present? &&
-      school.subscription_end < Time.current &&
-      params[:renew] != "true"
-      redirect_to new_payment_path, alert: "School subscription has expired. Please renew."
-      return
-    end
-
+    log_incoming_params
     disable_login_credentials_callback
 
     ActiveRecord::Base.transaction do
-      school = create_or_update_school
+      school = create_school
       @user = find_or_create_user(school)
       payment = process_payment(@user)
-
-      update_school_subscription(school, payment)
 
       setup_session(payment, @user)
       send_receipt(payment)
