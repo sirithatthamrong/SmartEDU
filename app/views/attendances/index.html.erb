@@ -1,25 +1,24 @@
-<p style="color: green"><%= notice %></p>
+<%= render "shared/notice" %>
 <% content_for :title, "Attendances" %>
   <%#== pagy_nav(@pagy) %>
 
-<div class="overflow-x-auto m-2">
-  <table id="List-Attendance" class="w-full text-left border-separate border-spacing-0 bg-white shadow-md rounded-2xl overflow-hidden hover" data-turbo="false">
-
-    <thead>
+<div class="my-entity-container px-4 md:px-6 overflow-x-auto">
+  <% if @attendance.nil? %>
+    <table id="shared-table" class="entity-table" data-turbo="false">
+      <thead>
       <tr>
         <th>Student ID</th>
         <th>Timestamp</th>
         <th>User ID</th>
         <th>action</th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <% @attendances.each do |attendance| %>
         <tr>
           <td><%= attendance.student_id %></td>
           <td><%= attendance.timestamp %></td>
           <td><%= attendance.user_id %></td>
-
           <td>
             <%= link_to attendance, class: "hover:text-blue-500 text-blue-700" do %>
               <i class="fas fa-eye" title="Show"></i> View
@@ -30,27 +29,11 @@
           </td>
         </tr>
       <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  <% else %>
+    <p class="text-left text-gray-600 mt-6 px-6">No attendances available.</p>
+  <% end %>
 </div>
 
-  <%#== pagy_nav(@pagy) %>
-
-<script>
-    document.addEventListener("turbo:load", function () {
-        const tableId = "#List-Attendance";
-
-        if (!$.fn.DataTable.isDataTable(tableId)) {
-            $(tableId).DataTable({
-                responsive: true,
-                order:[[1, "desc"]],
-                language: {
-                    search: "",
-                    searchPlaceholder: "Search students...",
-                },
-
-            });
-        }
-    });
-
-</script>
+<%= javascript_include_tag "controllers/students_table_controller" %>

@@ -1,0 +1,60 @@
+<%= render "shared/notice" %>
+
+<% content_for :title, "Manage Classrooms" %>
+
+<div class="flex flex-col md:flex-row md:justify-between items-start md:items-center space-y-4 md:space-y-0 px-4 md:px-6 justify-end space-x-4 px-6">
+  <% if current_user&.can_manage_teachers? %>
+    <%= link_to "New Classroom", new_classroom_path, class: "entity-btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc]" %>
+  <% end %>
+</div>
+
+<% if @get_all_classrooms.any? %>
+  <div class="my-entity-container px-4 md:px-6 overflow-x-auto">
+    <table id="shared-table" class="entity-table" data-turbo="false">
+      <thead class="bg-gray-50">
+      <tr>
+        <th>Class ID</th>
+        <th>Grade Level</th>
+        <th>Grade Classroom</th>
+        <th>Homeroom Teacher</th>
+        <th>Total Students</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+      <% @get_all_classrooms.each do |classroom| %>
+        <tr>
+          <td><%= classroom.id %></td>
+          <td>Grade <%= classroom.grade_level %></td>
+          <td>Grade <%= classroom.class_id %></td>
+          <td>
+            <% homeroom = @homerooms[classroom.id] %>
+            <% if homeroom&.teacher_user %>
+              <%= "#{homeroom.teacher_user.first_name} #{homeroom.teacher_user.last_name}" %>
+            <% else %>
+              Not Assigned
+            <% end %>
+          </td>
+          <td><%= @student_counts[classroom.id] || 0 %></td>
+          <td>
+            <div class="flex space-x-2">
+              <%= link_to view_classroom_path(classroom), class: "hover:text-blue-500 text-blue-700" do %>
+                <i class="fas fa-eye" title="Show"></i> View
+              <% end %>
+              <% if current_user&.can_manage_teachers? %>
+                <%= link_to edit_classroom_path(classroom), class: "hover:text-yellow-500 text-yellow-700" do %>
+                  <i class="fas fa-edit" title="Edit"></i> Edit
+                <% end %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p class="text-gray-500">No classrooms found for your school.</p>
+<% end %>
+
+<%= javascript_include_tag "controllers/students_table_controller" %>

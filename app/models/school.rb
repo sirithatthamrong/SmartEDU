@@ -4,19 +4,22 @@
 #
 # Table name: schools
 #
-#  id         :integer          not null, primary key
-#  address    :string           not null
-#  has_paid   :boolean          default(FALSE)
-#  name       :string           not null
-#  tier       :integer          default(1)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id               :integer          not null, primary key
+#  address          :string           not null
+#  has_paid         :boolean
+#  name             :string           not null
+#  subscription_end :datetime
+#  tier             :integer          default(1)
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
 #
 # Indexes
 #
 #  index_schools_on_name  (name) UNIQUE
 #
 class School < ApplicationRecord
+  has_one :school_tier
+  has_many :users
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :address, presence: true
   has_one :color_theme, dependent: :destroy
@@ -42,5 +45,9 @@ class School < ApplicationRecord
       neutral_color: "#6B8A9E",
       neutral_content_color: "#F3FAFF"
     )
+  end
+
+  def subscription_active?
+    subscription_end.present? && subscription_end > Time.zone.now
   end
 end

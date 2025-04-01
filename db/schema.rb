@@ -10,23 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_23_013748) do
-  create_table "Users", force: :cascade do |t|
-    t.string "email_address", null: false
-    t.string "password_digest", null: false
-    t.boolean "is_active", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "role", default: "student"
-    t.boolean "approved", default: false
-    t.integer "school_id"
-    t.string "personal_email", null: false
-    t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.index ["email_address"], name: "index_users_on_email_address", unique: true
-    t.index ["school_id"], name: "index_users_on_school_id"
-  end
-
+ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -113,8 +97,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_013748) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "has_paid", default: false
+    t.boolean "has_paid"
     t.integer "tier", default: 1
+    t.datetime "subscription_end"
     t.index ["name"], name: "index_schools_on_name", unique: true
   end
 
@@ -165,4 +150,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_23_013748) do
   add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "teacher_student_relationships", "users", column: "student_id"
   add_foreign_key "teacher_student_relationships", "users", column: "teacher_id"
+  add_foreign_key "users", "schools"
 end

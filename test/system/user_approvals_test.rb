@@ -3,7 +3,8 @@ require "application_system_test_case"
 class UserApprovalsTest < ApplicationSystemTestCase
   setup do
     @school = School.create!(name: "Test School", address: "123 Test St", has_paid: 1)
-
+    # update the subscription_end to a future date
+    @school.update(subscription_end: 1.month.from_now)
     @admin = User.create!(
       first_name: "Admin",
       last_name: "User",

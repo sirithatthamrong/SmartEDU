@@ -3,6 +3,7 @@ class SessionsController < ApplicationController
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_url, alert: "Try again later." }
 
   def new
+    # This is the login page
   end
 
   def show
@@ -19,24 +20,27 @@ class SessionsController < ApplicationController
         cookies.signed.permanent[:session_id] = { value: session.id, httponly: true, same_site: :lax }
         start_new_session_for(user)
         if user.approved?
-          if user.school.has_paid
-            # change to home page. (Used to be payment page, but we want to redirect to home page)
-            redirect_to home_index_path
+          if user.school.has_paid && user.school.subscription_active?
+              redirect_to home_index_path
           else
-            redirect_to payments_new_path
+            if user.role == "admin" || user.role == "principal"
+              flash[:alert] = "Your school subscription has expired. Please renew."
+              redirect_to new_payment_path
+            else
+              flash[:alert] = "Your school subscription has expired. Please contact your admin."
+              redirect_to root_url
+            end
           end
         else
           flash[:notice] = "Your account is pending approval."
           redirect_to root_url
         end
       else
-        Rails.logger.debug "Password authentication failed for user: #{user.email_address}"
         flash[:error] = "Invalid email or password."
         render :new, status: :unprocessable_entity
       end
     else
-      Rails.logger.debug "User not found with email: #{params[:email_address].strip.downcase}"
-      flash[:error] = "Invalid email or password."
+      flash[:error] = "Invalid username or password."
       render :new, status: :unprocessable_entity
     end
   end

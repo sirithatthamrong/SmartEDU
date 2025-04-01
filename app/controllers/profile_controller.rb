@@ -24,7 +24,7 @@ class ProfileController < ApplicationController
 
   def authorize_user!
     unless current_user.student? || current_user.teacher? || current_user.admin? || current_user.principal?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 end

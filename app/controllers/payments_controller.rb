@@ -2,17 +2,42 @@ class PaymentsController < ApplicationController
   allow_unauthenticated_access only: %i[new create success cancel]
 
   def new
-    @user = User.new
+    @user = current_user || User.new
+    @school = current_user&.school
+    @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
+    if @school && @school.subscription_end.present? && @school.subscription_end < Time.current
+      flash.now[:notice] = "Your school subscription has expired. Please renew."
+    end
+  end
+
+
+  def renew
+    @user = current_user || User.new
+    @school = current_user&.school
+    @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
+    if @school && @school.subscription_end.present? && @school.subscription_end < Time.current
+      flash.now[:notice] = "Your school subscription has expired. Please renew."
+    end
+    render :new
   end
 
   def create
-    log_incoming_params
+    school = School.find_by(name: params[:school_name])
+    if school && school.subscription_end.present? &&
+      school.subscription_end < Time.current &&
+      params[:renew] != "true"
+      redirect_to new_payment_path, alert: "School subscription has expired. Please renew."
+      return
+    end
+
     disable_login_credentials_callback
 
     ActiveRecord::Base.transaction do
-      school = create_school
+      school = create_or_update_school
       @user = find_or_create_user(school)
       payment = process_payment(@user)
+
+      update_school_subscription(school, payment)
 
       setup_session(payment, @user)
       send_receipt(payment)
@@ -20,7 +45,7 @@ class PaymentsController < ApplicationController
       render json: { status: "success", payment: payment }, status: 200
     end
 
-    send_credentials_email if @user&.persisted?
+    send_credentials_email if @user&.persisted? && !current_user
     enable_login_credentials_callback
 
   rescue Stripe::StripeError => e
@@ -31,7 +56,16 @@ class PaymentsController < ApplicationController
 
   def success
     @payment = Payment.find_by(id: session[:last_payment_id])
-    session.delete(:last_payment_id) # Clear session after retrieving payment
+    session.delete(:last_payment_id)
+
+    if @payment
+      @school_tier = @payment.user.school.school_tier.tier
+      if @school_tier == "Premium"
+        @school_tier = "Premium"
+      else
+        @school_tier = "Basic"
+      end
+    end
   end
 
   def cancel
@@ -40,62 +74,65 @@ class PaymentsController < ApplicationController
 
   private
 
-  def log_incoming_params
-    Rails.logger.debug("Received params from payment first page: #{params.inspect}")
-    Rails.logger.debug("Received params unsafe: #{params.to_unsafe_h}")
-  end
-
-  def disable_login_credentials_callback
-    User.skip_callback(:create, :after, :send_login_credentials) if User._create_callbacks.map(&:filter).include?(:send_login_credentials)
-  end
-
-  def enable_login_credentials_callback
-    User.set_callback(:create, :after, :send_login_credentials) if User.method_defined?(:send_login_credentials)
-  end
-
-  def create_school
-    school = School.find_or_create_by(name: params[:school_name]) do |s|
-      s.address = params[:schoolAddress]
-      s.has_paid = 1
+  def update_school_subscription(school, payment)
+    if params[:renew] == "true" && school.subscription_end&.future?
+      new_end_date = school.subscription_end + 1.year
+    else
+      new_end_date = Time.zone.now + 1.year
     end
 
-    Rails.logger.debug("School found or created: #{school.inspect}")
+    # Update the school's subscription end date
+    school.update(
+      subscription_end: new_end_date,
+      has_paid: 1
+    )
+    payment.update(
+      subscription_start: Time.zone.now,
+      subscription_end: new_end_date
+    )
+  end
+
+  def create_or_update_school
+    if current_user&.school && params[:renew] == "true"
+      school = current_user.school
+      school.update(tier: params[:tier].to_i == 200 ? 1 : 2)
+    else
+      school = School.find_or_create_by(name: params[:school_name]) do |s|
+        s.address = params[:schoolAddress]
+        s.has_paid = 1
+        s.tier = params[:tier].to_i == 200 ? 1 : 2
+      end
+      if school.persisted?
+        school.update(tier: params[:tier].to_i == 200 ? 1 : 2)
+      end
+    end
+    school_tier = SchoolTier.find_or_create_by(school_id: school.id)
+    school_tier.update(tier: params[:tier].to_i == 350 ? "Premium" : "Basic")
+
     school
   end
 
   def find_or_create_user(school)
+    if current_user
+      current_user.update!(approved: true)
+      return current_user
+    end
+
     existing_user = User.find_by(personal_email: params[:email])
 
     if existing_user
-      update_existing_user(existing_user)
+      existing_user.update!(approved: true)
+      existing_user
     else
-      create_new_user(school)
+      User.create!(
+        first_name: params[:first_name],
+        last_name: params[:last_name],
+        personal_email: params[:email],
+        role: "admin",
+        school_id: school.id,
+        approved: true
+      )
     end
-  end
-
-  def update_existing_user(user)
-    user.update!(approved: true)
-    Rails.logger.info("Existing user updated: #{user.inspect}")
-    user
-  end
-
-  def create_new_user(school)
-    user = User.new(
-      first_name: params[:first_name],
-      last_name: params[:last_name],
-      personal_email: params[:email],
-      role: "admin",
-      school_id: school.id,
-      approved: true
-    )
-
-    unless user.save
-      Rails.logger.error("User creation failed: #{user.errors.full_messages.join(', ')}")
-      raise ActiveRecord::RecordInvalid.new(user)
-    end
-
-    Rails.logger.info("New user created with ID: #{user.id}")
-    user
   end
 
   def process_payment(user)
@@ -127,7 +164,7 @@ class PaymentsController < ApplicationController
 
   def setup_session(payment, user)
     session[:last_payment_id] = payment.id
-    start_new_session_for user
+    start_new_session_for user unless current_user
   end
 
   def send_receipt(payment)
@@ -140,26 +177,18 @@ class PaymentsController < ApplicationController
   end
 
   def handle_stripe_error(error)
-    Rails.logger.error("Stripe error: #{error.message}")
     render json: { error: error.message }, status: :unprocessable_entity
   end
 
   def handle_record_invalid(error)
-    Rails.logger.error("ActiveRecord exception: #{error.message}")
-    flash[:error] = "Error: #{error.message}"
-    render :new, status: :unprocessable_entity
+    render json: { error: error.message }, status: :unprocessable_entity
   end
 
-  def payment_params
-    params.require(:payment).permit(:amount, :payment_method_id, :email, :first_name, :last_name)
+  def disable_login_credentials_callback
+    User.skip_callback(:create, :after, :send_login_credentials) if User._create_callbacks.map(&:filter).include?(:send_login_credentials)
   end
 
-  def user_params
-    {
-      first_name: params[:first_name],
-      last_name: params[:last_name],
-      personal_email: params[:email],
-      role: "admin"
-    }
+  def enable_login_credentials_callback
+    User.set_callback(:create, :after, :send_login_credentials) if User.method_defined?(:send_login_credentials)
   end
 end

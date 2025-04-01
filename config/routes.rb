@@ -5,7 +5,6 @@ Rails.application.routes.draw do
   get "payments/create"
   get "teachers/index"
   get "teachers/destroy"
-  resources :classrooms, only: [ :index, :show ]
   root "main#index"
   get "main/index"
 
@@ -13,14 +12,19 @@ Rails.application.routes.draw do
   collection do
     get "success", to: "payments#success"
     get "cancel", to: "payments#cancel"
+    get "renew", to: "payments#renew"
   end
   end
+
   resources :classrooms do
     collection do
       get "by_grade/:grade", to: "classrooms#by_grade", as: "by_grade"
+      get :manage
+      get :view
     end
     member do
       get :grading
+      get :view
       get :grade_level
     end
     resources :students, only: [ :index, :show ]
@@ -41,13 +45,6 @@ Rails.application.routes.draw do
   resource :profile, only: [ :show, :update ]
   patch "/profile/update_password", to: "profile#update_password"
 
-  # Students
-  resources :students do
-    collection do
-      post "mark_attendance"
-    end
-  end
-
   # Other Routes
   get "home/index"
   get "logout", to: "sessions#destroy", as: :logout
@@ -63,15 +60,19 @@ Rails.application.routes.draw do
   get "login", to: "sessions#new", as: "login"
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Additional Student Actions
+  # Students Routes
   resources :students do
+    collection do
+      get :download_csv_template
+      post :import_csv
+      post :mark_attendance
+      get :classrooms_by_grade
+      get :manage
+    end
     member do
       patch :toggle_status
       patch :archive
       patch :activate
-    end
-    collection do
-      get :manage
     end
   end
 

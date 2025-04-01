@@ -3,7 +3,7 @@
 
 <% content_for :title, "Manage Teachers" %>
 
-<div class="my-entity-container px-6">
+<div class="my-entity-container px-4 md:px-6 overflow-x-auto">
   <% if @teachers.any? %>
     <table class="entity-table" id="shared-table" data-turbo="false">
       <thead>
@@ -11,7 +11,7 @@
         <th>ID</th>
         <th>First Name</th>
         <th>Last Name</th>
-        <th>School Email</th>
+        <th>Username</th>
         <th>Personal Email</th>
         <th>Action</th>
       </tr>
