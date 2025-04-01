@@ -1,13 +1,18 @@
-<!DOCTYPE html>
-<% raw_theme = current_user&.school&.color_theme&.theme_name %>
-<% theme = raw_theme == "custom" ? "mytheme" : raw_theme || "mytheme" %>
+<% if current_user&.school&.color_theme %>
+  <% raw_theme = current_user.school.color_theme.theme_name %>
+  <% theme = raw_theme == "custom" ? "mytheme" : raw_theme %>
+<% else %>
+  <% theme = "mytheme" %>
+<% end %>
 
+<!DOCTYPE html>
 <html lang="en" data-theme="<%= theme %>">
 <head>
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
-  <% if theme == "mytheme" %>
+
+  <% if current_user&.school&.color_theme && theme == "mytheme" %>
     <style>
         [data-theme="mytheme"] {
             --primary: <%= current_user.school.color_theme.primary_color %>;
@@ -36,7 +41,6 @@
         }
     </style>
   <% else %>
-    <%# Optional: fallback for built-in themes, if navbar depends on CSS vars instead of Daisy classes %>
     <style>
         :root {
         <% if theme == "light" %>
@@ -73,6 +77,7 @@
         }
     </style>
   <% end %>
+
   <title><%= content_for(:title) || "Schooler" %></title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
