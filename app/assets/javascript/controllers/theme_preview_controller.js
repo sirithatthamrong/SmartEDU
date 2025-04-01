@@ -14,6 +14,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const base500Input = document.getElementById("base-500-color");
     const baseContentInput = document.getElementById("base-content-color");
 
+    const previewPrimaryBtn = document.getElementById("preview-primary-btn");
+    const previewAccentBtn = document.getElementById("preview-accent-btn");
+
     const baseThemeRadios = document.querySelectorAll('input[name="base_color_scheme"]');
 
     const builtInThemes = {
@@ -68,7 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
         previewBg.style.setProperty("--base-content", baseContent);
         previewBg.style.setProperty("background-image", `linear-gradient(to right, ${accent}, ${secondary})`);
 
-        // Extra preview styling
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
 
@@ -83,11 +85,20 @@ document.addEventListener("DOMContentLoaded", function () {
             previewHomeLink.style.color = secondary;
         }
 
+        if (previewPrimaryBtn) {
+            previewPrimaryBtn.style.backgroundColor = primary;
+            previewPrimaryBtn.style.color = primaryContent;
+        }
+
+        if (previewAccentBtn) {
+            previewAccentBtn.style.backgroundColor = accent;
+            previewAccentBtn.style.color = accentContent;
+        }
+
         previewInputs.forEach(input => {
             input.style.borderColor = base500Input?.value || "#d0d0d0";
             input.style.backgroundColor = base100;
             input.style.caretColor = base500Input?.value || "#d0d0d0";
-
             input.style.color = "#9ca3af";
 
             const existingStyle = document.getElementById("dynamic-placeholder-style");
@@ -96,10 +107,10 @@ document.addEventListener("DOMContentLoaded", function () {
             const style = document.createElement("style");
             style.id = "dynamic-placeholder-style";
             style.innerHTML = `
-      #preview-bg input::placeholder {
-        color: #9ca3af !important; /* Tailwind gray-400 */
-      }
-    `;
+                #preview-bg input::placeholder {
+                    color: #9ca3af !important;
+                }
+            `;
             document.head.appendChild(style);
         });
     }
@@ -115,7 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Listen for theme changes
     document.addEventListener("themeChanged", (e) => {
         const selected = e.detail.theme;
         previewBg.setAttribute("data-theme", selected === "custom" ? "mytheme" : selected);
@@ -128,7 +138,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    // Watch for custom color inputs
     [primaryInput, secondaryInput, accentInput].forEach(input => {
         input?.addEventListener("input", () => {
             const selectedTheme = document.querySelector(".theme-radio:checked")?.value;
@@ -136,7 +145,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // Watch base color scheme (light/dark toggle)
     baseThemeRadios.forEach(radio => {
         radio.addEventListener("change", (e) => {
             const selectedTheme = document.querySelector(".theme-radio:checked")?.value;
