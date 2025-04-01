@@ -71,7 +71,7 @@
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 
 </head>
-<body class="<%= 'pt-10' if current_user&.approved? && current_user&.school&.has_paid?%>">
+<body class="bg-base-100 text-base-content <%= 'pt-10' if current_user&.approved? && current_user&.school&.has_paid? %>">
 <% if current_user&.approved? && current_user&.school&.has_paid? %>
   <%= render "layouts/nav" %>
   <%= render "layouts/drawer" do %>
