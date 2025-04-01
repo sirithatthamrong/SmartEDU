@@ -17,8 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const previewPrimaryBtn = document.getElementById("preview-primary-btn");
     const previewAccentBtn = document.getElementById("preview-accent-btn");
 
-    const baseThemeRadios = document.querySelectorAll('input[name="base_color_scheme"]');
-
     const builtInThemes = {
         light: {
             primary: "#570df8",
@@ -55,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return luminance > 0.5 ? "#000000" : "#ffffff";
     }
 
-    function applyThemeToPreview({primary, secondary, accent, base100, base200, baseContent}) {
+    function applyThemeToPreview({ primary, secondary, accent, base100, base200, baseContent }) {
         const primaryContent = getContrastingTextColor(primary);
         const secondaryContent = getContrastingTextColor(secondary);
         const accentContent = getContrastingTextColor(accent);
@@ -77,19 +75,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const previewForgotLink = document.getElementById("preview-secondary-link");
         const previewHomeLink = document.getElementById("preview-tertiary-link");
 
-        if (previewForgotLink) {
-            previewForgotLink.style.color = primary;
-        }
-
-        if (previewHomeLink) {
-            previewHomeLink.style.color = secondary;
-        }
-
+        if (previewForgotLink) previewForgotLink.style.color = primary;
+        if (previewHomeLink) previewHomeLink.style.color = secondary;
         if (previewPrimaryBtn) {
             previewPrimaryBtn.style.backgroundColor = primary;
             previewPrimaryBtn.style.color = primaryContent;
         }
-
         if (previewAccentBtn) {
             previewAccentBtn.style.backgroundColor = accent;
             previewAccentBtn.style.color = accentContent;
@@ -130,6 +121,12 @@ document.addEventListener("DOMContentLoaded", function () {
         const selected = e.detail.theme;
         previewBg.setAttribute("data-theme", selected === "custom" ? "mytheme" : selected);
         if (selected === "custom") {
+            base100Input.value = "#ffffff";
+            base200Input.value = "#f8f8f8";
+            base300Input.value = "#f0f0f0";
+            base500Input.value = "#d0d0d0";
+            baseContentInput.value = "#00182A";
+
             updateCustomPreview();
         } else {
             const theme = builtInThemes[selected];
@@ -141,29 +138,6 @@ document.addEventListener("DOMContentLoaded", function () {
         input?.addEventListener("input", () => {
             const selectedTheme = document.querySelector(".theme-radio:checked")?.value;
             if (selectedTheme === "custom") updateCustomPreview();
-        });
-    });
-
-    baseThemeRadios.forEach(radio => {
-        radio.addEventListener("change", (e) => {
-            const selectedTheme = document.querySelector(".theme-radio:checked")?.value;
-            if (selectedTheme !== "custom") return;
-
-            if (e.target.value === "light") {
-                base100Input.value = "#ffffff";
-                base200Input.value = "#f8f8f8";
-                base300Input.value = "#f0f0f0";
-                base500Input.value = "#d0d0d0";
-                baseContentInput.value = "#00182A";
-            } else {
-                base100Input.value = "#1e1e1e";
-                base200Input.value = "#2a2a2a";
-                base300Input.value = "#333333";
-                base500Input.value = "#4e4e4e";
-                baseContentInput.value = "#ffffff";
-            }
-
-            updateCustomPreview();
         });
     });
 });

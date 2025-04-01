@@ -1,6 +1,7 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
+  darkMode: false,
   content: [
     "./public/*.html",
     "./app/helpers/**/*.rb",
@@ -20,7 +21,11 @@ module.exports = {
     require("daisyui"),
   ],
   daisyui: {
-    themes: [ "light", "dark", "pastel",
+    darkTheme: false, // Ensure dark mode is not applied
+    themes: [
+      "light",
+      "dark",
+      "pastel",
       {
         mytheme: {
           "primary": "var(--primary)",
@@ -44,7 +49,6 @@ module.exports = {
           "warning-content": "#221300",
           "error": "#F87272",
           "error-content": "#fff6f4",
-
           "radius-selector": "1rem",
           "radius-field": "0.25rem",
           "radius-box": "0.5rem",
@@ -56,7 +60,5 @@ module.exports = {
         },
       },
     ],
-    defaultTheme: "mytheme",
   },
-
 };

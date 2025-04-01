@@ -8,17 +8,17 @@ class SettingsController < ApplicationController
   before_action :set_color_theme, only: [ :show, :edit, :update ]
 
   def show
-    # This method is intentionally left empty
+    # This action is intentionally left blank.
   end
+
   def edit
-    # This method is intentionally left empty
+    # This action is intentionally left blank.
   end
 
   def update
     params[:color_theme][:theme_name] = "mytheme" if params[:color_theme][:theme_name] == "custom"
     selected_theme = params[:color_theme][:theme_name]
 
-    # Built-in themes: only save theme_name and overwrite just core colors
     case selected_theme
     when "light"
       params[:color_theme].merge!(
@@ -54,37 +54,17 @@ class SettingsController < ApplicationController
         base_content_color: "#00182a"
       )
     when "mytheme"
-      # Custom colors will be handled below — this is here to satisfy static analysis tools like SonarQube.
+      params[:color_theme].merge!(
+        base_100_color: WHITE,
+        base_200_color: "#F8F8F7",
+        base_300_color: GRAY_100,
+        base_500_color: GRAY_200,
+        base_content_color: "#00182B",
+        neutral_color: "#6b8a9e",
+        neutral_content_color: "#f3faff"
+      )
     else
       raise "Unexpected theme selected: #{selected_theme}"
-    end
-
-    # For custom themes, we handle the base color scheme
-    if selected_theme == "mytheme"
-      case params[:base_color_scheme]
-      when "light"
-        params[:color_theme].merge!(
-          base_100_color: WHITE,
-          base_200_color: "#F8F8F7",
-          base_300_color: GRAY_100,
-          base_500_color: GRAY_200,
-          base_content_color: "#00182B",
-          neutral_color: "#6b8a9e",
-          neutral_content_color: "#f3faff"
-        )
-      when "dark"
-        params[:color_theme].merge!(
-          base_100_color: "#1e1e1e",
-          base_200_color: "#2a2a2a",
-          base_300_color: "#333333",
-          base_500_color: "#4e4e4e",
-          base_content_color: WHITE,
-          neutral_color: "#3d3d3d",
-          neutral_content_color: "#f3faff"
-        )
-      else
-        raise "Unexpected base color scheme selected: #{params[:base_color_scheme]}"
-      end
     end
 
     if @color_theme.update(color_theme_params)

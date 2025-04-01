@@ -46,31 +46,25 @@
   <%= csp_meta_tag %>
   <%= yield :head %>
 
-  <%# Enable PWA manifest for installable apps %>
-  <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
-
   <link rel="icon" href="/icon.png" type="image/png">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/icon.png">
 
-  <%# Includes all stylesheet files %>
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
 
-  <%# Includes all JavaScript files %>
   <%= javascript_include_tag :application, "data-turbo-track": "reload" %>
 
   <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
 
-  <%# JavaScript Imports %>
   <%= javascript_importmap_tags %>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
   <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
-
 </head>
+
 <body class="bg-base-100 text-base-content <%= 'pt-10' if current_user&.approved? && current_user&.school&.has_paid? %>">
 <% if current_user&.approved? && current_user&.school&.has_paid? %>
   <%= render "layouts/nav" %>
@@ -80,5 +74,27 @@
 <% else %>
   <%= yield %>
 <% end %>
+
+<% if theme == "mytheme" && current_user&.school&.color_theme %>
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const root = document.documentElement;
+          root.style.setProperty("--primary", "<%= current_user.school.color_theme.primary_color %>");
+          root.style.setProperty("--primary-content", "<%= current_user.school.color_theme.primary_content_color %>");
+          root.style.setProperty("--secondary", "<%= current_user.school.color_theme.secondary_color %>");
+          root.style.setProperty("--secondary-content", "<%= current_user.school.color_theme.secondary_content_color %>");
+          root.style.setProperty("--accent", "<%= current_user.school.color_theme.accent_color %>");
+          root.style.setProperty("--accent-content", "<%= current_user.school.color_theme.accent_content_color %>");
+          root.style.setProperty("--base-100", "<%= current_user.school.color_theme.base_100_color %>");
+          root.style.setProperty("--base-200", "<%= current_user.school.color_theme.base_200_color %>");
+          root.style.setProperty("--base-300", "<%= current_user.school.color_theme.base_300_color %>");
+          root.style.setProperty("--base-500", "<%= current_user.school.color_theme.base_500_color %>");
+          root.style.setProperty("--base-content", "<%= current_user.school.color_theme.base_content_color %>");
+          root.style.setProperty("--neutral", "<%= current_user.school.color_theme.neutral_color %>");
+          root.style.setProperty("--neutral-content", "<%= current_user.school.color_theme.neutral_content_color %>");
+      });
+  </script>
+<% end %>
+
 </body>
 </html>

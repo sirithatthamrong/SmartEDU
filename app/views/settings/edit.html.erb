@@ -47,17 +47,6 @@
           </div>
 
           <div class="mt-6 space-y-2">
-            <p class="block font-semibold mb-1">Base Color</p>
-            <div class="flex gap-6 items-center">
-              <label for="base_color_scheme_light" class="flex items-center gap-2 cursor-pointer">
-                <%= radio_button_tag :base_color_scheme, "light", (@color_theme.base_100_color == "#ffffff"), id: "base_color_scheme_light", class: "form-radio text-primary h-5 w-5" %>
-                <span>Light</span>
-              </label>
-              <label for="base_color_scheme_dark" class="flex items-center gap-2 cursor-pointer">
-                <%= radio_button_tag :base_color_scheme, "dark", (@color_theme.base_100_color != "#ffffff"), id: "base_color_scheme_dark", class: "form-radio text-primary h-5 w-5" %>
-                <span>Dark</span>
-              </label>
-            </div>
           </div>
 
           <!-- Hidden fields -->
