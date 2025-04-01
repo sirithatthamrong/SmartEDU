@@ -26,12 +26,13 @@
 
 <!-- Payment Form Container -->
 <div class="flex-grow pt-32 pb-20">
-<div class="payment-form-container text-center max-w-lg w-full bg-white p-8 rounded-lg shadow-lg mx-auto">
+<div class="payment-form-container text-center max-w-lg w-full bg-white p-8 rounded-lg shadow-lg mx-auto flex flex-col items-center">
   <h1 class="text-3xl font-bold text-green-500 mb-6">🎉 Payment Successful! 🎉</h1>
-  <p class="text-lg text-gray-700 mb-6">Thank you for your payment. Your transaction has been completed successfully. Please check your email for the recipet and the login credentials. If you have any questions, please contact our support team.</p>
+  <p class="text-lg text-gray-700">Thank you for your payment. Your transaction has been completed successfully.</p>
+    <b class="text-lg"> Please check your email for the receipt and the login credentials.</b>
 
   <!-- Receipt Card -->
-  <div id="receipt" class="bg-white p-6 rounded-lg shadow-lg text-left">
+  <div id="receipt" class="bg-gray-50 p-6 rounded-lg shadow-lg text-left mt-5">
     <div class="text-center mb-4">
       <h2 class="text-xl font-bold">Payment Receipt</h2>
       <p class="text-gray-500"><%= Time.now.strftime("%B %d, %Y") %></p>
@@ -44,7 +45,7 @@
       </div>
       <div class="flex justify-between mb-2">
         <span>Amount:</span>
-        <span>$<%= @payment&.amount || 0 %></span>
+        <span>฿<%= @payment&.amount || 0 %></span>
       </div>
       <div class="flex justify-between mb-2">
         <span>Transaction ID:</span>
@@ -64,21 +65,24 @@
     </div>
 
     <div class="text-center text-sm text-gray-500 mt-4">
-      <p>Thank you for your payment!</p>
+      <p>If you are already in our service, you will use the same login credentials and will not receive an email.</p>
     </div>
   </div>
 
   <!-- Download Button -->
   <div class="mt-6">
-    <button id="download-receipt" class="btn btn-primary w-1/2 mx-auto">
+    <button id="download-receipt" class="btn btn-primary mt-3">
       Download Receipt
     </button>
   </div>
 
   <!-- Return Home Link -->
-  <a href="<%= root_path %>" class="btn btn-secondary mt-5 w-1/2 mx-auto">
+  <a href="<%= root_path %>" class="btn btn-secondary mt-3">
     Return to Home
   </a>
+
+  <p class="mt-10 mb-2 text-sm"><i>If you have any questions, please contact our support team via smarteduccc@gmail.com</i></p>
+
 </div>
 
 </div>

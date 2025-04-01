@@ -1,0 +1,134 @@
+<div class="student-card max-w-md mx-auto bg-white rounded-lg shadow-md p-6" data-turbo-permanent id="payment-wizard-container">
+  <h1 class="student-title"><%= @title ? @title: "New Payment" %></h1>
+
+  <!-- Progress bar -->
+  <div class="flex mb-8 relative">
+    <div class="flex-1 relative">
+      <div class="w-8 h-8 bg-blue-500 text-white rounded-full mx-auto flex items-center justify-center border-2 border-gray-200">1</div>
+      <p class="text-center text-xs mt-1">Personal</p>
+    </div>
+    <div class="flex-1 relative">
+      <div class="w-8 h-8 bg-gray-200 text-gray-600 rounded-full mx-auto flex items-center justify-center border-2 border-gray-200">2</div>
+      <p class="text-center text-xs mt-1">Amount</p>
+    </div>
+    <div class="flex-1 relative">
+      <div class="w-8 h-8 bg-gray-200 text-gray-600 rounded-full mx-auto flex items-center justify-center border-2 border-gray-200">3</div>
+      <p class="text-center text-xs mt-1">Payment</p>
+    </div>
+    <div class="flex-1 relative">
+      <div class="w-8 h-8 bg-gray-200 text-gray-600 rounded-full mx-auto flex items-center justify-center border-2 border-gray-200">4</div>
+      <p class="text-center text-xs mt-1">Review</p>
+    </div>
+    <div class="absolute top-4 left-0 w-full h-0.5 bg-gray-200 -z-10"></div>
+  </div>
+
+  <!-- Steps content -->
+  <div id="payment-form-wizard">
+    <!-- Step 1: Personal Information -->
+    <div class="py-5" id="step-1">
+      <h2 class="text-2xl font-bold mb-6">Personal Information</h2>
+      <div class="mb-5">
+        <label for="first_name" class="block mb-2 font-medium">First Name</label>
+        <input type="text" id="first_name" name="first_name" class="input input-bordered w-full" required value="<%= @user.first_name || '' %>">
+      </div>
+      <div class="mb-5">
+        <label for="last_name" class="block mb-2 font-medium">Last Name</label>
+        <input type="text" id="last_name" name="last_name" class="input input-bordered w-full" required value="<%= @user.last_name || '' %>">
+      </div>
+      <div class="mb-5">
+        <label for="email" class="block mb-2 font-medium">Email</label>
+        <input type="email" id="email" name="email" class="input input-bordered w-full" required value="<%= @user.email_address || ''%>">
+      </div>
+      <div class="mb-5">
+        <label for="school_name" class="block mb-2 font-medium">School Name</label>
+        <input type="text" id="school_name" name="school_name" class="input input-bordered w-full" required value="<%= @user&.school&.name || ''%>">
+      </div>
+      <div class="mb-5">
+        <label for="school_address" class="block mb-2 font-medium">School Address</label>
+        <input type="text" id="school_address" name="school_address" class="input input-bordered w-full" required value="<%= @user&.school&.address || '' %>">
+      </div>
+      <div class="flex justify-end mt-8">
+        <button type="button" id="next-to-2" class="btn btn-primary w-full">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Amount -->
+    <div class="hidden py-5 px-6 bg-white rounded-lg shadow-md" id="step-2">
+      <h2 class="text-2xl font-bold mb-6 text-gray-800">Payment Amount</h2>
+      <!-- Tier Selection -->
+      <div class="mb-6">
+        <div class="block text-lg font-medium mb-3 text-gray-700">Choose Tier</div>
+        <div class="space-y-4">
+          <!-- Tier 1 -->
+          <label class="block p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+            <input type="radio" name="tier" value="200" checked class="mr-2" onchange="calculateTierAmount()" />
+            <span class="font-semibold text-gray-900">Basic</span>
+            <p class="text-sm text-gray-600">200 Baht per student</p>
+            <p class="text-sm text-gray-500">Manual Checking Attendance</p>
+          </label>
+          <!-- Tier 2 -->
+          <label class="block p-4 border border-gray-300 rounded-lg hover:border-blue-500 cursor-pointer">
+            <input type="radio" name="tier" value="350" class="mr-2" onchange="calculateTierAmount()" />
+            <span class="font-semibold text-gray-900">Premium</span>
+            <p class="text-sm text-gray-600">350 Baht per student</p>
+            <p class="text-sm text-gray-500">Automatic Checking Attendance with QR Code</p>
+            <p class="text-sm text-gray-500">Parent Notifications through Emailing</p>
+          </label>
+        </div>
+      </div>
+      <!-- Student Count Input -->
+      <div class="mb-6">
+        <label for="student_count" class="block text-lg font-medium mb-2 text-gray-700">Number of Students</label>
+        <input type="number" id="student_count" name="student_count" min="1" class="input input-bordered w-full" required oninput="calculateTierAmount()" />
+      </div>
+      <input type="hidden" id="amount" name="amount" value="0" />
+      <div class="flex justify-between mt-8">
+        <button type="button" id="prev-to-1" class="btn">Back</button>
+        <button type="button" id="next-to-3" class="btn btn-primary flex">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Payment Method -->
+    <div class="hidden py-5" id="step-3">
+      <h2 class="text-2xl font-bold mb-6">Payment Method</h2>
+      <div class="mb-5">
+        <label for="card-element" class="block mb-2 font-medium">Credit or debit card</label>
+        <div class="card-input-container border border-gray-300 rounded-md p-3 bg-white">
+          <div id="card-element" class="h-10"></div>
+        </div>
+        <div id="card-errors" class="text-red-500 mt-1 text-sm"></div>
+      </div>
+      <div class="flex justify-between mt-8">
+        <button type="button" id="prev-to-2" class="btn">Back</button>
+        <button type="button" id="next-to-4" class="btn btn-primary flex">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 4: Review -->
+    <div class="hidden py-5" id="step-4">
+      <h2 class="text-2xl font-bold mb-6">Review Your Information</h2>
+      <div class="bg-gray-50 p-4 rounded-lg mb-6">
+        <div class="mb-5 border-b border-gray-100 pb-3">
+          <h3 class="text-lg font-semibold mb-2">Personal Information</h3>
+          <p><strong>Name:</strong> <span id="review-name" class="ml-2"></span></p>
+          <p><strong>Email:</strong> <span id="review-email" class="ml-2"></span></p>
+          <p><strong>School Name:</strong> <span id="review-school-name" class="ml-2"></span></p>
+          <p><strong>School Address:</strong> <span id="review-school-address" class="ml-2"></span></p>
+          <p><strong>Tier:</strong> <span id="review-tier" class="ml-2"></span></p>
+        </div>
+        <div class="mb-5 border-b border-gray-100 pb-3">
+          <h3 class="text-lg font-semibold mb-2">Amount</h3>
+          <p><strong>Total:</strong> <span class="ml-2">฿<span id="review-amount"></span></span></p>
+        </div>
+        <div class="mb-5 border-b border-gray-100 pb-3">
+          <h3 class="text-lg font-semibold mb-2">Payment Method</h3>
+          <p> Credit Card <span id="review-card-last4"></span></p>
+        </div>
+      </div>
+      <div class="flex justify-between mt-8">
+        <button type="button" id="prev-to-3" class="btn">Back</button>
+        <button type="button" id="submit-payment" class="btn btn-primary flex">Complete Payment</button>
+      </div>
+    </div>
+  </div>
+</div>

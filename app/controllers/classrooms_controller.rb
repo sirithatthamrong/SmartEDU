@@ -1,6 +1,13 @@
 class ClassroomsController < ApplicationController
   before_action :set_classroom, only: %i[show grading]
   before_action :authorize_admin_or_teacher_or_principal!
+  NO_CLASSROOM = "Classroom not found or you don't have access."
+  CANNOT_DELETE = "Classroom cannot be deleted because it has students. Please reassign them first."
+  SUCCESS_DELETE  = "Classroom was successfully deleted."
+  ADD_SUCCESS = "Successfully added Classroom."
+  ADD_ERROR = "Error adding Classroom."
+  UPDATE_SUCCESS = "Successfully updated Classroom."
+  UPDATE_ERROR = "Error updating Classroom."
 
   def new
     @classroom = Classroom.new
@@ -10,7 +17,7 @@ class ClassroomsController < ApplicationController
   def view
     @classroom = Classroom.find_by(id: params[:id])
     unless @classroom
-      flash[:alert] = "Classroom not found"
+      flash[:alert] = NO_CLASSROOM
       return redirect_to manage_classrooms_path
     end
 
@@ -25,15 +32,15 @@ class ClassroomsController < ApplicationController
 
     if classroom
       if classroom.students.exists?
-        flash[:errors] = "Classroom cannot be deleted because it has students. Please reassign them first."
+        flash[:errors] = CANNOT_DELETE
         return redirect_to manage_classrooms_path
       end
 
       Homeroom.where(classroom_id: classroom.id).delete_all
       classroom.destroy!
-      redirect_to manage_classrooms_path, notice: "Classroom was successfully deleted."
+      redirect_to manage_classrooms_path, notice: SUCCESS_DELETE
     else
-      render json: { error: "Classroom not found" }, status: :not_found
+      render json: { error: NO_CLASSROOM }, status: :not_found
     end
   end
 
@@ -47,7 +54,7 @@ class ClassroomsController < ApplicationController
 
     if @classroom.save
       Homeroom.create!(classroom_id: @classroom.id, teacher_id: params[:classroom][:teacher_id])
-      redirect_to manage_classrooms_path, notice: "Classroom was successfully created."
+      redirect_to manage_classrooms_path, notice: ADD_SUCCESS
     else
       @available_teachers = fetch_available_teachers
       render :new
@@ -118,7 +125,7 @@ class ClassroomsController < ApplicationController
     @classroom = fetch_classroom_by_id
 
     unless @classroom
-      flash[:alert] = "Classroom not found or you don't have access."
+      flash[:alert] = NO_CLASSROOM
       return redirect_to manage_classrooms_path
     end
 
@@ -134,7 +141,7 @@ class ClassroomsController < ApplicationController
       homeroom = Homeroom.find_or_initialize_by(classroom_id: @classroom.id)
       homeroom.update!(teacher_id: params[:classroom][:teacher_id])
 
-      redirect_to manage_classrooms_path, notice: "Classroom was successfully updated."
+      redirect_to manage_classrooms_path, notice: UPDATE_SUCCESS
     else
       @available_teachers = fetch_available_teachers
       render :edit
@@ -145,7 +152,7 @@ class ClassroomsController < ApplicationController
     @classroom = fetch_classroom_by_id
 
     unless @classroom
-      flash[:alert] = "Classroom not found or you don't have access."
+      flash[:alert] = NO_CLASSROOM
       return redirect_to manage_classrooms_path
     end
 
@@ -170,7 +177,7 @@ class ClassroomsController < ApplicationController
     @classroom = fetch_classroom_by_id
 
     unless @classroom
-      flash[:alert] = "Classroom not found or you don't have access."
+      flash[:alert] = NO_CLASSROOM
       redirect_to classrooms_path
     end
   end
