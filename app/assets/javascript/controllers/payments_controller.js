@@ -1,3 +1,9 @@
+function calculateTierAmount() {
+    const tier = parseInt(document.querySelector('input[name="tier"]:checked').value, 10) || 0;
+    const studentCount = parseInt(document.getElementById('student_count').value, 10) || 0;
+    document.getElementById('amount').value = tier * studentCount;
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     console.log("Payment form script loaded");
 
@@ -27,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // Initialize Stripe on step 3 and variables for tracking progress
-    let currentStep = 1;
     let stripe = null;
     let card = null;
     let cardComplete = false;
@@ -42,15 +47,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
     function goToStep(stepNumber) {
-        // Hide all steps
+        // Hide all steps first
         document.querySelectorAll('#payment-form-wizard > div').forEach(step => {
             step.classList.add('hidden');
-            step.classList.remove('block');
         });
 
-        // Show the target step
-        document.getElementById(`step-${stepNumber}`).classList.add('block');
+        // Show only the current step
         document.getElementById(`step-${stepNumber}`).classList.remove('hidden');
 
         // Update progress bar indicators
@@ -60,8 +64,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (stepNumber === 3) {
             initializeStripe();
         }
-
-        currentStep = stepNumber;
     }
 
     function updateProgressBar(stepNumber) {
@@ -81,29 +83,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+
     function validateStep(step) {
         switch (step) {
-            case 1:
+            case 1: {
                 const firstName = document.getElementById('first_name').value;
                 const lastName = document.getElementById('last_name').value;
-                if (!firstName || !lastName) {
+                const email = document.getElementById('email').value;
+                const schoolName = document.getElementById('school_name').value;
+                const schoolAddress = document.getElementById('school_address').value;
+
+                if (!firstName || !lastName || !email || !schoolName || !schoolAddress) {
                     alert('Please fill in all required fields');
                     return false;
                 }
+
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+                if (!emailRegex.test(email)) {
+                    alert('Please enter a valid email address');
+                    return false;
+                }
+
                 return true;
-            case 2:
+            }
+            case 2: {
                 const amount = document.getElementById('amount').value;
                 if (!amount || amount <= 0) {
                     alert('Please enter a valid amount');
                     return false;
                 }
                 return true;
-            case 3:
+            }
+            case 3: {
                 if (!cardComplete) {
                     alert('Please complete the card information');
                     return false;
                 }
                 return true;
+            }
             default:
                 return true;
         }
@@ -113,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const cardElement = document.getElementById('card-element');
         if (!cardElement) return;
 
-        const publishableKey = "<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>";
         if (!stripe) {
             stripe = Stripe(publishableKey);
         }
@@ -146,31 +162,53 @@ document.addEventListener("DOMContentLoaded", function () {
         const firstName = document.getElementById('first_name').value;
         const lastName = document.getElementById('last_name').value;
         const amount = document.getElementById('amount').value;
+        const email = document.getElementById('email').value;
+        const schoolName = document.getElementById('school_name').value;
+        const schoolAddress = document.getElementById('school_address').value;
+        let tier = document.querySelector('input[name="tier"]:checked').value;
+
+        if (tier === "200") {
+            tier = "Basic";
+        } else {
+            tier = "Premium";
+        }
+
 
         document.getElementById('review-name').textContent = `${firstName} ${lastName}`;
-        document.getElementById('review-amount').textContent = (amount / 100).toFixed(2);
+        document.getElementById('review-amount').textContent = amount
+        document.getElementById('review-email').textContent = email;
+        document.getElementById('review-school-name').textContent = schoolName;
+        document.getElementById('review-school-address').textContent = schoolAddress;
+        document.getElementById('review-tier').textContent = tier;
 
         if (last4) {
             document.getElementById('review-card-last4').textContent = "****" + last4;
         }
     }
 
+
     // Handle payment form submission
     document.getElementById('submit-payment').addEventListener('click', async function () {
         const firstName = document.getElementById('first_name').value;
         const lastName = document.getElementById('last_name').value;
         const amount = document.getElementById('amount').value;
+        const email = document.getElementById('email').value;
+        const schoolName = document.getElementById('school_name').value;
+        const schoolAddress = document.getElementById('school_address').value;
+        const tier = document.querySelector('input[name="tier"]:checked').value;
 
         const submitButton = document.getElementById('submit-payment');
         submitButton.disabled = true;
         submitButton.textContent = 'Processing...';
 
+        const endpoint = isRenewal ? '/payments/renew_payment' : '/payments';
         try {
             const {paymentMethod, error} = await stripe.createPaymentMethod({
                 type: "card",
                 card: card,
                 billing_details: {
                     name: `${firstName} ${lastName}`,
+
                 }
             });
 
@@ -181,17 +219,22 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
-            const response = await fetch("/payments", {
+            const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "X-CSRF-Token": "<%= form_authenticity_token %>"
+                    "X-CSRF-Token": csrfToken
                 },
                 body: JSON.stringify({
                     first_name: firstName,
                     last_name: lastName,
                     amount: parseInt(amount),
-                    payment_method_id: paymentMethod.id
+                    payment_method_id: paymentMethod.id,
+                    email: email,
+                    schoolAddress: schoolAddress,
+                    school_name: schoolName,
+                    tier: tier,
+                    renew: isRenewal
                 }),
             });
 

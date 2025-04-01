@@ -3,7 +3,6 @@ class SessionsController < ApplicationController
   rate_limit to: 10, within: 3.minutes, only: :create, with: -> { redirect_to new_session_url, alert: "Try again later." }
 
   def new
-    # This is the login page
   end
 
   def show
@@ -24,10 +23,9 @@ class SessionsController < ApplicationController
               redirect_to home_index_path
           else
             if user.role == "admin" || user.role == "principal"
-              flash[:alert] = "Your school subscription has expired. Please renew."
-              redirect_to new_payment_path
+              redirect_to renew_payments_url
             else
-              flash[:alert] = "Your school subscription has expired. Please contact your admin."
+              flash[:error] = "Please contact your school admin for access."
               redirect_to root_url
             end
           end
@@ -36,11 +34,13 @@ class SessionsController < ApplicationController
           redirect_to root_url
         end
       else
+        Rails.logger.debug "Password authentication failed for user: #{user.email_address}"
         flash[:error] = "Invalid email or password."
         render :new, status: :unprocessable_entity
       end
     else
-      flash[:error] = "Invalid username or password."
+      Rails.logger.debug "User not found with email: #{params[:email_address].strip.downcase}"
+      flash[:error] = "Invalid email or password."
       render :new, status: :unprocessable_entity
     end
   end
