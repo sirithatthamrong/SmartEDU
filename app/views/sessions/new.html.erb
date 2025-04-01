@@ -9,12 +9,12 @@
       <br>
       <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", class: "input input-bordered w-full mb-2" %>
       <br>
-      <%= form.submit "Sign In", class: "btn btn-primary btn-wide mt-4 w-full" %>
+      <%= form.submit "Sign In", class: "btn rounded-full bg-[#8294C4] text-[#000000] hover:bg-[#DBDFEA] btn-wide mt-4 w-full" %>
     <% end %>
 
     <div>
       <%= link_to "Sign Up", new_signup_path, method: :get,
-                  class: "btn w-full bg-[#FFEAD2] text-[#8294C4] py-3 rounded-[var(--rounded-btn,.5rem)] font-semibold hover:bg-[#DBDFEA] transition-all duration-300 mt-2" %>
+                  class: "btn rounded-full w-full bg-[#FFEAD2] text-[#8294C4] py-3 rounded-[var(--rounded-btn,.5rem)] font-semibold hover:bg-[#DBDFEA] transition-all duration-300 mt-2" %>
     </div>
     <div class="pt-4 text-center">
       <%= link_to "Forgot password?", new_password_path, class: "text-[#8294C4] hover:underline" %>

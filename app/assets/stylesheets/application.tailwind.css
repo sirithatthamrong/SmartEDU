@@ -27,19 +27,38 @@
     }
 
     input.input-bordered {
-        @apply rounded-full px-4 py-2 border border-neutral text-neutral-content bg-[var(--base-100)];
+        @apply rounded-full px-4 py-2 border text-neutral-content;
+        background-color: var(--base-100);
+        border-color: var(--base-200);
     }
-
     input.input-bordered:focus {
-        @apply outline-none ring-2 ring-primary;
+        @apply outline-none ring-2;
     }
-
     [data-theme="mytheme"] select {
         @apply w-full h-12 px-4 py-2 rounded-full border border-neutral text-neutral-content bg-[var(--base-100)];
     }
 
     [data-theme="mytheme"] select:focus {
         @apply outline-none ring-2 ring-primary;
+    }
+    .alert {
+        @apply rounded-full px-6 py-4 font-medium text-center shadow-md;
+    }
+
+    .alert-success {
+        @apply rounded-full bg-success text-success-content;
+    }
+
+    .alert-error {
+        @apply rounded-full bg-error text-error-content;
+    }
+
+    .alert-warning {
+        @apply rounded-full bg-warning text-warning-content;
+    }
+
+    .alert-info {
+        @apply rounded-full bg-info text-info-content;
     }
 }
 
