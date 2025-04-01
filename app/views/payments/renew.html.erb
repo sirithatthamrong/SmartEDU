@@ -1,10 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SmartEdu Attendance</title>
-  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="flex flex-col min-h-screen bg-gray-50">
 <div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
@@ -20,15 +20,14 @@
   </div>
 </div>
 <div class="flex-grow pt-32 pb-20">
-  <%= render 'payments/payment_form', title: 'New Payment' %>
+  <%= render 'payments/payment_form', title: 'Renew Your Payment' %>
 </div>
 <%= javascript_include_tag "https://js.stripe.com/v3/", "data-turbo-track": "reload" %>
 </body>
-
 <script>
     const publishableKey = "<%= Rails.application.credentials.dig(:stripe, :publishable_key) %>";
     const csrfToken = "<%= form_authenticity_token %>";
-    const isRenewal = false;
+    const isRenewal = true;
 </script>
 
 <%= javascript_include_tag "controllers/payments_controller" %>

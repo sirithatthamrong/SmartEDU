@@ -13,7 +13,8 @@ Rails.application.routes.draw do
     get "success", to: "payments#success"
     get "cancel", to: "payments#cancel"
     get "renew", to: "payments#renew"
-  end
+    post "renew_payment", to: "payments#renew_payment"
+    end
   end
 
   resources :classrooms do
@@ -83,6 +84,6 @@ Rails.application.routes.draw do
   resources :teachers, only: [ :index, :destroy ]
   resources :users, only: [ :index, :destroy ]
 
-  # Settings (Themes)
+  # Settings
   resource :settings, only: [:show, :edit, :update]
 end
