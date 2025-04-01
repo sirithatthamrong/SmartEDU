@@ -15,6 +15,7 @@ class SettingsController < ApplicationController
   end
 
   def update
+    params[:color_theme][:theme_name] = "mytheme" if params[:color_theme][:theme_name] == "custom"
     selected_theme = params[:color_theme][:theme_name]
 
     # Built-in themes: only save theme_name and overwrite just core colors
@@ -52,14 +53,14 @@ class SettingsController < ApplicationController
         base_500_color: GRAY_200,
         base_content_color: "#00182a"
       )
-    when "custom"
+    when "mytheme"
       # Custom colors will be handled below — this is here to satisfy static analysis tools like SonarQube.
     else
       raise "Unexpected theme selected: #{selected_theme}"
     end
 
     # For custom themes, we handle the base color scheme
-    if selected_theme == "custom"
+    if selected_theme == "mytheme"
       case params[:base_color_scheme]
       when "light"
         params[:color_theme].merge!(

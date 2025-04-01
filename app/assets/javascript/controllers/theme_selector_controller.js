@@ -2,7 +2,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeRadios = document.querySelectorAll(".theme-radio");
     const customForm = document.getElementById("custom-form");
     const themeField = document.getElementById("selected-theme-name");
-    const previewThemeLabel = document.getElementById("theme-preview-label");
 
     function highlightSelectedTheme(selectedTheme) {
         themeRadios.forEach(radio => {
@@ -24,8 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 customForm.classList.toggle("hidden", selectedTheme !== "custom");
             }
             if (themeField) themeField.value = selectedTheme;
-            if (previewThemeLabel) previewThemeLabel.textContent = selectedTheme;
-
+            if (themeField) themeField.value = selectedTheme === "custom" ? "mytheme" : selectedTheme;
             // Highlight selected
             highlightSelectedTheme(selectedTheme);
 
