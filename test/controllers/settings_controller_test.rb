@@ -6,7 +6,7 @@ class SettingsControllerTest < ActionDispatch::IntegrationTest
     @principal = User.create!(
       first_name: "Principal",
       last_name: "Test",
-      personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
+      personal_email: "principal_#{ SecureRandom.hex(4) }@gmail.com",
       role: "principal",
       password: "password123",
       school_id: @school.id

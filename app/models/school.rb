@@ -49,5 +49,4 @@ class School < ApplicationRecord
       neutral_content_color: "#F3FAFF"
     )
   end
-
 end

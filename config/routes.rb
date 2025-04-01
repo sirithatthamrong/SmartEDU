@@ -85,5 +85,5 @@ Rails.application.routes.draw do
   resources :users, only: [ :index, :destroy ]
 
   # Settings
-  resource :settings, only: [:show, :edit, :update]
+  resource :settings, only: [ :show, :edit, :update ]
 end
