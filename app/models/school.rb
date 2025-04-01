@@ -6,7 +6,7 @@
 #
 #  id               :integer          not null, primary key
 #  address          :string           not null
-#  has_paid         :boolean
+#  has_paid         :boolean          default(FALSE)
 #  name             :string           not null
 #  subscription_end :datetime
 #  tier             :integer          default(1)
@@ -26,8 +26,11 @@ class School < ApplicationRecord
   accepts_nested_attributes_for :color_theme
   after_create :set_default_color_theme
 
-  private
+  def subscription_active?
+    subscription_end.present? && subscription_end > Time.zone.now
+  end
 
+  private
   def set_default_color_theme
     create_color_theme!(
       theme_name: "mytheme",
@@ -47,7 +50,4 @@ class School < ApplicationRecord
     )
   end
 
-  def subscription_active?
-    subscription_end.present? && subscription_end > Time.zone.now
-  end
 end
