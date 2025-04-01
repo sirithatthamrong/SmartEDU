@@ -41,6 +41,25 @@
     [data-theme="mytheme"] select:focus {
         @apply outline-none ring-2 ring-primary;
     }
+    .alert {
+        @apply rounded-full px-6 py-4 font-medium text-center shadow-md;
+    }
+
+    .alert-success {
+        @apply rounded-full bg-success text-success-content;
+    }
+
+    .alert-error {
+        @apply rounded-full bg-error text-error-content;
+    }
+
+    .alert-warning {
+        @apply rounded-full bg-warning text-warning-content;
+    }
+
+    .alert-info {
+        @apply rounded-full bg-info text-info-content;
+    }
 }
 
 .pagy {
