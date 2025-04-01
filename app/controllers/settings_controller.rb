@@ -5,12 +5,12 @@ class SettingsController < ApplicationController
 
   before_action :authenticated?
   before_action :authorize_admin_or_principal!
-  before_action :set_color_theme, only: [:show, :edit, :update]
+  before_action :set_color_theme, only: [ :show, :edit, :update ]
 
-  def show;
+  def show
     # This method is intentionally left empty
   end
-  def edit;
+  def edit
     # This method is intentionally left empty
   end
 
