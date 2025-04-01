@@ -7,11 +7,14 @@ Rails.application.routes.draw do
   get "main/index"
 
   resources :payments  do
-  collection do
-    get "success", to: "payments#success"
-    get "cancel", to: "payments#cancel"
-    get "renew", to: "payments#renew"
-    post "renew_payment", to: "payments#renew_payment"
+    collection do
+      get "success", to: "payments#success"
+      get "cancel", to: "payments#cancel"
+      get "renew", to: "payments#renew"
+      post "renew_payment", to: "payments#renew_payment"
+    end
+    member do
+      get :show
     end
   end
 

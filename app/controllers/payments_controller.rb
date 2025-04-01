@@ -16,6 +16,14 @@ class PaymentsController < ApplicationController
     render :new
   end
 
+  def show
+    @user = current_user
+    @payment = @user.payments.last
+    @school = @user.school
+    @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
+    @payment_history = @user.payments.order(created_at: :desc)
+  end
+
 
   def renew
     @title = RENEW_SUB
