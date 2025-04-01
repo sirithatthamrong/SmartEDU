@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
     document.addEventListener("themeChanged", (e) => {
         const selected = e.detail.theme;
         previewBg.setAttribute("data-theme", selected === "custom" ? "mytheme" : selected);
-
+        document.documentElement.setAttribute("data-theme", selected === "custom" ? "mytheme" : selected);
         if (selected === "custom") {
             updateCustomPreview();
         } else {

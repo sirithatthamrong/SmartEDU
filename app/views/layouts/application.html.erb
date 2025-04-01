@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html lang="html" data-theme="<%= current_user&.school&.color_theme&.theme_name || "mytheme" %>">
+<% raw_theme = current_user&.school&.color_theme&.theme_name %>
+<% theme = raw_theme == "custom" ? "mytheme" : raw_theme || "mytheme" %>
+
+<html lang="en" data-theme="<%= theme %>">
 <head>
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
-  <% theme = current_user&.school&.color_theme&.theme_name || "mytheme" %>
-  <% if ["mytheme", "custom", "light", "dark", "pastel"].include?(theme) %>
+  <% if theme == "mytheme" %>
     <style>
-        [data-theme="<%= theme %>"] {
+        [data-theme="mytheme"] {
             --primary: <%= current_user.school.color_theme.primary_color %>;
             --primary-content: #f3faff;
             --secondary: <%= current_user.school.color_theme.secondary_color %>;

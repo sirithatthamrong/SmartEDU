@@ -69,7 +69,7 @@
           <%= f.hidden_field :primary_content_color, id: "primary-content-color" %>
           <%= f.hidden_field :secondary_content_color, id: "secondary-content-color" %>
           <%= f.hidden_field :accent_content_color, id: "accent-content-color" %>
-          <%= f.hidden_field :theme_name, id: "selected-theme-name" %>
+          <%= f.hidden_field :theme_name, id: "selected-theme-name", value: @color_theme.theme_name %>
         </div>
 
         <!-- Shared Submit and Back Buttons -->
