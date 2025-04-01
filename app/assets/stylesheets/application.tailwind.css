@@ -27,13 +27,13 @@
     }
 
     input.input-bordered {
-        @apply rounded-full px-4 py-2 border border-neutral text-neutral-content bg-[var(--base-100)];
+        @apply rounded-full px-4 py-2 border text-neutral-content;
+        background-color: var(--base-100);
+        border-color: var(--base-200);
     }
-
     input.input-bordered:focus {
-        @apply outline-none ring-2 ring-primary;
+        @apply outline-none ring-2;
     }
-
     [data-theme="mytheme"] select {
         @apply w-full h-12 px-4 py-2 rounded-full border border-neutral text-neutral-content bg-[var(--base-100)];
     }
