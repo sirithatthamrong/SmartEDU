@@ -1,17 +1,24 @@
 class PaymentsController < ApplicationController
   allow_unauthenticated_access only: %i[new create cancel]
+  RENEW_SUB = "Renew Subscription"
+  NEW_PAY = "New Payment"
 
   def new
+    @title = NEW_PAY
     @user = current_user || User.new
     @school = current_user&.school
     @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
+
     if @school && @school.subscription_end.present? && @school.subscription_end < Time.current
       flash.now[:notice] = "Your school subscription has expired. Please renew."
     end
+
+    render :new
   end
 
 
   def renew
+    @title = RENEW_SUB
     @user = current_user
     @school = current_user&.school
     @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
@@ -47,8 +54,13 @@ class PaymentsController < ApplicationController
     handle_record_invalid(e)
   end
   def create
+    @title = NEW_PAY
     log_incoming_params
     disable_login_credentials_callback
+
+    if params[:renew] == "true"
+      renew_payment
+    else
 
     ActiveRecord::Base.transaction do
       school = create_or_update_school
@@ -60,6 +72,7 @@ class PaymentsController < ApplicationController
 
       render json: { status: "success", payment: payment }, status: 200
     end
+    end
 
     send_credentials_email
     enable_login_credentials_callback
@@ -68,7 +81,7 @@ class PaymentsController < ApplicationController
     handle_stripe_error(e)
   rescue ActiveRecord::RecordInvalid => e
     handle_record_invalid(e)
-  end
+    end
 
   def success
     @payment = Payment.find_by(id: session[:last_payment_id])
@@ -91,7 +104,7 @@ class PaymentsController < ApplicationController
   private
 
   def update_school_subscription(school, payment)
-    if school.subscription_end&.future?
+    if school.subscription_end < Time.zone.now
       new_end_date = school.subscription_end + 1.year
     else
       new_end_date = Time.zone.now + 1.year
@@ -210,6 +223,5 @@ class PaymentsController < ApplicationController
   end
   def log_incoming_params
     Rails.logger.debug("Received params from payment first page: #{params.inspect}")
-    Rails.logger.debug("Received params unsafe: #{params.to_unsafe_h}")
   end
 end
