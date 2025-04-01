@@ -11,6 +11,7 @@ if Rails.env.development? || Rails.env.test?
   User.delete_all
   Classroom.delete_all
   SchoolTier.delete_all
+  ColorTheme.delete_all
   School.delete_all
 end
 
