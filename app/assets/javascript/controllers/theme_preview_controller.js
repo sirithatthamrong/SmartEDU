@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
             baseContent: "#00182A"
         },
         dark: {
-            primary: "#793ef9",
+            primary: "#570df8",
             secondary: "#f000b8",
             accent: "#37cdbe",
             base100: "#1e1e1e",
@@ -67,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
         previewBg.style.setProperty("--base-100", base100);
         previewBg.style.setProperty("--base-200", base200);
         previewBg.style.setProperty("--base-content", baseContent);
-        previewBg.style.setProperty("background-image", `linear-gradient(to right, ${accent}, ${secondary})`);
+        previewBg.style.setProperty("background-image", `linear-gradient(to right, ${accent}, ${primary})`);
 
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
