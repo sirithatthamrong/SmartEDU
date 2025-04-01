@@ -81,7 +81,7 @@
         <% if current_user.payments.any? %>
           <li>
             <%= link_to payment_path(current_user.payments.last), class: "flex items-center gap-2" do %>
-              <i class="fas fa-shopping-cart"></i> Payment
+              <i class="fas fa-shopping-cart"></i> Payment History
             <% end %>
           </li>
         <% end %>

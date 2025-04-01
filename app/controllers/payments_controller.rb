@@ -8,6 +8,7 @@ class PaymentsController < ApplicationController
     @user = current_user || User.new
     @school = current_user&.school
     @current_tier = @school&.school_tier&.tier == "Premium" ? 350 : 200
+    @is_renew = true
 
     if @school && @school.subscription_end.present? && @school.subscription_end < Time.current
       flash.now[:notice] = "Your school subscription has expired. Please renew."
