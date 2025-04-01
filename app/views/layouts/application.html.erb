@@ -11,13 +11,13 @@
     <style>
         [data-theme="mytheme"] {
             --primary: <%= current_user.school.color_theme.primary_color %>;
-            --primary-content: #f3faff;
+            --primary-content: <%= current_user.school.color_theme.primary_content_color || "#f3faff" %>;
             --secondary: <%= current_user.school.color_theme.secondary_color %>;
-            --secondary-content: #f1fbfb;
+            --secondary-content: <%= current_user.school.color_theme.secondary_content_color || "#f1fbfb" %>;
             --accent: <%= current_user.school.color_theme.accent_color %>;
-            --accent-content: #00182a;
-            --neutral: #6b8a9e;
-            --neutral-content: #f3faff;
+            --accent-content: <%= current_user.school.color_theme.accent_content_color || "#00182a" %>;
+            --neutral: <%= current_user.school.color_theme.neutral_color || "#6b8a9e" %>;
+            --neutral-content: <%= current_user.school.color_theme.neutral_content_color || "#f3faff" %>;
 
             --base-100: <%= current_user.school.color_theme.base_100_color %>;
             --base-200: <%= current_user.school.color_theme.base_200_color %>;
@@ -33,6 +33,43 @@
             --warning-content: #221300;
             --error: #F87272;
             --error-content: #fff6f4;
+        }
+    </style>
+  <% else %>
+    <%# Optional: fallback for built-in themes, if navbar depends on CSS vars instead of Daisy classes %>
+    <style>
+        :root {
+        <% if theme == "light" %>
+            --primary: #570df8;
+            --primary-content: #ffffff;
+            --secondary: #f000b8;
+            --secondary-content: #ffffff;
+            --accent: #37cdbe;
+            --accent-content: #00182A;
+            --base-100: #ffffff;
+            --base-200: #f8f8f8;
+            --base-content: #00182A;
+        <% elsif theme == "dark" %>
+            --primary: #793ef9;
+            --primary-content: #ffffff;
+            --secondary: #f000b8;
+            --secondary-content: #ffffff;
+            --accent: #37cdbe;
+            --accent-content: #00182A;
+            --base-100: #1e1e1e;
+            --base-200: #2a2a2a;
+            --base-content: #ffffff;
+        <% elsif theme == "pastel" %>
+            --primary: #d1c1d7;
+            --primary-content: #00182A;
+            --secondary: #f4c2c2;
+            --secondary-content: #00182A;
+            --accent: #b5ead7;
+            --accent-content: #00182A;
+            --base-100: #ffffff;
+            --base-200: #f8f8f8;
+            --base-content: #00182A;
+        <% end %>
         }
     </style>
   <% end %>
