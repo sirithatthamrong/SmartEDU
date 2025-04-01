@@ -4,9 +4,10 @@
   <%= stylesheet_link_tag "tailwind", "inter-font", "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
-  <% if current_user&.school&.color_theme&.theme_name == "mytheme" || current_user&.school&.color_theme&.theme_name == "custom" %>
+  <% theme = current_user&.school&.color_theme&.theme_name || "mytheme" %>
+  <% if ["mytheme", "custom", "light", "dark", "pastel"].include?(theme) %>
     <style>
-        [data-theme="<%= current_user.school.color_theme.theme_name %>"] {
+        [data-theme="<%= theme %>"] {
             --primary: <%= current_user.school.color_theme.primary_color %>;
             --primary-content: #f3faff;
             --secondary: <%= current_user.school.color_theme.secondary_color %>;
