@@ -5,7 +5,8 @@
   </div>
   <div class="drawer-side z-50">
     <label for="my-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
-    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-2" style="background-color: var(--base-200);">
+    <ul class="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-2">
+
       <!-- Dashboard -->
       <li>
         <%= link_to home_index_path, class: "flex items-center gap-2" do %>
@@ -14,11 +15,11 @@
       </li>
 
       <!-- Profile -->
-      <li>
-        <%= link_to profile_path, class: "flex items-center gap-2" do %>
-          <i class="fas fa-user"></i> Profile
-        <% end %>
-      </li>
+        <li>
+          <%= link_to profile_path, class: "flex items-center gap-2" do %>
+            <i class="fas fa-user"></i> Profile
+          <% end %>
+        </li>
 
       <!-- Management Section -->
          <% if current_user&.admin? || current_user&.teacher? || current_user&.principal? %>
@@ -77,6 +78,7 @@
       <% end %>
 
       <!-- Grades Section -->
+      <!-- Grades Section -->
       <li>
         <% if current_user&.teacher? || current_user&.principal? || current_user&.admin? %>
           <%
@@ -104,16 +106,6 @@
     </span>
         <% end %>
       </li>
-
-      <!-- Settings Section -->
-      <% if current_user&.admin? || current_user&.principal? %>
-        <li>
-          <%= link_to settings_path, class: "flex items-center gap-2" do %>
-            <i class="fas fa-cogs"></i> Settings
-          <% end %>
-        </li>
-      <% end %>
-
       <!-- Logout -->
       <li>
         <%= link_to logout_path, data: { turbo_method: :delete, confirm: "Are you sure you want to log out?" }, class: "flex items-center gap-2 text-red-500 hover:text-red-700" do %>

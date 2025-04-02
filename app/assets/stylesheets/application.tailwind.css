@@ -1,48 +1,19 @@
 @import "pages/students.css";
 @import "pages/approval.css";
-@import "tailwindcss";
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/*
+
 @layer components {
-    .btn {
-        @apply rounded-full px-4 py-2 font-semibold border-none;
-    }
-
-    [data-theme="mytheme"] .btn-primary {
-        background-color: var(--primary);
-        color: var(--primary-content);
-    }
-
-    [data-theme="mytheme"] .btn-secondary {
-        background-color: var(--secondary);
-        color: var(--secondary-content);
-    }
-
-    [data-theme="mytheme"] .btn-accent {
-        background-color: var(--accent);
-        color: var(--accent-content);
-    }
-
-    input.input-bordered {
-        @apply rounded-full px-4 py-2 border border-neutral text-neutral-content bg-[var(--base-100)];
-    }
-
-    input.input-bordered:focus {
-        @apply outline-none ring-2 ring-primary;
-    }
-
-    [data-theme="mytheme"] select {
-        @apply w-full h-12 px-4 py-2 rounded-full border border-neutral text-neutral-content bg-[var(--base-100)];
-    }
-
-    [data-theme="mytheme"] select:focus {
-        @apply outline-none ring-2 ring-primary;
-    }
+  .btn-primary {
+    @apply py-2 px-4 bg-blue-200;
+  }
 }
 
+*/
 .pagy {
     @apply flex space-x-1 font-semibold text-sm text-gray-500;
 
@@ -92,61 +63,4 @@ th, td {
 
 .animate-fade {
     animation: fade 0.5s ease-in-out;
-}
-
-/* Global theme-aware button styles using CSS variables */
-[data-theme="mytheme"] .btn-primary {
-    background-color: var(--primary) !important;
-    color: var(--primary-content) !important;
-    border: none;
-    border-radius: 9999px; /* rounded-full */
-    padding: 0.5rem 1rem;
-    font-weight: 600;
-}
-
-[data-theme="mytheme"] .btn-secondary {
-    background-color: var(--secondary) !important;
-    color: var(--secondary-content) !important;
-    border: none;
-    border-radius: 9999px;
-    padding: 0.5rem 1rem;
-    font-weight: 600;
-}
-
-[data-theme="mytheme"] .btn-accent {
-    background-color: var(--accent) !important;
-    color: var(--accent-content) !important;
-    border: none;
-    border-radius: 9999px;
-    padding: 0.5rem 1rem;
-    font-weight: 600;
-}
-[data-theme="mytheme"] .alert-success {
-    background-color: var(--success) !important;
-    color: var(--success-content) !important;
-    border-radius: 9999px;
-    padding: 0.75rem 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-weight: 500;
-}
-
-[data-theme="mytheme"] .alert-error {
-    background-color: var(--error) !important;
-    color: var(--error-content) !important;
-    border-radius: 9999px;
-    padding: 0.75rem 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    font-weight: 500;
-}
-
-[data-theme="mytheme"] .alert-warning {
-    background-color: var(--warning) !important;
-    color: var(--warning-content) !important;
-}
-
-[data-theme="mytheme"] .alert-info {
-    background-color: var(--info) !important;
-    color: var(--info-content) !important;
 }

@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  get "settings/show"
-  get "settings/update"
   get "payments/new"
   get "payments/create"
   get "teachers/index"
@@ -83,7 +81,4 @@ Rails.application.routes.draw do
   # Teachers & Users
   resources :teachers, only: [ :index, :destroy ]
   resources :users, only: [ :index, :destroy ]
-
-  # Settings
-  resource :settings, only: [ :show, :edit, :update ]
 end
