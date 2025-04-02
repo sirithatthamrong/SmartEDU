@@ -23,4 +23,5 @@
 class TeacherStudentRelationship < ApplicationRecord
   validates :teacher_id, presence: true
   validates :student_id, presence: true
+  has_many :teacher_student_relationships, dependent: :destroy # Cascade delete relationships
 end

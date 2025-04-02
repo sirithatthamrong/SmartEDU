@@ -5,7 +5,7 @@
     </h1>
 
     <%= form_with(url: session_path, html: { autocomplete: "on" }) do |form| %>
-      <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address], class: "input input-bordered w-full mb-2 mt-2" %>
+      <%= form.text_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your username", value: params[:email_address], class: "input input-bordered w-full mb-2 mt-2" %>
       <br>
       <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", class: "input input-bordered w-full mb-2" %>
       <br>

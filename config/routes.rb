@@ -10,16 +10,20 @@ Rails.application.routes.draw do
   collection do
     get "success", to: "payments#success"
     get "cancel", to: "payments#cancel"
-  end
+    get "renew", to: "payments#renew"
+    post "renew_payment", to: "payments#renew_payment"
+    end
   end
 
   resources :classrooms do
     collection do
       get "by_grade/:grade", to: "classrooms#by_grade", as: "by_grade"
       get :manage
+      get :view
     end
     member do
       get :grading
+      get :view
       get :grade_level
     end
     resources :students, only: [ :index, :show ]

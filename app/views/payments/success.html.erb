@@ -7,15 +7,32 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.69/vfs_fonts.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="flex items-center justify-center min-h-screen bg-gray-100">
+
+<body class="flex flex-col min-h-screen bg-gray-50">
+<div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
+  <div class="navbar bg-white fixed top-0 left-0 w-full z-50 shadow-md h-20 flex items-center px-6">
+    <div class="flex-1">
+    <span class="text-4xl font-bold flex items-center">
+      <%= render "shared/logo_text" %>
+      <span class="text-gray-800"><%= content_for :title %></span>
+    </span>
+    </div>
+    <div class="flex-none">
+      <%= link_to 'Home', root_url, class: 'btn btn-secondary px-6 py-2 text-xl mr-4' %>
+      <%= link_to 'Login', new_session_path, class: 'btn btn-primary px-8 py-2 text-xl' %>
+    </div>
+  </div>
+</div>
 
 <!-- Payment Form Container -->
-<div class="payment-form-container text-center max-w-lg w-full bg-white p-8 rounded-lg shadow-lg mx-auto">
+<div class="flex-grow pt-32 pb-20">
+<div class="payment-form-container text-center max-w-lg w-full bg-white p-8 rounded-lg shadow-lg mx-auto flex flex-col items-center">
   <h1 class="text-3xl font-bold text-green-500 mb-6">🎉 Payment Successful! 🎉</h1>
-  <p class="text-lg text-gray-700 mb-6">Thank you for your payment. Your transaction has been completed successfully.</p>
+  <p class="text-lg text-gray-700">Thank you for your payment. Your transaction has been completed successfully.</p>
+    <b class="text-lg"> Please check your email for the receipt and the login credentials.</b>
 
   <!-- Receipt Card -->
-  <div id="receipt" class="bg-white p-6 rounded-lg shadow-lg text-left">
+  <div id="receipt" class="bg-gray-50 p-6 rounded-lg shadow-lg text-left mt-5">
     <div class="text-center mb-4">
       <h2 class="text-xl font-bold">Payment Receipt</h2>
       <p class="text-gray-500"><%= Time.now.strftime("%B %d, %Y") %></p>
@@ -28,7 +45,7 @@
       </div>
       <div class="flex justify-between mb-2">
         <span>Amount:</span>
-        <span>$<%= @payment&.amount || 0 %></span>
+        <span>฿<%= @payment&.amount || 0 %></span>
       </div>
       <div class="flex justify-between mb-2">
         <span>Transaction ID:</span>
@@ -38,24 +55,36 @@
         <span>Date:</span>
         <span><%= @payment&.created_at&.strftime("%B %d, %Y at %H:%M") || Time.now.strftime("%B %d, %Y at %H:%M") %></span>
       </div>
+
+      <div class="flex justify-between">
+        <span>Tier:</span>
+        <span><%= @school_tier %> </span>
+
+      </div>
+
     </div>
 
     <div class="text-center text-sm text-gray-500 mt-4">
-      <p>Thank you for your payment!</p>
+      <p>If you are already in our service, you will use the same login credentials and will not receive an email.</p>
     </div>
   </div>
 
   <!-- Download Button -->
   <div class="mt-6">
-    <button id="download-receipt" class="btn btn-primary w-1/2 mx-auto">
+    <button id="download-receipt" class="btn btn-primary mt-3">
       Download Receipt
     </button>
   </div>
 
   <!-- Return Home Link -->
-  <a href="<%= root_path %>" class="btn btn-secondary mt-5 w-1/2 mx-auto">
+  <a href="<%= root_path %>" class="btn btn-secondary mt-3">
     Return to Home
   </a>
+
+  <p class="mt-10 mb-2 text-sm"><i>If you have any questions, please contact our support team via smarteduccc@gmail.com</i></p>
+
+</div>
+
 </div>
 
 <script>

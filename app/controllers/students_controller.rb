@@ -4,6 +4,22 @@ class StudentsController < ApplicationController
   include Pagy::Backend
   require "csv"
 
+  CSV_HEADER_FIRST_NAME = "First Name"
+  CSV_HEADER_LAST_NAME = "Last Name"
+  CSV_HEADER_GRADE = "Grade"
+  CSV_HEADER_CLASSROOM = "Classroom"
+  CSV_HEADER_PERSONAL_EMAIL = "Personal Email Address"
+  CSV_HEADER_PARENT_EMAIL = "Parent Email Address"
+
+  CSV_HEADERS = [
+    CSV_HEADER_FIRST_NAME,
+    CSV_HEADER_LAST_NAME,
+    CSV_HEADER_GRADE,
+    CSV_HEADER_CLASSROOM,
+    CSV_HEADER_PERSONAL_EMAIL,
+    CSV_HEADER_PARENT_EMAIL
+  ]
+
   def index
     @classroom = Classroom.find_by(id: params[:classroom_id], school_id: current_user.school_id) if params[:classroom_id].present?
     @grades = Classroom.where(school_id: current_user.school_id).distinct.pluck(:grade_level)
@@ -167,10 +183,11 @@ class StudentsController < ApplicationController
   end
 
   def download_csv_template
-    headers = [ "First Name", "Last Name", "Grade", "Classroom", "Personal Email Address", "Parent Email Address" ]
+    example = [ "Example: John", "Doe", "1", "1A", "john.doe@example.com", "parent@example.com" ]
 
     csv_data = CSV.generate(headers: true) do |csv|
-      csv << headers
+      csv << CSV_HEADERS
+      csv << example
     end
 
     send_data csv_data, filename: "student_import_template.csv", type: "text/csv"
@@ -184,18 +201,28 @@ class StudentsController < ApplicationController
     end
 
     csv = CSV.parse(file.read, headers: true)
+
+    # 1. Validate column headers
+    if csv.headers != CSV_HEADERS
+      flash[:error] = "CSV headers must exactly match: #{CSV_HEADERS.join(', ')}"
+      redirect_to students_path and return
+    end
+
     failed_rows = []
     imported_students = []
 
     ActiveRecord::Base.transaction do
       csv.each_with_index do |row, index|
+        # 2. Skip the example row (row 2 in this case)
+        next if index == 0
+
         begin
-          first_name = row["First Name"]&.strip
-          last_name = row["Last Name"]&.strip
-          grade = row["Grade"]&.strip
-          class_id = row["Classroom"]&.strip
-          personal_email = row["Personal Email Address"]&.strip
-          parent_email = row["Parent Email Address"]&.strip
+          first_name = row[CSV_HEADER_FIRST_NAME]&.strip
+          last_name = row[CSV_HEADER_LAST_NAME]&.strip
+          grade = row[CSV_HEADER_GRADE]&.strip
+          class_id = row[CSV_HEADER_CLASSROOM]&.strip
+          personal_email = row[CSV_HEADER_PERSONAL_EMAIL]&.strip
+          parent_email = row[CSV_HEADER_PARENT_EMAIL]&.strip
 
           classroom = Classroom.find_by(class_id: class_id, grade_level: grade, school_id: current_user.school_id)
           raise "Invalid classroom or grade" if classroom.nil?
@@ -210,7 +237,7 @@ class StudentsController < ApplicationController
           )
 
           unless user.valid?
-            raise "User validation failed: #{user.errors.full_messages.join(", ")}"
+            raise "User validation failed: #{user.errors.full_messages.join(', ')}"
           end
 
           user.save!
@@ -224,7 +251,7 @@ class StudentsController < ApplicationController
           )
 
           unless student.valid?
-            raise "Student validation failed: #{student.errors.full_messages.join(", ")}"
+            raise "Student validation failed: #{student.errors.full_messages.join(', ')}"
           end
 
           student.save!
@@ -232,7 +259,7 @@ class StudentsController < ApplicationController
           imported_students << student
 
         rescue => e
-          failed_rows << { row_number: index + 2, error: e.message } # +2 for header + 1-based index
+          failed_rows << { row_number: index + 2, error: e.message } # +2 accounts for 0-based index + header row
           raise ActiveRecord::Rollback
         end
       end
@@ -298,13 +325,13 @@ class StudentsController < ApplicationController
 
   def authorize_admin_or_principal!
     unless current_user.admin? || current_user.principal?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 
   def authorize_student!
     unless current_user.student?
-      redirect_to root_path, alert: "You are not authorized to access this page."
+      redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
   end
 end

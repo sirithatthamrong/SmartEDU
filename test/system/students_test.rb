@@ -3,6 +3,7 @@ require "application_system_test_case"
 class StudentsTest < ApplicationSystemTestCase
   setup do
     @school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1)
+    @school.update(subscription_end: 1.month.from_now)
 
     @principal = User.create!(
       first_name: "Principal",
@@ -77,14 +78,14 @@ class StudentsTest < ApplicationSystemTestCase
     visit student_url(@student)
     click_on "Edit", match: :first
     fill_in "First Name", with: "Edited"
-    fill_in "Last Name", with: "Student"
+    fill_in "Last Name", with: "StudentName"
     select @classroom.grade_level.to_s, from: "grade-select"
     select @classroom.class_id, from: "classroom-select"
-    fill_in "Personal Email Address", with: @student.student_email_address
+    fill_in "Personal Email Address", with: "#{SecureRandom.hex(8)}@example.com"
     fill_in "Parent Email Address", with: @student.parent_email_address
 
     click_on "Update Student"
-    assert_text "Edited Student was successfully updated."
+    assert_text "Edited StudentName was successfully updated."
     click_on "Back"
   end
 

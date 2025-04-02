@@ -15,8 +15,8 @@ if Rails.env.development? || Rails.env.test?
 end
 
 # Create Schools
-school1 = School.create!(name: "Piti Academy", address: "123 Main St, Bangkok", has_paid: 1)
-school2 = School.create!(name: "Kanat Kitty School", address: "456 Algorithm Rd, Nakhon Pathom", has_paid: 1)
+school1 = School.create!(name: "Piti Academy", address: "123 Main St, Bangkok", has_paid: 1, subscription_end: 1.year.from_now)
+school2 = School.create!(name: "Kanat Kitty School", address: "456 Algorithm Rd, Nakhon Pathom", has_paid: 1, subscription_end: 1.year.from_now)
 
 # Create Classrooms
 classroom1 = Classroom.create!(class_id: "5A", grade_level: 5, school_id: school1.id)
