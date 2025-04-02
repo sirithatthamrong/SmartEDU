@@ -43,16 +43,7 @@ class StudentsTest < ApplicationSystemTestCase
       student_email_address: @user.email_address,
       parent_email_address: "parenttest@example.com"
     )
-    login_as_principal
-  end
-
-  def login_as_principal
-    visit new_session_path
-
-    fill_in "email_address", with: @principal.email_address
-    fill_in "password", with: "password123"
-    click_on "Sign In"
-    assert_selector "h2 span", text: "Dashboard", wait: 10
+    login_as(@principal)
   end
 
   test "visiting the index" do
