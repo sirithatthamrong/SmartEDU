@@ -1,8 +1,8 @@
 <% if current_user&.school&.color_theme %>
   <% raw_theme = current_user.school.color_theme.theme_name %>
-  <% theme = raw_theme == "custom" ? "mytheme" : raw_theme || "pastel" %>
+  <% theme = raw_theme == "custom" ? "mytheme" : raw_theme %>
 <% else %>
-  <% theme = "pastel" %>
+  <% theme = "mytheme" %>
 <% end %>
 
 <!DOCTYPE html>

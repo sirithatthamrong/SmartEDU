@@ -33,7 +33,7 @@ class School < ApplicationRecord
   private
   def set_default_color_theme
     create_color_theme!(
-      theme_name: "pastel",
+      theme_name: "mytheme",
       primary_color: "#8294C4",
       primary_content_color: "#FFFFFF",
       secondary_color: "#ACB1D6",
