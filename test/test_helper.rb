@@ -9,22 +9,6 @@ def ci?
   ENV["CI"] == "true"
 end
 
-module SignInHelper
-  def sign_in
-    user = User.find_by!(role: "principal")
-    Rails.logger.info("Signing in as #{user.email_address}")
-    post session_path, params: { email_address: user.email_address, password: "password123", school_id: user.school_id }
-
-    follow_redirect!
-    assert_response :success, "Login failed: #{response.body}"
-  end
-
-  def sign_in_with_parameter(user)
-    post session_path, params: { email_address: user.email_address, password: user.password, school_id: user.school_id }
-    follow_redirect!
-    assert_response :success, "Login failed: #{response.body}"
-  end
-end
 
 class ActionDispatch::IntegrationTest
   include IntegrationTestHelper
