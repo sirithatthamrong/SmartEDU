@@ -34,8 +34,11 @@ Rails.application.routes.draw do
     collection do
       get "scan_qr", to: "attendances#scan_qr", as: "scan_qr"
       post "checkin", to: "attendances#checkin"
-      get "status", to: "attendances#status"
     end
+  end
+
+  resources :attendances, only: [ :create ] do
+    get "/status", to: "attendances#status"
   end
 
   # Profile Routes
