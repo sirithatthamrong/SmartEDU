@@ -2,8 +2,8 @@ require "test_helper"
 
 class StudentsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @eiei_school = School.create!(name: "Test School", address: "123 Main St")
-    @yoyo_school = School.create!(name: "Yoyo School", address: "123 Main St")
+    @eiei_school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1, subscription_end: 1.year.from_now)
+    @yoyo_school = School.create!(name: "Yoyo School", address: "123 Main St", has_paid: 1, subscription_end: 1.year.from_now)
 
     @principal = User.create!(
       first_name: "Principal",

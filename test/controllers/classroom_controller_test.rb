@@ -2,7 +2,7 @@ require "test_helper"
 
 class ClassroomsControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @eiei_school = School.create!(name: "Eiei School", address: "123 Main St")
+    @eiei_school = School.create!(name: "Eiei School", address: "123 Main St", has_paid: 1, subscription_end: 1.year.from_now)
     @classroom = Classroom.create!(
       grade_level: 5,
       class_id: 1,

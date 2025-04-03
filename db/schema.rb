@@ -11,22 +11,6 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
-  create_table "Users", force: :cascade do |t|
-    t.string "email_address", null: false
-    t.string "password_digest", null: false
-    t.boolean "is_active", default: true
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "role", default: "student"
-    t.boolean "approved", default: false
-    t.integer "school_id"
-    t.string "personal_email", null: false
-    t.string "first_name", null: false
-    t.string "last_name", null: false
-    t.index ["email_address"], name: "index_users_on_email_address", unique: true
-    t.index ["school_id"], name: "index_users_on_school_id"
-  end
-
   create_table "attendances", force: :cascade do |t|
     t.integer "student_id", null: false
     t.datetime "timestamp"
@@ -44,27 +28,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
     t.datetime "updated_at", null: false
     t.integer "school_id"
     t.index ["school_id", "class_id"], name: "index_classrooms_on_school_id_and_class_id", unique: true
-  end
-
-  create_table "color_themes", force: :cascade do |t|
-    t.integer "school_id", null: false
-    t.string "theme_name", null: false
-    t.string "primary_color"
-    t.string "primary_content_color"
-    t.string "secondary_color"
-    t.string "secondary_content_color"
-    t.string "accent_color"
-    t.string "accent_content_color"
-    t.string "base_100_color"
-    t.string "base_200_color"
-    t.string "base_300_color"
-    t.string "base_500_color"
-    t.string "base_content_color"
-    t.string "neutral_color"
-    t.string "neutral_content_color"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["school_id"], name: "index_color_themes_on_school_id"
   end
 
   create_table "homerooms", force: :cascade do |t|
@@ -113,7 +76,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "has_paid", default: false
+    t.boolean "has_paid"
     t.integer "tier", default: 1
     t.datetime "subscription_end"
     t.index ["name"], name: "index_schools_on_name", unique: true
@@ -150,10 +113,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
     t.index ["teacher_id"], name: "index_teacher_student_relationships_on_teacher_id"
   end
 
-  add_foreign_key "Users", "schools"
+  create_table "users", force: :cascade do |t|
+    t.string "email_address", null: false
+    t.string "password_digest", null: false
+    t.boolean "is_active", default: true
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "role", default: "student"
+    t.boolean "approved", default: false
+    t.integer "school_id"
+    t.string "personal_email", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.index ["email_address"], name: "index_users_on_email_address", unique: true
+    t.index ["school_id"], name: "index_users_on_school_id"
+  end
+
   add_foreign_key "attendances", "students"
   add_foreign_key "attendances", "users"
-  add_foreign_key "color_themes", "schools"
   add_foreign_key "homerooms", "classrooms"
   add_foreign_key "homerooms", "users", column: "teacher_id"
   add_foreign_key "payments", "users"
@@ -162,8 +139,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
   add_foreign_key "school_tiers", "schools"
   add_foreign_key "sessions", "users"
   add_foreign_key "students", "classrooms"
-  add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
+  add_foreign_key "students", "classrooms"
   add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "teacher_student_relationships", "users", column: "student_id"
   add_foreign_key "teacher_student_relationships", "users", column: "teacher_id"
+  add_foreign_key "users", "schools"
 end
