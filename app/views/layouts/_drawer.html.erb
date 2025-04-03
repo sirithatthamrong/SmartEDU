@@ -68,12 +68,22 @@
       <% end %>
 
       <!-- Scan QR Section -->
-      <% if(current_user&.system? || current_user&.principal? || current_user&.teacher?) && current_user&.school.tier == 2 %>
+      <% if (current_user&.system? || current_user&.principal? || current_user&.teacher?) && current_user&.school.tier == 2 %>
         <li>
           <%= link_to scan_qr_attendances_path, class: "flex items-center gap-2" do %>
             <i class="fas fa-qrcode"></i> Scan QR Code
           <% end %>
         </li>
+      <% end %>
+
+      <% if current_user&.system? || current_user&.principal? %>
+        <% if current_user.payments.any? %>
+          <li>
+            <%= link_to payment_path(current_user.payments.last), class: "flex items-center gap-2" do %>
+              <i class="fas fa-shopping-cart"></i> Payment History
+            <% end %>
+          </li>
+        <% end %>
       <% end %>
 
       <!-- Grades Section -->
