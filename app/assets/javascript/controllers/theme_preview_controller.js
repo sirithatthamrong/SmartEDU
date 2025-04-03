@@ -26,14 +26,6 @@ document.addEventListener("DOMContentLoaded", function () {
             base200: "#f8f8f8",
             baseContent: "#00182A"
         },
-        dark: {
-            primary: "#570df8",
-            secondary: "#f000b8",
-            accent: "#37cdbe",
-            base100: "#1e1e1e",
-            base200: "#2a2a2a",
-            baseContent: "#ffffff"
-        },
         pastel: {
             primary: "#d1c1d7",
             secondary: "#f4c2c2",

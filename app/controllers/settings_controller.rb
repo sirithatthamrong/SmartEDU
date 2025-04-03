@@ -31,17 +31,6 @@ class SettingsController < ApplicationController
         base_500_color: GRAY_200,
         base_content_color: "#00182a"
       )
-    when "dark"
-      params[:color_theme].merge!(
-        primary_color: "#793ef9",
-        secondary_color: "#f000b8",
-        accent_color: "#37cdbe",
-        base_100_color: "#1e1e1e",
-        base_200_color: "#2a2a2a",
-        base_300_color: "#333333",
-        base_500_color: "#4e4e4e",
-        base_content_color: WHITE
-      )
     when "pastel"
       params[:color_theme].merge!(
         primary_color: "#d1c1d7",

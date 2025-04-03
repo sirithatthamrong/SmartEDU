@@ -1,7 +1,6 @@
 const defaultTheme = require("tailwindcss/defaultTheme");
 
 module.exports = {
-  darkMode: false,
   content: [
     "./public/*.html",
     "./app/helpers/**/*.rb",
@@ -21,24 +20,23 @@ module.exports = {
     require("daisyui"),
   ],
   daisyui: {
-    darkTheme: false, // Ensure dark mode is not applied
     themes: [
       "light",
-      "dark",
       "pastel",
       {
         mytheme: {
-          "primary": "var(--primary)",
+          // Use fallback colors to avoid Tailwind build errors
+          "primary": "#000000",
           "primary-content": "#f3faff",
-          "secondary": "var(--secondary)",
+          "secondary": "#000000",
           "secondary-content": "#f1fbfb",
-          "accent": "var(--accent)",
+          "accent": "#000000",
           "accent-content": "#00182a",
-          "base-100": "var(--base-100)",
-          "base-200": "var(--base-200)",
-          "base-300": "var(--base-300)",
-          "base-500": "var(--base-500)",
-          "base-content": "var(--base-content)",
+          "base-100": "#ffffff",
+          "base-200": "#f8f8f8",
+          "base-300": "#f0f0f0",
+          "base-500": "#d0d0d0",
+          "base-content": "#00182a",
           "neutral": "#6b8a9e",
           "neutral-content": "#f3faff",
           "info": "#3ABFF8",
