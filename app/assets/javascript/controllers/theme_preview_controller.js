@@ -26,13 +26,21 @@ document.addEventListener("DOMContentLoaded", function () {
             base200: "#f8f8f8",
             baseContent: "#00182A"
         },
-        dark: {
-            primary: "#570df8",
-            secondary: "#f000b8",
-            accent: "#37cdbe",
-            base100: "#1e1e1e",
-            base200: "#2a2a2a",
-            baseContent: "#ffffff"
+        cupcake: {
+            primary: "#65c3c8",
+            secondary: "#ef9fbc",
+            accent: "#eeaf3a",
+            base100: "#faf7f5",
+            base200: "#efeae6",
+            baseContent: "#291334"
+        },
+        emerald: {
+            primary: "#34d399",
+            secondary: "#3b82f6",
+            accent: "#f97316",
+            base100: "#ffffff",
+            base200: "#f2f2f2",
+            baseContent: "#e5e6e6"
         },
         pastel: {
             primary: "#d1c1d7",

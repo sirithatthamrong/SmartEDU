@@ -52,7 +52,7 @@ function styleDataTableElements() {
     // Style search input
     $("div.dt-container .dt-search input").css({
         "border": "1px solid #aaa",
-        "border-radius": "10px",
+        "border-radius": "100px",
         "padding": "5px",
         "background-color": "transparent",
         "color": "inherit",

@@ -21,11 +21,11 @@
     }
 
     .entity-table thead th {
-        @apply bg-[#5b79a3] text-white text-left py-4 px-6 border-b;
+        @apply bg-primary text-white text-left py-4 px-6 border-b;
     }
 
     .entity-table tbody tr {
-        @apply bg-white hover:bg-[#FFEAD2] transition duration-200 ease-in-out;
+        @apply bg-white hover:bg-accent transition duration-200 ease-in-out;
     }
 
     .entity-table td {

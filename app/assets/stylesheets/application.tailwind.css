@@ -10,6 +10,13 @@
     .btn {
         @apply rounded-full px-4 py-2 font-semibold border-none;
     }
+    * {
+        @apply border-gray-300;
+    }
+
+    .search {
+        @apply rounded-full;
+    }
 
     [data-theme="mytheme"] .btn-primary {
         background-color: var(--primary);
@@ -56,6 +63,7 @@
     .alert-info {
         @apply rounded-full;
     }
+
 }
 
 .pagy {
@@ -164,4 +172,17 @@ th, td {
 [data-theme="mytheme"] .alert-info {
     background-color: var(--info) !important;
     color: var(--info-content) !important;
+}
+
+[data-theme="mytheme"] .entity-table thead th {
+    background-color: var(--primary) !important;
+    color: var(--primary-content) !important;
+}
+[data-theme="mytheme"] .entity-table tbody tr:hover {
+    background-color: var(--accent) !important;
+    color: var(--accent-content) !important;
+}
+[data-theme="mytheme"] .navbar {
+    background-color: var(--primary) !important;
+    color: var(--primary-content) !important;
 }

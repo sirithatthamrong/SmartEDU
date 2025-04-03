@@ -13,7 +13,7 @@
       <%= form_with model: @color_theme, url: settings_path, method: :patch, local: true do |f| %>
         <!-- Theme Options -->
         <div class="flex flex-col space-y-4">
-          <% %w[light dark pastel custom].each do |theme_name| %>
+          <% %w[light cupcake emerald pastel custom].each do |theme_name| %>
             <label for="theme_select_<%= theme_name %>" class="cursor-pointer block border p-4 rounded-lg hover:ring-2 hover:ring-primary transition-all duration-200">
               <%= radio_button_tag "theme_select", theme_name, (current_theme == theme_name), id: "theme_select_#{theme_name}", class: "hidden theme-radio", data: { theme_value: theme_name } %>
               <div class="peer-checked:ring-2 ring-primary">
@@ -85,13 +85,13 @@
 
         <div class="flex justify-start w-full md:w-1/2 px-6">
           <div class="max-w-md w-full">
-            <div id="preview-card" class="student-card max-w-md w-full p-8 bg-white rounded-2xl shadow-2xl">
+            <div id="preview-card" class="student-card max-w-md w-full p-8 bg-base-200 rounded-2xl shadow-2xl">
               <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
               <form action="#" method="post" autocomplete="on">
                 <label for="preview-email" class="sr-only">Email</label>
-                <input id="preview-email" type="email" placeholder="Enter your email address" class="input input-bordered w-full mb-2 mt-2" disabled>
+                <input id="preview-email" type="email" placeholder="Enter your email address" class="input input-bordered bg-base-100 w-full mb-2 mt-2" disabled>
                 <label for="preview-password" class="sr-only">Password</label>
-                <input id="preview-password" type="password" placeholder="Enter your password" class="input input-bordered w-full mb-2" disabled>
+                <input id="preview-password" type="password" placeholder="Enter your password" class="input input-bordered bg-base-100 w-full mb-2" disabled>
                 <button class="btn btn-primary w-full mt-4" id="preview-primary-btn" type="button">Sign In</button>
               </form>
               <div class="mt-2">

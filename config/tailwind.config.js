@@ -25,6 +25,8 @@ module.exports = {
     themes: [
       "light",
       "dark",
+      "cupcake",
+      "emerald",
       "pastel",
       {
         mytheme: {
