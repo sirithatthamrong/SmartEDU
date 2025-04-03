@@ -1,5 +1,5 @@
 class HomeController < ApplicationController
-  before_action :reminder_subscription, unless: -> { session[:reminder_sent] }
+  before_action :check_subscription
   ATTENDANCE_TIMESTAMP_CONDITION = "attendances.timestamp >= ?".freeze
 
   def index
@@ -49,11 +49,11 @@ class HomeController < ApplicationController
     }
   end
   private
-  def reminder_subscription
-    school = School.find_by(id: current_user.school_id)
-    if school && !session[:reminder_sent]
-      PaymentMailer.reminder_email(school).deliver_now
-      session[:reminder_sent] = true
+  def check_subscription
+    if current_user&.school &&
+      current_user.school.subscription_end.present? &&
+      current_user.school.subscription_end < Time.current
+      redirect_to new_payment_path, alert: "Your school subscription has expired. Please renew."
     end
   end
 end

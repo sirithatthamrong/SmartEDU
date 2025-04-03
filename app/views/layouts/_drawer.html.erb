@@ -77,7 +77,7 @@
         </li>
       <% end %>
 
-      <% if current_user&.admin? || current_user&.principal? %>
+      <% if current_user&.system? || current_user&.principal? %>
         <% if current_user.payments.any? %>
           <li>
             <%= link_to payment_path(current_user.payments.last), class: "flex items-center gap-2" do %>
