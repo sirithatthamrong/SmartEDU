@@ -60,7 +60,11 @@ class User < ApplicationRecord
   end
 
   def can_manage_teachers?
-    admin? || principal?
+    admin?
+  end
+
+  def can_manage_users?
+    admin?
   end
 
   def admin?
