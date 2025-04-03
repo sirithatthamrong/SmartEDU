@@ -87,10 +87,9 @@
       <% end %>
 
       <!-- Grades Section -->
-      <li>
-        <% if current_user&.teacher? || current_user&.principal? || current_user&.admin? %>
+      <% if current_user&.teacher? || current_user&.principal? || current_user&.admin? %>
+        <li>
           <%
-            # Safer approach with multiple fallbacks
             classroom_link = if @classroom.present?
                                grading_classroom_path(@classroom) rescue nil
                              else
@@ -103,17 +102,9 @@
             <%= link_to classroom_link, class: "flex items-center gap-2" do %>
               <i class="fas fa-graduation-cap"></i> Grades
             <% end %>
-          <% else %>
-      <span class="flex items-center gap-2 text-gray-400 cursor-not-allowed">
-        <i class="fas fa-graduation-cap"></i> Grades
-      </span>
           <% end %>
-        <% else %>
-    <span class="flex items-center gap-2 text-gray-400 cursor-not-allowed">
-      <i class="fas fa-graduation-cap"></i> Grades
-    </span>
-        <% end %>
-      </li>
+        </li>
+      <% end %>
 
       <!-- Settings Section -->
       <% if current_user&.admin? || current_user&.principal? %>
