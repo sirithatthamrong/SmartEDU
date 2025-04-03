@@ -127,7 +127,7 @@ class User < ApplicationRecord
 
   def send_login_credentials
     Rails.logger.info("SendingLoginCredentials")
-    UserMailer.send_login_credentials(self, @plain_password).deliver_later
+    UserMailer.send_login_credentials(self, @plain_password).deliver_now
     Rails.logger.info("SendingLoginCredentials")
   end
 end

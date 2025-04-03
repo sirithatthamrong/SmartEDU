@@ -163,7 +163,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
   add_foreign_key "sessions", "users"
   add_foreign_key "students", "classrooms"
   add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
-  add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "teacher_student_relationships", "users", column: "student_id"
   add_foreign_key "teacher_student_relationships", "users", column: "teacher_id"
 end
