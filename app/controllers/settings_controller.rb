@@ -58,7 +58,7 @@ class SettingsController < ApplicationController
         secondary_color: "#ef9fbc",
         secondary_content_color: "#49101e",
         accent_color: "#eeaf3a",
-        accent_content_color:"3b2300",
+        accent_content_color: "3b2300",
         base_100_color: "#faf7f5",
         base_200_color: "#efeae6",
         base_300_color: "#e7e2df",
