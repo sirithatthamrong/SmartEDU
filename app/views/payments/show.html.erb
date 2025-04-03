@@ -1,0 +1,46 @@
+<% content_for :title, "Payment History Page" %>
+<div class="flex-grow">
+  <div class="my-entity-container px-4 md:px-6 overflow-x-auto">
+    <div class="flex items-center ">
+      <%= link_to "Renew Payment", renew_payments_path, class: "entity-btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc] px-4 py-2" %>
+    </div>
+
+    <% if @payment_history.present? %>
+      <table id="shared-table" class="entity-table" data-turbo="false">
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Payment Transaction ID</th>
+          <th>Amount Paid</th>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Currency</th>
+          <th>Status</th>
+          <th>Subscription Start</th>
+          <th>Subscription End</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @payment_history.each do |payment| %>
+          <tr>
+            <td><%= payment.created_at.strftime("%B %d, %Y") %></td>
+            <td><%= payment.stripe_payment_intent_id %></td>
+            <td>฿<%= payment.amount %></td>
+            <td><%= payment.first_name %></td>
+            <td><%= payment.last_name %></td>
+            <td><%= "THB" %></td>
+            <td class="text-green-500"><%= payment.status %></td>
+            <td><%= payment.subscription_start.strftime("%B %d, %Y") %></td>
+            <td><%= payment.subscription_end.strftime("%B %d, %Y") %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No payment history available.</p>
+    <% end %>
+  </div>
+</div>
+</body>
+
+<%= javascript_include_tag "controllers/students_table_controller" %>
