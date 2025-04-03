@@ -6,11 +6,11 @@
       <form id="deleteForm" method="post">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <input type="hidden" name="_method" value="delete">
-        <button type="submit" class="entity-btn entity-btn-delete">
+        <button type="submit" class="btn entity-btn-delete">
           Yes, Remove
         </button>
       </form>
-      <button onclick="closeModal()" class="entity-btn entity-btn-secondary">Cancel</button>
+      <button onclick="closeModal()" class="btn entity-btn-secondary">Cancel</button>
     </div>
   </div>
 </div>
@@ -23,7 +23,7 @@
       <form id="archiveForm" method="post">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <input type="hidden" name="_method" value="delete">
-        <button type="submit" class="entity-btn entity-btn-delete">
+        <button type="submit" class="btn entity-btn-delete">
           Yes, Archive
         </button>
       </form>

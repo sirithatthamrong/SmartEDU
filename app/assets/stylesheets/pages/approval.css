@@ -21,7 +21,7 @@
     }
 
     .entity-table thead th {
-        @apply bg-primary text-white text-left py-4 px-6 border-b;
+        @apply bg-secondary text-white text-left py-4 px-6 border-b;
     }
 
     .entity-table tbody tr {

@@ -175,8 +175,8 @@ th, td {
 }
 
 [data-theme="mytheme"] .entity-table thead th {
-    background-color: var(--primary) !important;
-    color: var(--primary-content) !important;
+    background-color: var(--secondary) !important;
+    color: var(--secondary-content) !important;
 }
 [data-theme="mytheme"] .entity-table tbody tr:hover {
     background-color: var(--accent) !important;

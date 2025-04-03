@@ -25,11 +25,11 @@
           <td><%= user.personal_email %></td>
           <td><%= user.role.capitalize %></td>
           <td class="flex space-x-2">
-            <button class="entity-btn bg-green-500 hover:bg-green-600" style="height: 2.5rem;"
+            <button class="btn bg-green-500 hover:bg-green-600" style="height: 2.5rem;"
                     onclick="confirmApprove(<%= user.id %>, '<%= user.email_address %>')">
               <i class="fas fa-check"></i> Approve
             </button>
-            <button class="entity-btn entity-btn-delete" style="height: 2.5rem;"
+            <button class="btn entity-btn-delete" style="height: 2.5rem;"
                     onclick="confirmDelete(<%= user.id %>, '<%= user.email_address %>', '/users')">
               <i class="fas fa-trash"></i> Remove
             </button>
