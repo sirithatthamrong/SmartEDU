@@ -4,7 +4,7 @@
 #
 #  id               :integer          not null, primary key
 #  address          :string           not null
-#  has_paid         :boolean
+#  has_paid         :boolean          default(FALSE)
 #  name             :string           not null
 #  subscription_end :datetime
 #  tier             :integer          default(1)
