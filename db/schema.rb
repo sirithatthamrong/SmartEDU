@@ -76,7 +76,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
     t.string "address", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "has_paid"
+    t.boolean "has_paid", default: false
     t.integer "tier", default: 1
     t.datetime "subscription_end"
     t.index ["name"], name: "index_schools_on_name", unique: true
@@ -138,7 +138,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
   add_foreign_key "principal_teacher_relationships", "users", column: "teacher_id"
   add_foreign_key "school_tiers", "schools"
   add_foreign_key "sessions", "users"
-  add_foreign_key "students", "classrooms"
   add_foreign_key "students", "classrooms"
   add_foreign_key "students", "users", column: "student_email_address", primary_key: "email_address"
   add_foreign_key "teacher_student_relationships", "users", column: "student_id"
