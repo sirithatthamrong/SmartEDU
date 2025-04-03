@@ -1,6 +1,60 @@
-<h1>Payment Receipt</h1>
-<p>Thank you for your payment.</p>
-<p><strong>Name:</strong> <%= @payment.first_name %> <%= @payment.last_name %></p>
-<p><strong>Amount:</strong> $<%= @payment.amount %></p>
-<p><strong>Transaction ID:</strong> <%= @payment.stripe_payment_intent_id %></p>
-<p><strong>Date:</strong> <%= @payment.created_at.strftime("%B %d, %Y at %H:%M") %></p>
+<div id="receipt" style="max-width: 600px; margin: auto; font-family: Arial, sans-serif; border: 1px solid #ddd; padding: 20px;">
+  <h1 style="text-align: center; font-size: 24px; margin-bottom: 20px;">RECEIPT</h1>
+
+  <table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+      <td style="font-weight: bold; font-size: 14px;">SmartEDU</td>
+      <th scope=col style="text-align: right; font-size: 14px;">
+        <strong>PAYMENT DATE:</strong> <%= @payment.created_at.strftime('%B %d, %Y at %H:%M') %><br>
+        <strong>TRANSACTION ID:</strong> <%= @payment.stripe_payment_intent_id %>
+      </th>
+    </tr>
+    <tr>
+      <td style="font-size: 12px;">
+        Mahidol International University<br>
+        Nakhon Pathom, Salaya<br>
+        0998671165<br>
+        smarteduccc@gmail.com
+      </td>
+    </tr>
+  </table>
+
+  <table style="width: 100%; margin-bottom: 20px;">
+    <tr>
+      <td style="font-weight: bold; text-decoration: underline; font-size: 14px;">BILL TO</td>
+      <th scope='col' style="font-weight: bold; text-decoration: underline; font-size: 14px; text-align: right;">SUBSCRIPTION DETAILS</th>
+    </tr>
+    <tr>
+      <td style="font-size: 14px;">
+        <%= @payment.first_name %> <%= @payment.last_name %><br>
+        <%= @payment.email %>
+      </td>
+      <td style="text-align: right; font-size: 14px;">
+        <strong>Start Date:</strong> <%= @payment.subscription_start.strftime('%B %d, %Y') if @payment.subscription_start %><br>
+        <strong>End Date:</strong> <%= @payment.subscription_end.strftime('%B %d, %Y') if @payment.subscription_end %>
+      </td>
+    </tr>
+  </table>
+
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+    <tr style="background-color: #142567; color: white;">
+      <th style="text-align: left; padding: 8px;">DESCRIPTION</th>
+      <th style="text-align: right; padding: 8px;">AMOUNT</th>
+    </tr>
+    <tr>
+      <td style="padding: 8px;">Subscription Payment</td>
+      <td style="text-align: right; padding: 8px;"><%= @payment.amount %> THB</td>
+    </tr>
+  </table>
+
+  <table style="width: 100%; border-top: 2px solid #000; padding-top: 10px;">
+    <tr>
+      <td style="font-weight: bold; font-size: 14px;">TOTAL AMOUNT</td>
+      <th scope='col' style="text-align: right; font-weight: bold; font-size: 14px;"><%= @payment.amount %> THB</th>
+    </tr>
+  </table>
+
+  <p style="text-align: right; font-style: italic; font-size: 12px; margin-top: 20px;">
+    Paid: <%= @payment.amount %> THB
+  </p>
+</div>
