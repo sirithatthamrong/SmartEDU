@@ -2,7 +2,7 @@ require "test_helper"
 
 class UserMailerTest < ActionMailer::TestCase
   setup do
-    @school = School.create!(name: "Test School", address: "123 Test St", has_paid: 1)
+    @school = School.create!(name: "Test School", address: "123 Test St", has_paid: 1, subscription_end: 1.year.from_now)
     @user = User.create!(
       first_name: "Test",
       last_name: "User",

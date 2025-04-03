@@ -2,7 +2,7 @@ require "test_helper"
 
 class SignupControllerTest < ActionDispatch::IntegrationTest
   setup do
-    @eiei_school = School.create!(name: "Test School", address: "123 Main St")
+    @eiei_school = School.create!(name: "Test School", address: "123 Main St", has_paid: 1, subscription_end: 1.year.from_now)
   end
 
   test "should get new" do

@@ -15,15 +15,13 @@
       </span>
   </div>
   <div class="flex-none">
-    <%= link_to 'Back to Dashboard', home_index_url, class: 'btn btn-secondary px-6 py-2 text-xl mr-4' %>
+    <%= link_to 'Home', root_url, class: 'btn btn-secondary px-6 py-2 text-xl mr-4' %>
+    <%= link_to 'Login', new_session_path, class: 'btn btn-primary px-8 py-2 text-xl' %>
   </div>
 </div>
 <div class="flex-grow pt-32 pb-20">
   <%= render 'payments/payment_form', title: 'Renew Your Payment' %>
 </div>
-
-
-
 <%= javascript_include_tag "https://js.stripe.com/v3/", "data-turbo-track": "reload" %>
 </body>
 <script>
