@@ -69,6 +69,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
   end
 
+
   def authorize_admin!
     unless current_user.admin?
       redirect_to home_index_url, alert: "You are not authorized to access this page."
