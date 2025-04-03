@@ -89,7 +89,7 @@ class ClassroomsController < ApplicationController
   end
 
   def show
-    @students = Student.where(grade: @classroom.grade_level).order(:name)
+    @students = @classroom.students.where(grade: @classroom.grade_level).order(:name)
   end
 
   def grading

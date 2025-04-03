@@ -30,6 +30,27 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
     t.index ["school_id", "class_id"], name: "index_classrooms_on_school_id_and_class_id", unique: true
   end
 
+  create_table "color_themes", force: :cascade do |t|
+    t.integer "school_id", null: false
+    t.string "theme_name", null: false
+    t.string "primary_color"
+    t.string "primary_content_color"
+    t.string "secondary_color"
+    t.string "secondary_content_color"
+    t.string "accent_color"
+    t.string "accent_content_color"
+    t.string "base_100_color"
+    t.string "base_200_color"
+    t.string "base_300_color"
+    t.string "base_500_color"
+    t.string "base_content_color"
+    t.string "neutral_color"
+    t.string "neutral_content_color"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["school_id"], name: "index_color_themes_on_school_id"
+  end
+
   create_table "homerooms", force: :cascade do |t|
     t.integer "teacher_id", null: false
     t.integer "classroom_id", null: false
@@ -131,6 +152,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_30_050536) do
 
   add_foreign_key "attendances", "students"
   add_foreign_key "attendances", "users"
+  add_foreign_key "color_themes", "schools"
   add_foreign_key "homerooms", "classrooms"
   add_foreign_key "homerooms", "users", column: "teacher_id"
   add_foreign_key "payments", "users"
