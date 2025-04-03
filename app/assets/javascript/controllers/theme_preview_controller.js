@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             accent: "#f97316",
             base100: "#ffffff",
             base200: "#f2f2f2",
-            baseContent: "#e5e6e6",
+            baseContent: "#000000",
         },
         pastel: {
             primary: "#d1c1d7",
@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const secondaryContent = getContrastingTextColor(secondary);
         const accentContent = getContrastingTextColor(accent);
 
+        // Set CSS variables globally on preview container
         previewBg.style.setProperty("--primary", primary);
         previewBg.style.setProperty("--primary-content", primaryContent);
         previewBg.style.setProperty("--secondary", secondary);
@@ -75,8 +76,14 @@ document.addEventListener("DOMContentLoaded", function () {
         previewBg.style.setProperty("--base-100", base100);
         previewBg.style.setProperty("--base-200", base200);
         previewBg.style.setProperty("--base-content", baseContent);
-        previewBg.style.setProperty("background-image", `linear-gradient(to right, ${accent}, ${primary})`);
 
+        // Gradient only for Slide 1
+        const slideSignin = document.getElementById("slide-signin");
+        if (slideSignin) {
+            slideSignin.style.backgroundImage = `linear-gradient(to right, ${accent}, ${primary})`;
+        }
+
+        // Card + form styling
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
 
@@ -94,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
             previewAccentBtn.style.color = accentContent;
         }
 
+        // Input styling
         previewInputs.forEach((input) => {
             input.style.borderColor = base500Input?.value || "#d0d0d0";
             input.style.backgroundColor = base100;
@@ -106,13 +114,14 @@ document.addEventListener("DOMContentLoaded", function () {
             const style = document.createElement("style");
             style.id = "dynamic-placeholder-style";
             style.innerHTML = `
-        #preview-bg input::placeholder {
-          color: #9ca3af !important;
-        }
-      `;
+      #preview-bg input::placeholder {
+        color: #9ca3af !important;
+      }
+    `;
             document.head.appendChild(style);
         });
 
+        // Navbar and table head
         const navbar = document.getElementById("preview-navbar");
         const tableHead = document.getElementById("preview-table-head");
         const hoverRows = document.querySelectorAll(".hover-row");
@@ -193,4 +202,12 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     showSlide(0);
+
+    const initiallySelected = document.querySelector(".theme-radio:checked")?.value;
+    if (initiallySelected === "custom") {
+        updateCustomPreview();
+    } else {
+        const theme = builtInThemes[initiallySelected];
+        if (theme) applyThemeToPreview(theme);
+    }
 });

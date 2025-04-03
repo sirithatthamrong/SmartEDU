@@ -64,15 +64,16 @@
     <!-- RIGHT COLUMN: Live Preview -->
     <div class="w-full flex flex-col items-center overflow-x-hidden">
       <div id="preview-bg"
-           class="w-full max-w-[960px] h-auto flex flex-col items-center justify-center p-6 gap-4 rounded-xl overflow-hidden shadow-xl relative"
-           style="background: linear-gradient(to right, <%= @color_theme.accent_color %>, <%= @color_theme.primary_color %>);">
-
+           class="w-full max-w-[960px] h-auto flex flex-col items-center justify-center pt-10 pb-6 px-6 gap-4 rounded-xl overflow-hidden shadow-xl relative bg-base-100">
         <!-- Slides Container -->
         <div class="w-full overflow-hidden relative" id="preview-slider">
           <div class="flex transition-transform duration-300 ease-in-out w-[200%]" id="slider-track">
 
-            <!-- Slide 1: Sign In -->
-            <div class="preview-slide w-1/2 flex-shrink-0 px-4 flex flex-col md:flex-row items-center justify-between gap-6" id="slide-signin">
+            <!-- Slide 1: Sign In with gradient -->
+            <div class="preview-slide w-1/2 flex-shrink-0 px-4 flex flex-col md:flex-row items-center justify-between gap-6"
+                 id="slide-signin"
+                 style="background: linear-gradient(to right, <%= @color_theme.accent_color %>, <%= @color_theme.primary_color %>);">
+
               <!-- Logo -->
               <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
                 <div class="max-w-md w-full text-center md:text-left">
@@ -85,7 +86,7 @@
 
               <!-- Sign In Card -->
               <div class="flex justify-start w-full md:w-1/2 px-6">
-                <div class="max-w-md w-full">
+                <div class="max-w-md w-full mt-8 mb-4">
                   <div id="preview-card" class="student-card max-w-md w-full p-8 bg-base-200 rounded-2xl shadow-2xl">
                     <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
                     <form>
@@ -109,7 +110,7 @@
               </div>
             </div>
 
-            <!-- Slide 2: Table -->
+            <!-- Slide 2: Table with normal base-100 background -->
             <div class="preview-slide w-1/2 flex-shrink-0 px-4" id="slide-table">
               <div class="rounded-xl shadow-xl overflow-hidden w-full">
                 <div id="preview-navbar" class="h-12 flex items-center px-6 text-white font-bold" style="background-color: var(--primary)">
@@ -127,6 +128,38 @@
                   </tr>
                   </thead>
                   <tbody>
+                  <tr class="hover-row">
+                    <td class="py-3 px-4">10</td>
+                    <td class="py-3 px-4">Grade 5</td>
+                    <td class="py-3 px-4">5A</td>
+                    <td class="py-3 px-4">Not Assigned</td>
+                    <td class="py-3 px-4">12</td>
+                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
+                  </tr>
+                  <tr class="hover-row">
+                    <td class="py-3 px-4">10</td>
+                    <td class="py-3 px-4">Grade 5</td>
+                    <td class="py-3 px-4">5A</td>
+                    <td class="py-3 px-4">Not Assigned</td>
+                    <td class="py-3 px-4">12</td>
+                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
+                  </tr>
+                  <tr class="hover-row">
+                    <td class="py-3 px-4">10</td>
+                    <td class="py-3 px-4">Grade 5</td>
+                    <td class="py-3 px-4">5A</td>
+                    <td class="py-3 px-4">Not Assigned</td>
+                    <td class="py-3 px-4">12</td>
+                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
+                  </tr>
+                  <tr class="hover-row">
+                    <td class="py-3 px-4">10</td>
+                    <td class="py-3 px-4">Grade 5</td>
+                    <td class="py-3 px-4">5A</td>
+                    <td class="py-3 px-4">Not Assigned</td>
+                    <td class="py-3 px-4">12</td>
+                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
+                  </tr>
                   <tr class="hover-row">
                     <td class="py-3 px-4">10</td>
                     <td class="py-3 px-4">Grade 5</td>
@@ -155,4 +188,4 @@
       </div>
     </div>
     <%= javascript_include_tag "controllers/theme_selector_controller" %>
-<%= javascript_include_tag "controllers/theme_preview_controller" %>
+    <%= javascript_include_tag "controllers/theme_preview_controller" %>
