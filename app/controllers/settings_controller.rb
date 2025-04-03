@@ -3,6 +3,10 @@ class SettingsController < ApplicationController
   GRAY_100    = "#f0f0f0".freeze
   GRAY_200    = "#d0d0d0".freeze
   GRAY_BLUE = "#1f2937".freeze
+  DEFAULT_PRIMARY_CONTENT_MYTHEME = "#F3FAFF".freeze
+  DEFAULT_SECONDARY_CONTENT_MYTHEME = "#F1FBFB".freeze
+  DEFAULT_ACCENT_CONTENT_MYTHEME = "#00182A".freeze
+  DEFAULT_NEUTRAL_CONTENT_MYTHEME = "#F3FAFF".freeze
 
   before_action :authenticated?
   before_action :authorize_admin_or_principal!
@@ -74,13 +78,16 @@ class SettingsController < ApplicationController
       )
     when "mytheme"
       params[:color_theme].merge!(
+        primary_content_color: DEFAULT_PRIMARY_CONTENT_MYTHEME,
+        secondary_content_color: "#F1FBFB",
+        accent_content_color: DEFAULT_ACCENT_CONTENT_MYTHEME,
         base_100_color: WHITE,
         base_200_color: "#F8F8F7",
         base_300_color: GRAY_100,
         base_500_color: GRAY_200,
         base_content_color: "#00182B",
         neutral_color: "#6b8a9e",
-        neutral_content_color: "#f3faff"
+        neutral_content_color: DEFAULT_NEUTRAL_CONTENT_MYTHEME
       )
     else
       raise "Unexpected theme selected: #{selected_theme}"
@@ -105,18 +112,18 @@ class SettingsController < ApplicationController
     {
       theme_name: "mytheme",
       primary_color: "#8294C4",
-      primary_content_color: "#F3FAFF",
+      primary_content_color: DEFAULT_PRIMARY_CONTENT_MYTHEME,
       secondary_color: "#ACB1D6",
-      secondary_content_color: "#F1FBFB",
+      secondary_content_color: DEFAULT_SECONDARY_CONTENT_MYTHEME,
       accent_color: "#FFEAD2",
-      accent_content_color: "#00182A",
+      accent_content_color: DEFAULT_ACCENT_CONTENT_MYTHEME,
       base_100_color: WHITE,
       base_200_color: "#F8F8F8",
       base_300_color: GRAY_100,
       base_500_color: GRAY_200,
       base_content_color: "#00182A",
       neutral_color: "#6B8A9E",
-      neutral_content_color: "#F3FAFF"
+      neutral_content_color: DEFAULT_NEUTRAL_CONTENT_MYTHEME
     }
   end
 
