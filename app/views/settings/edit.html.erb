@@ -24,10 +24,8 @@
           <% end %>
         </div>
 
-        <!-- Hidden field for non-custom theme name -->
         <%= hidden_field_tag "color_theme[theme_name]", "", id: "non-custom-theme-name" %>
 
-        <!-- Custom Theme Form -->
         <div id="custom-form" class="mt-6 hidden">
           <h2 class="text-xl font-bold mb-2">Customize Your Theme</h2>
 
@@ -46,10 +44,6 @@
             </div>
           </div>
 
-          <div class="mt-6 space-y-2">
-          </div>
-
-          <!-- Hidden fields -->
           <%= hidden_field_tag "base-100", @color_theme.base_100_color, id: "base-100-color" %>
           <%= hidden_field_tag "base-200", @color_theme.base_200_color, id: "base-200-color" %>
           <%= hidden_field_tag "base-300", @color_theme.base_300_color, id: "base-300-color" %>
@@ -61,55 +55,104 @@
           <%= f.hidden_field :theme_name, id: "selected-theme-name", value: @color_theme.theme_name %>
         </div>
 
-        <!-- Shared Submit and Back Buttons -->
         <div class="flex gap-4 mt-6" id="form-actions">
           <%= f.submit "Apply & Save", class: "btn btn-primary" %>
           <%= link_to "Back", settings_path, class: "btn btn-secondary" %>
         </div>
       <% end %>
     </div>
-
     <!-- RIGHT COLUMN: Live Preview -->
-    <div class="w-full flex justify-center items-start">
+    <div class="w-full flex flex-col items-center overflow-x-hidden">
       <div id="preview-bg"
-           class="w-full max-w-[960px] md:aspect-video md:h-auto h-auto flex flex-col md:flex-row items-center justify-center p-6 gap-4 rounded-xl overflow-hidden shadow-xl"
+           class="w-full max-w-[960px] h-auto flex flex-col items-center justify-center p-6 gap-4 rounded-xl overflow-hidden shadow-xl relative"
            style="background: linear-gradient(to right, <%= @color_theme.accent_color %>, <%= @color_theme.primary_color %>);">
-        <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
-          <div class="max-w-md w-full text-center md:text-left">
-            <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
-            <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
-              <%= render "shared/logo_text" %>
-            </div>
-          </div>
-        </div>
 
-        <div class="flex justify-start w-full md:w-1/2 px-6">
-          <div class="max-w-md w-full">
-            <div id="preview-card" class="student-card max-w-md w-full p-8 bg-base-200 rounded-2xl shadow-2xl">
-              <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
-              <form action="#" method="post" autocomplete="on">
-                <label for="preview-email" class="sr-only">Email</label>
-                <input id="preview-email" type="email" placeholder="Enter your email address" class="input input-bordered bg-base-100 w-full mb-2 mt-2" disabled>
-                <label for="preview-password" class="sr-only">Password</label>
-                <input id="preview-password" type="password" placeholder="Enter your password" class="input input-bordered bg-base-100 w-full mb-2" disabled>
-                <button class="btn btn-primary w-full mt-4" id="preview-primary-btn" type="button">Sign In</button>
-              </form>
-              <div class="mt-2">
-                <button type="button" class="btn btn-accent w-full py-3 font-semibold transition-all duration-300" id="preview-accent-btn">Sign Up</button>
+        <!-- Slides Container -->
+        <div class="w-full overflow-hidden relative" id="preview-slider">
+          <div class="flex transition-transform duration-300 ease-in-out w-[200%]" id="slider-track">
+
+            <!-- Slide 1: Sign In -->
+            <div class="preview-slide w-1/2 flex-shrink-0 px-4 flex flex-col md:flex-row items-center justify-between gap-6" id="slide-signin">
+              <!-- Logo -->
+              <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
+                <div class="max-w-md w-full text-center md:text-left">
+                  <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
+                  <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
+                    <%= render "shared/logo_text" %>
+                  </div>
+                </div>
               </div>
-              <div class="pt-4 text-center">
-                <a href="#" class="text-secondary hover:underline" style="color: <%= @color_theme.primary_color %>;" id="preview-secondary-link">Forgot password?</a>
-                <div class="pt-4 text-center">
-                  <a href="#" class="text-secondary hover:underline" style="color: <%= @color_theme.secondary_color %>;" id="preview-tertiary-link">Back to home</a>
+
+              <!-- Sign In Card -->
+              <div class="flex justify-start w-full md:w-1/2 px-6">
+                <div class="max-w-md w-full">
+                  <div id="preview-card" class="student-card max-w-md w-full p-8 bg-base-200 rounded-2xl shadow-2xl">
+                    <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
+                    <form>
+                      <label for="preview-email" class="sr-only">Email</label>
+                      <input id="preview-email" type="email" placeholder="Enter your email address" class="input input-bordered bg-base-100 w-full mb-2 mt-2" disabled>
+                      <label for="preview-password" class="sr-only">Password</label>
+                      <input id="preview-password" type="password" placeholder="Enter your password" class="input input-bordered bg-base-100 w-full mb-2" disabled>
+                      <button class="btn btn-primary w-full mt-4" id="preview-primary-btn" type="button">Sign In</button>
+                    </form>
+                    <div class="mt-2">
+                      <button type="button" class="btn btn-accent w-full py-3 font-semibold transition-all duration-300" id="preview-accent-btn">Sign Up</button>
+                    </div>
+                    <div class="pt-4 text-center">
+                      <a href="#" class="text-secondary hover:underline" style="color: <%= @color_theme.primary_color %>;" id="preview-secondary-link">Forgot password?</a>
+                      <div class="pt-4">
+                        <a href="#" class="text-secondary hover:underline" style="color: <%= @color_theme.secondary_color %>;" id="preview-tertiary-link">Back to home</a>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+
+            <!-- Slide 2: Table -->
+            <div class="preview-slide w-1/2 flex-shrink-0 px-4" id="slide-table">
+              <div class="rounded-xl shadow-xl overflow-hidden w-full">
+                <div id="preview-navbar" class="h-12 flex items-center px-6 text-white font-bold" style="background-color: var(--primary)">
+                  SmartEDU > Manage Classrooms
+                </div>
+                <table class="w-full text-left text-gray-800 bg-white">
+                  <thead id="preview-table-head">
+                  <tr>
+                    <th class="py-3 px-4">Class ID</th>
+                    <th class="py-3 px-4">Grade Level</th>
+                    <th class="py-3 px-4">Grade Classroom</th>
+                    <th class="py-3 px-4">Homeroom Teacher</th>
+                    <th class="py-3 px-4">Total Students</th>
+                    <th class="py-3 px-4">Actions</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr class="hover-row">
+                    <td class="py-3 px-4">10</td>
+                    <td class="py-3 px-4">Grade 5</td>
+                    <td class="py-3 px-4">5A</td>
+                    <td class="py-3 px-4">Not Assigned</td>
+                    <td class="py-3 px-4">12</td>
+                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Arrows -->
+          <div class="absolute top-1/2 left-2 transform -translate-y-1/2 cursor-pointer text-2xl" id="slide-prev">&#8592;</div>
+          <div class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer text-2xl" id="slide-next">&#8594;</div>
+
+          <!-- Pagination -->
+          <div class="flex justify-center mt-4 gap-2">
+            <div class="w-3 h-3 rounded-full bg-gray-400 cursor-pointer" data-slide="0"></div>
+            <div class="w-3 h-3 rounded-full bg-gray-400 cursor-pointer" data-slide="1"></div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
-
-<%= javascript_include_tag "controllers/theme_selector_controller" %>
+    <%= javascript_include_tag "controllers/theme_selector_controller" %>
 <%= javascript_include_tag "controllers/theme_preview_controller" %>
