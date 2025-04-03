@@ -6,11 +6,11 @@
       <form id="deleteForm" method="post">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <input type="hidden" name="_method" value="delete">
-        <button type="submit" class="entity-btn entity-btn-delete">
+        <button type="submit" class="btn entity-btn-delete">
           Yes, Remove
         </button>
       </form>
-      <button onclick="closeModal()" class="entity-btn entity-btn-secondary">Cancel</button>
+      <button onclick="closeModal()" class="btn entity-btn-secondary">Cancel</button>
     </div>
   </div>
 </div>
@@ -23,11 +23,11 @@
       <form id="archiveForm" method="post">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <input type="hidden" name="_method" value="delete">
-        <button type="submit" class="entity-btn entity-btn-delete">
+        <button type="submit" class="btn entity-btn-delete">
           Yes, Archive
         </button>
       </form>
-      <button onclick="closeArchiveModal()" class="entity-btn entity-btn-secondary">Cancel</button>
+      <button onclick="closeArchiveModal()" class="btn entity-btn-secondary">Cancel</button>
     </div>
   </div>
 </div>
@@ -40,11 +40,11 @@
       <form id="approveForm" method="post">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
         <input type="hidden" name="_method" value="patch">
-        <button type="submit" class="entity-btn bg-green-500 hover:bg-green-600">
+        <button type="submit" class="btn bg-green-500 hover:bg-green-600">
           Yes, Approve
         </button>
       </form>
-      <button onclick="closeApproveModal()" class="entity-btn entity-btn-secondary">Cancel</button>
+      <button onclick="closeApproveModal()" class="btn entity-btn-secondary">Cancel</button>
     </div>
   </div>
 </div>
@@ -56,11 +56,11 @@
     <div class="modal-buttons flex justify-center space-x-4">
       <form id="confirmationForm" method="post">
         <%= hidden_field_tag :authenticity_token, form_authenticity_token %>
-        <button type="submit" class="entity-btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+        <button type="submit" class="btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
           Confirm
         </button>
       </form>
-      <button type="button" class="entity-btn entity-btn-secondary close-modal">
+      <button type="button" class="btn entity-btn-secondary close-modal">
         Cancel
       </button>
     </div>
