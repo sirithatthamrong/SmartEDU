@@ -45,11 +45,11 @@
 
   <div class="mt-6 flex justify-center space-x-4">
     <% if current_user&.can_manage_teachers? %>
-      <%= link_to edit_classroom_path(@classroom), class: "entity-btn entity-btn-secondary text-center" do %>
+      <%= link_to edit_classroom_path(@classroom), class: "btn btn-secondary text-center" do %>
         <i class="fas fa-edit"></i> Edit
       <% end %>
 
-      <button class="entity-btn entity-btn-delete" onclick="openDeleteModal(<%= @classroom.id %>)">
+      <button class="btn entity-btn-delete" onclick="openDeleteModal(<%= @classroom.id %>)">
         <i class="fas fa-trash-alt"></i> Delete
       </button>
     <% end %>

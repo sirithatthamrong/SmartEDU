@@ -19,8 +19,7 @@ class SignupController < ApplicationController
           start_new_session_for @user
           redirect_to after_authentication_url
         else
-          flash[:notice] = "Your account is pending approval. \n\n
-                            Your username and password have been sent to your personal email."
+          flash[:notice] = "Pending approval. Login sent to your email."
           redirect_to login_path
         end
       else

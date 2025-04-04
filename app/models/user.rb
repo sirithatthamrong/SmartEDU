@@ -60,7 +60,11 @@ class User < ApplicationRecord
   end
 
   def can_manage_teachers?
-    admin? || principal?
+    admin?
+  end
+
+  def can_manage_users?
+    admin?
   end
 
   def admin?
@@ -123,7 +127,7 @@ class User < ApplicationRecord
 
   def send_login_credentials
     Rails.logger.info("SendingLoginCredentials")
-    UserMailer.send_login_credentials(self, @plain_password).deliver_later
+    UserMailer.send_login_credentials(self, @plain_password).deliver_now
     Rails.logger.info("SendingLoginCredentials")
   end
 end

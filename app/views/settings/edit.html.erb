@@ -1,0 +1,337 @@
+<%= render "shared/notice" %>
+<% content_for :title, "Themes" %>
+
+<% current_theme = @color_theme.try(:selected_theme) || "pastel" %>
+
+<div class="p-6">
+  <div class="grid grid-cols-1 md:grid-cols-[300px_minmax(0,1fr)] gap-8">
+
+    <!-- LEFT COLUMN -->
+    <div class="space-y-4">
+      <h2 class="text-2xl font-bold mb-2">Pick a Theme</h2>
+
+      <%= form_with model: @color_theme, url: settings_path, method: :patch, local: true do |f| %>
+        <!-- Theme Options -->
+        <div class="flex flex-col space-y-4">
+          <% %w[light cupcake emerald pastel custom].each do |theme_name| %>
+            <label for="theme_select_<%= theme_name %>" class="cursor-pointer block border p-4 rounded-lg hover:ring-2 hover:ring-primary transition-all duration-200">
+              <%= radio_button_tag "theme_select", theme_name, (current_theme == theme_name), id: "theme_select_#{theme_name}", class: "hidden theme-radio", data: { theme_value: theme_name } %>
+              <div class="peer-checked:ring-2 ring-primary">
+                <div class="text-lg font-bold capitalize"><%= theme_name %></div>
+                <div class="h-4 w-full mt-2 rounded-full bg-base-100" data-theme="<%= theme_name %>"></div>
+              </div>
+            </label>
+          <% end %>
+        </div>
+
+        <%= hidden_field_tag "color_theme[theme_name]", "", id: "non-custom-theme-name" %>
+
+        <div id="custom-form" class="mt-6 hidden">
+          <h2 class="text-xl font-bold mb-2">Customize Your Theme</h2>
+
+          <div class="space-y-4">
+            <div>
+              <%= f.label :primary_color, "Primary Color", class: "block font-semibold mb-1" %>
+              <%= f.color_field :primary_color, id: "primary-color", class: "w-full h-12 p-2 rounded" %>
+            </div>
+            <div>
+              <%= f.label :secondary_color, "Secondary Color", class: "block font-semibold mb-1" %>
+              <%= f.color_field :secondary_color, id: "secondary-color", class: "w-full h-12 p-2 rounded" %>
+            </div>
+            <div>
+              <%= f.label :accent_color, "Accent Color", class: "block font-semibold mb-1" %>
+              <%= f.color_field :accent_color, id: "accent-color", class: "w-full h-12 p-2 rounded" %>
+            </div>
+          </div>
+
+          <%= hidden_field_tag "base-100", @color_theme.base_100_color, id: "base-100-color" %>
+          <%= hidden_field_tag "base-200", @color_theme.base_200_color, id: "base-200-color" %>
+          <%= hidden_field_tag "base-300", @color_theme.base_300_color, id: "base-300-color" %>
+          <%= hidden_field_tag "base-500", @color_theme.base_500_color, id: "base-500-color" %>
+          <%= hidden_field_tag "base-content", @color_theme.base_content_color, id: "base-content-color" %>
+          <%= f.hidden_field :primary_content_color, id: "primary-content-color" %>
+          <%= f.hidden_field :secondary_content_color, id: "secondary-content-color" %>
+          <%= f.hidden_field :accent_content_color, id: "accent-content-color" %>
+          <%= f.hidden_field :theme_name, id: "selected-theme-name", value: @color_theme.theme_name %>
+        </div>
+
+        <div class="flex gap-4 mt-6" id="form-actions">
+          <%= f.submit "Apply & Save", class: "btn btn-primary" %>
+          <%= link_to "Back", settings_path, class: "btn btn-secondary" %>
+        </div>
+      <% end %>
+    </div>
+    <!-- RIGHT COLUMN: Live Preview -->
+    <div class="w-full flex flex-col items-center overflow-x-hidden">
+      <div id="preview-bg"
+           class="w-full max-w-[960px] h-auto flex flex-col items-center justify-center pt-10 pb-6 px-6 gap-4 rounded-xl overflow-hidden shadow-xl relative bg-base-100">
+        <!-- Slides Container -->
+        <div class="w-full overflow-hidden relative" id="preview-slider">
+          <div class="flex transition-transform duration-300 ease-in-out w-[200%]" id="slider-track">
+
+            <!-- Slide 1: Sign In with gradient -->
+            <div class="preview-slide w-1/2 flex-shrink-0 px-4 flex flex-col md:flex-row items-center justify-between gap-6"
+                 id="slide-signin"
+                 style="background: linear-gradient(to right, <%= @color_theme.accent_color %>, <%= @color_theme.primary_color %>);">
+
+              <!-- Logo -->
+              <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
+                <div class="max-w-md w-full text-center md:text-left">
+                  <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
+                  <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
+                    <%= render "shared/logo_text" %>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Sign In Card -->
+              <div class="flex justify-start w-full md:w-1/2 px-6">
+                <div class="max-w-md w-full mt-8 mb-4">
+                  <div id="preview-card" class="student-card max-w-md w-full p-8 bg-base-200 rounded-2xl shadow-2xl">
+                    <h1 id="preview-header" class="text-2xl font-bold pb-4 text-center">Sign In</h1>
+                    <form>
+                      <label for="preview-email" class="sr-only">Email</label>
+                      <input id="preview-email" type="email" placeholder="Enter your email address" class="input input-bordered bg-base-100 w-full mb-2 mt-2" disabled>
+                      <label for="preview-password" class="sr-only">Password</label>
+                      <input id="preview-password" type="password" placeholder="Enter your password" class="input input-bordered bg-base-100 w-full mb-2" disabled>
+                      <button class="btn btn-primary w-full mt-4" id="preview-primary-btn" type="button">Sign In</button>
+                    </form>
+                    <div class="mt-2">
+                      <button type="button" class="btn btn-accent w-full py-3 font-semibold transition-all duration-300" id="preview-accent-btn">Sign Up</button>
+                    </div>
+                    <div class="pt-4 text-center">
+                      <a href="#" class="text-secondary hover:underline" style="color: <%= @color_theme.primary_color %>;" id="preview-secondary-link">Forgot password?</a>
+                      <div class="pt-4">
+                        <a href="#" class="text-secondary hover:underline" style="color: <%= @color_theme.secondary_color %>;" id="preview-tertiary-link">Back to home</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 2: Table with normal base-100 background -->
+            <div class="preview-slide w-1/2 flex-shrink-0 px-4" id="slide-table">
+              <div class="rounded-xl shadow-xl overflow-hidden w-full bg-white">
+                <!-- Navbar -->
+                <div id="preview-navbar" class="h-12 flex items-center gap-3 px-6 text-black font-bold">
+                  <button id="preview-navbar-button" class="btn btn-ghost btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </button>
+                  <%= render "shared/logo_text" %> &nbsp;> Manage Classrooms
+                </div>
+
+                <!-- Top Controls -->
+                <div class="p-4 flex flex-col gap-4">
+                  <div class="flex flex-wrap justify-between items-center gap-4">
+                    <button class="btn btn-accent">New Classroom</button>
+
+                    <div class="flex items-center gap-4">
+                      <label class="text-sm">
+                        <select class="select select-bordered select-sm w-auto">
+                          <option selected>10</option>
+                          <option>25</option>
+                          <option>50</option>
+                        </select>
+                        entries per page
+                      </label>
+                      <input type="text" class="input input-bordered input-sm w-48" placeholder="Search by name..." />
+                    </div>
+                  </div>
+
+                  <!-- Table -->
+                  <div class="overflow-x-auto rounded-lg shadow">
+                    <table class="table w-full bg-white">
+                      <thead id="preview-table-head" class="bg-secondary">
+                      <tr>
+                        <th class="py-3 px-4" scope="col">Class ID</th>
+                        <th class="py-3 px-4" scope="col">Grade Level</th>
+                        <th class="py-3 px-4" scope="col">Grade Classroom</th>
+                        <th class="py-3 px-4" scope="col">Homeroom Teacher</th>
+                        <th class="py-3 px-4" scope="col">Total Students</th>
+                        <th class="py-3 px-4" scope="col">Actions</th>
+                      </tr>
+                      </thead>
+                      <tr>
+                        <th class="py-3 px-4" scope="col">Class ID</th>
+                        <th class="py-3 px-4" scope="col">Grade Level</th>
+                        <th class="py-3 px-4" scope="col">Grade Classroom</th>
+                        <th class="py-3 px-4" scope="col">Homeroom Teacher</th>
+                        <th class="py-3 px-4" scope="col">Total Students</th>
+                        <th class="py-3 px-4" scope="col">Actions</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">10</td>
+                        <td class="py-3 px-4">Grade 5</td>
+                        <td class="py-3 px-4">5A</td>
+                        <td class="py-3 px-4">Mario Bro</td>
+                        <td class="py-3 px-4">18</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">11</td>
+                        <td class="py-3 px-4">Grade 5</td>
+                        <td class="py-3 px-4">5B</td>
+                        <td class="py-3 px-4">Luigi Bro</td>
+                        <td class="py-3 px-4">16</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">12</td>
+                        <td class="py-3 px-4">Grade 5</td>
+                        <td class="py-3 px-4">5C</td>
+                        <td class="py-3 px-4">Wario Noe</td>
+                        <td class="py-3 px-4">15</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">13</td>
+                        <td class="py-3 px-4">Grade 6</td>
+                        <td class="py-3 px-4">6A</td>
+                        <td class="py-3 px-4">Tim Tam</td>
+                        <td class="py-3 px-4">17</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">14</td>
+                        <td class="py-3 px-4">Grade 6</td>
+                        <td class="py-3 px-4">6B</td>
+                        <td class="py-3 px-4">Kit Kat</td>
+                        <td class="py-3 px-4">16</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">15</td>
+                        <td class="py-3 px-4">Grade 7</td>
+                        <td class="py-3 px-4">7A</td>
+                        <td class="py-3 px-4">Haagen D</td>
+                        <td class="py-3 px-4">14</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">16</td>
+                        <td class="py-3 px-4">Grade 8</td>
+                        <td class="py-3 px-4">8A</td>
+                        <td class="py-3 px-4">Swen Sen</td>
+                        <td class="py-3 px-4">18</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">17</td>
+                        <td class="py-3 px-4">Grade 9</td>
+                        <td class="py-3 px-4">9A</td>
+                        <td class="py-3 px-4">Gus D Good</td>
+                        <td class="py-3 px-4">19</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Bottom Controls -->
+                  <div class="flex justify-between items-center text-sm mt-2 flex-col md:flex-row gap-2 md:gap-0 w-full">
+                    <p>Showing 1 to 8 of 8 entries</p>
+                    <div class="flex items-center space-x-2">
+                      <button class="btn btn-sm">«</button>
+                      <button class="btn btn-sm btn-active">1</button>
+                      <button class="btn btn-sm">»</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Arrows -->
+          <div class="absolute top-1/2 left-2 transform -translate-y-1/2 cursor-pointer text-2xl" id="slide-prev">&#8592;</div>
+          <div class="absolute top-1/2 right-2 transform -translate-y-1/2 cursor-pointer text-2xl" id="slide-next">&#8594;</div>
+
+          <!-- Pagination -->
+          <div class="flex justify-center mt-4 gap-2">
+            <div class="w-3 h-3 rounded-full bg-gray-400 cursor-pointer" data-slide="0"></div>
+            <div class="w-3 h-3 rounded-full bg-gray-400 cursor-pointer" data-slide="1"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%= javascript_include_tag "controllers/theme_selector_controller" %>
+<%= javascript_include_tag "controllers/theme_preview_controller" %>

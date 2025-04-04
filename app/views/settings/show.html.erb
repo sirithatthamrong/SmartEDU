@@ -1,0 +1,100 @@
+<%= render "shared/notice" %>
+<% content_for :title, "Themes" %>
+
+<div class="p-6">
+  <!-- Header with Edit Button -->
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold">Current Theme</h1>
+    <%= link_to "Edit Theme", edit_settings_path, class: "btn btn-primary" %>
+  </div>
+
+  <!-- Main Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+    <!-- Left: Color Palette Boxes -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 gap-4">
+      <% {
+           "Primary" => @color_theme.primary_color,
+           "Secondary" => @color_theme.secondary_color,
+           "Accent" => @color_theme.accent_color,
+           "Base" => @color_theme.base_100_color,
+         }.each do |label, hex| %>
+        <div class="rounded-lg shadow p-4 text-center border" style="background-color: <%= hex %>; border-color: var(--base-500);">
+          <div class="text-sm font-semibold text-gray-700 bg-white bg-opacity-80 rounded px-2 inline-block mb-2"><%= label %></div>
+          <div class="text-sm font-mono text-white drop-shadow" style="text-shadow: 1px 1px 2px #00000060;">
+            <%= hex %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Right: Live Preview (non-interactive) -->
+    <div id="preview-bg"
+         class="min-h-[32rem] flex flex-col md:flex-row items-center justify-center p-6 gap-4 rounded-xl overflow-hidden shadow-xl w-full"
+         style="background: linear-gradient(to right, <%= @color_theme.accent_color %>, <%= @color_theme.primary_color %>);">
+      <!-- Left: Welcome -->
+      <div class="flex justify-center w-full md:w-1/2 px-6 pb-4">
+        <div class="max-w-md w-full text-center md:text-left">
+          <p class="text-[#1f2937] text-4xl font-bold mb-2">Welcome to</p>
+          <div class="text-[#4A4A4A] text-5xl font-bold leading-none">
+            <%= render "shared/logo_text" %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Sign-in Card -->
+      <div class="flex justify-start w-full md:w-1/2 px-6">
+        <div class="max-w-md w-full">
+          <div class="student-card max-w-md w-full p-8 rounded-2xl shadow-2xl" style="background-color: var(--base-200);">
+            <h1 class="text-2xl font-bold pb-4 text-center">Sign In</h1>
+            <input
+              type="email"
+              placeholder="Enter your email address"
+              class="input input-bordered w-full mb-2 mt-2"
+              style="background-color: var(--base-100); color: var(--base-500); border: 1px solid var(--base-500);"
+              disabled
+            >
+            <input
+              type="password"
+              placeholder="Enter your password"
+              class="input input-bordered w-full mb-2"
+              style="background-color: var(--base-100); color: var(--base-500); border: 1px solid var(--base-500);"
+              disabled
+            >
+
+            <button
+              class="btn btn-primary w-full mt-4"
+              type="button"
+              style="background-color: <%= @color_theme.primary_color %>; border: none;"
+            >
+              Sign In
+            </button>
+
+            <div class="mt-2">
+              <button
+                type="button"
+                class="btn btn-accent w-full py-3 font-semibold"
+                style="background-color: <%= @color_theme.accent_color %>; border: none;"
+              >
+                Sign Up
+              </button>
+            </div>
+
+            <div class="pt-4 text-center">
+              <a href="#" class="hover:underline" style="color: <%= @color_theme.primary_color %>;">
+                Forgot password?
+              </a>
+            </div>
+
+            <div class="pt-4 text-center">
+              <a href="#" class="hover:underline" style="color: <%= @color_theme.secondary_color %>;">
+                Back to home
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
