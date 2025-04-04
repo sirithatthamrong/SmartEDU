@@ -6,11 +6,12 @@ class StudentsTest < ApplicationSystemTestCase
     @school.update(subscription_end: 1.month.from_now)
 
     @principal = User.create!(
-      first_name: "Principal",
+      first_name: "Admin",
       last_name: "Test",
       personal_email: "principal_#{SecureRandom.hex(4)}@gmail.com",
-      role: "principal",
+      role: "admin",
       password: "password123",
+      approved: true,
       school_id: @school.id
     )
 

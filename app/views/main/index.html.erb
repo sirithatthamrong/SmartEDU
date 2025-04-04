@@ -34,8 +34,10 @@
       SmartEDU Attendance Management
     </div>
     <p class="text-lg text-gray-700 mt-5">Effortless attendance tracking students for schools</p>
-    <div class="mt-7 text-center">
-      <%= link_to 'Get Started', '#tier-section', class: 'btn btn-primary mx-auto text-2xl' %>
+    <div class="mt-7 flex justify-center">
+      <div class="max-w-fit">
+        <%= link_to 'Get Started', '#tier-section', class: 'btn btn-primary text-2xl' %>
+      </div>
     </div>
   </div>
 </div>
@@ -69,8 +71,11 @@
         <p class="text-2xl font-bold text-gray-900 mt-4">
           THB 200/student/year
         </p>
-        <%= link_to 'Select Plan', new_payment_path, class: 'btn btn-secondary font-bold mt-4' %>
-        <ul class="list-disc list-inside text-gray-600 mt-4">
+        <div class="mt-4 flex justify-center">
+          <div class="max-w-fit">
+            <%= link_to 'Select Plan', new_payment_path, class: 'btn btn-secondary font-bold' %>
+          </div>
+        </div>        <ul class="list-disc list-inside text-gray-600 mt-4">
           <li>Track student attendance</li>
         </ul>
       </div>
@@ -82,8 +87,11 @@
         <p class="text-2xl font-bold text-gray-900 mt-4">
           THB 350/student/year
         </p>
-        <%= link_to 'Select Plan', new_payment_path, class: 'btn btn-secondary font-bold mt-4' %>
-        <ul class="list-disc list-inside text-gray-600 mt-4">
+        <div class="mt-4 flex justify-center">
+          <div class="max-w-fit">
+            <%= link_to 'Select Plan', new_payment_path, class: 'btn btn-secondary font-bold' %>
+          </div>
+        </div>        <ul class="list-disc list-inside text-gray-600 mt-4">
           <li>Track student attendance</li>
           <li>Generate attendance reports</li>
           <li>Parent notifications</li>
