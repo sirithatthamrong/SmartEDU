@@ -24,17 +24,15 @@
           <td><%= user.email_address %></td>
           <td><%= user.personal_email %></td>
           <td><%= user.role.capitalize %></td>
-          <td>
-            <div class="flex gap-2 whitespace-nowrap">
-              <button class="btn btn-sm bg-green-500 hover:bg-green-600 px-3"
-                      onclick="confirmApprove(<%= user.id %>, '<%= user.email_address %>')">
-                <i class="fas fa-check"></i>
-              </button>
-              <button class="btn btn-sm entity-btn-delete px-3"
-                      onclick="confirmDelete(<%= user.id %>, '<%= user.email_address %>', '/users')">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
+          <td class="whitespace-nowrap space-x-2">
+            <button class="btn btn-sm bg-green-400 hover:bg-green-500 px-3"
+                    onclick="confirmApprove(<%= user.id %>, '<%= user.email_address %>')">
+              <i class="fas fa-check mr-1"></i> Approve
+            </button>
+            <button class="btn btn-sm entity-btn-delete px-3"
+                    onclick="confirmDelete(<%= user.id %>, '<%= user.email_address %>', '/users')">
+              <i class="fas fa-trash mr-1"></i> Remove
+            </button>
           </td>
         </tr>
       <% end %>
