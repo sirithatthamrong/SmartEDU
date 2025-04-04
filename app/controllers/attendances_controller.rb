@@ -5,7 +5,7 @@ class AttendancesController < ApplicationController
 
   # GET /attendances or /attendances.json
   def index
-    @attendances = Attendance.all
+    @attendances = fetch_all_attendance_by_school
   end
 
   # GET /attendances/1 or /attendances/1.json
@@ -107,7 +107,7 @@ class AttendancesController < ApplicationController
     attendance = Attendance.create(student: student, timestamp: Time.current, user: current_user)
 
     if attendance.persisted?
-      if student.user.school == 2
+      if student&.user&.school&.tier == 2
         AttendanceMailer.check_in_notification(student, attendance).deliver_later
         message = "Student checked in successfully at #{Time.current.strftime('%I:%M:%S')}. Parent has been notified."
       else
@@ -187,5 +187,11 @@ class AttendancesController < ApplicationController
     unless current_user.admin? || current_user.principal? || current_user.system? || current_user.teacher?
       redirect_to home_index_url, alert: "You are not authorized to access this page."
     end
+  end
+
+  def fetch_all_attendance_by_school
+    # only student that classroom has the current school_id
+    student_ids = Student.where(classroom_id: Classroom.where(school_id: current_user.school_id)).pluck(:id)
+    Attendance.where(student_id: student_ids)
   end
 end
