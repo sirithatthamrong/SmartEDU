@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
             accent: "#37cdbe",
             base100: "#ffffff",
             base200: "#f8f8f8",
-            baseContent: "#00182A"
+            baseContent: "#00182A",
         },
         cupcake: {
             primary: "#65c3c8",
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
             accent: "#eeaf3a",
             base100: "#faf7f5",
             base200: "#efeae6",
-            baseContent: "#291334"
+            baseContent: "#291334",
         },
         emerald: {
             primary: "#34d399",
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             accent: "#f97316",
             base100: "#ffffff",
             base200: "#f2f2f2",
-            baseContent: "#e5e6e6"
+            baseContent: "#000000",
         },
         pastel: {
             primary: "#d1c1d7",
@@ -48,8 +48,8 @@ document.addEventListener("DOMContentLoaded", function () {
             accent: "#b5ead7",
             base100: "#ffffff",
             base200: "#f8f8f8",
-            baseContent: "#00182A"
-        }
+            baseContent: "#00182A",
+        },
     };
 
     function getContrastingTextColor(hex) {
@@ -66,6 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const secondaryContent = getContrastingTextColor(secondary);
         const accentContent = getContrastingTextColor(accent);
 
+        // Set CSS variables globally on preview container
         previewBg.style.setProperty("--primary", primary);
         previewBg.style.setProperty("--primary-content", primaryContent);
         previewBg.style.setProperty("--secondary", secondary);
@@ -75,8 +76,27 @@ document.addEventListener("DOMContentLoaded", function () {
         previewBg.style.setProperty("--base-100", base100);
         previewBg.style.setProperty("--base-200", base200);
         previewBg.style.setProperty("--base-content", baseContent);
-        previewBg.style.setProperty("background-image", `linear-gradient(to right, ${accent}, ${primary})`);
 
+        // Gradient only for Slide 1
+        const slideSignin = document.getElementById("slide-signin");
+        if (slideSignin) {
+            slideSignin.style.backgroundImage = `linear-gradient(to right, ${accent}, ${primary})`;
+        }
+
+        const navbarButton = document.getElementById("preview-navbar-button");
+        if (navbarButton) {
+            navbarButton.style.backgroundColor = primary;
+            navbarButton.style.color = primaryContent;
+        }
+
+        // thead
+        const tableHead = document.getElementById("preview-table-head");
+        if (tableHead) {
+            tableHead.style.backgroundColor = secondary;
+            tableHead.style.color = getContrastingTextColor(secondary);
+        }
+
+        // Card + form styling
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
 
@@ -94,7 +114,8 @@ document.addEventListener("DOMContentLoaded", function () {
             previewAccentBtn.style.color = accentContent;
         }
 
-        previewInputs.forEach(input => {
+        // Input styling
+        previewInputs.forEach((input) => {
             input.style.borderColor = base500Input?.value || "#d0d0d0";
             input.style.backgroundColor = base100;
             input.style.caretColor = base500Input?.value || "#d0d0d0";
@@ -106,11 +127,26 @@ document.addEventListener("DOMContentLoaded", function () {
             const style = document.createElement("style");
             style.id = "dynamic-placeholder-style";
             style.innerHTML = `
-                #preview-bg input::placeholder {
-                    color: #9ca3af !important;
-                }
-            `;
+      #preview-bg input::placeholder {
+        color: #9ca3af !important;
+      }
+    `;
             document.head.appendChild(style);
+        });
+
+        // Navbar and table head
+        const navbar = document.getElementById("preview-navbar");
+        const hoverRows = document.querySelectorAll(".hover-row");
+
+        if (navbar) navbar.style.backgroundColor = primary;
+        if (tableHead) {
+            tableHead.style.backgroundColor = secondary;
+            tableHead.style.color = getContrastingTextColor(secondary);
+        }
+
+        hoverRows.forEach((row) => {
+            row.addEventListener("mouseenter", () => (row.style.backgroundColor = accent));
+            row.addEventListener("mouseleave", () => (row.style.backgroundColor = base100));
         });
     }
 
@@ -121,7 +157,7 @@ document.addEventListener("DOMContentLoaded", function () {
             accent: accentInput?.value || "#000000",
             base100: base100Input?.value || "#ffffff",
             base200: base200Input?.value || "#f8f8f8",
-            baseContent: baseContentInput?.value || "#00182A"
+            baseContent: baseContentInput?.value || "#00182A",
         });
     }
 
@@ -142,10 +178,49 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    [primaryInput, secondaryInput, accentInput].forEach(input => {
+    [primaryInput, secondaryInput, accentInput].forEach((input) => {
         input?.addEventListener("input", () => {
             const selectedTheme = document.querySelector(".theme-radio:checked")?.value;
             if (selectedTheme === "custom") updateCustomPreview();
         });
     });
+
+    // Slider logic
+    const slides = document.querySelectorAll(".preview-slide");
+    const dots = document.querySelectorAll("[data-slide]");
+    let currentSlide = 0;
+
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.toggle("hidden", i !== index);
+        });
+        dots.forEach((dot, i) => {
+            dot.classList.toggle("bg-gray-400", i !== index);
+            dot.classList.toggle("bg-primary", i === index);
+        });
+        currentSlide = index;
+    }
+
+    document.getElementById("slide-next")?.addEventListener("click", () => {
+        showSlide((currentSlide + 1) % slides.length);
+    });
+
+    document.getElementById("slide-prev")?.addEventListener("click", () => {
+        showSlide((currentSlide - 1 + slides.length) % slides.length);
+    });
+
+    dots.forEach((dot) => {
+        dot.addEventListener("click", () => showSlide(parseInt(dot.dataset.slide)));
+    });
+
+    showSlide(0);
+
+    const initiallySelected = document.querySelector(".theme-radio:checked")?.value;
+    if (initiallySelected === "custom") {
+        updateCustomPreview();
+    } else {
+        const theme = builtInThemes[initiallySelected];
+        if (theme) applyThemeToPreview(theme);
+    }
+
 });
