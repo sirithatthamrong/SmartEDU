@@ -107,7 +107,7 @@ class AttendancesController < ApplicationController
     attendance = Attendance.create(student: student, timestamp: Time.current, user: current_user)
 
     if attendance.persisted?
-      if student.user.school == 2
+      if student&.user&.school&.tier == 2
         AttendanceMailer.check_in_notification(student, attendance).deliver_later
         message = "Student checked in successfully at #{Time.current.strftime('%I:%M:%S')}. Parent has been notified."
       else
