@@ -5,8 +5,11 @@
 </h1>
 
 <div class="mx-auto bg-white p-4 md:p-6 rounded-lg max-w-full overflow-x-auto">
-  <div class="mb-4">
-    <%= link_to "← Back to Classrooms", by_grade_classrooms_path(@classroom.class_id.first), class: "btn bg-[#FFEAD2] text-black hover:bg-[#e6d3bc]" %>
+  <!-- Wrap the button in a container -->
+  <div class="mb-4 flex justify-start">
+    <div class="inline-flex w-auto">
+      <%= link_to "← Back", by_grade_classrooms_path(@classroom.class_id.first), class: "btn btn-accent" %>
+    </div>
   </div>
 
   <%= form_with url: attendances_path, method: :post, remote: true do %>

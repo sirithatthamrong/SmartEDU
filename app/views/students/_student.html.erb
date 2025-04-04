@@ -15,10 +15,10 @@
     </figure>
 
     <div class="mt-2 flex justify-center space-x-4">
-      <%= link_to edit_student_path(@student), class: "entity-btn entity-btn-secondary text-center" do %>
+      <%= link_to edit_student_path(@student), class: "btn btn-secondary flex text-center" do %>
         <i class="fas fa-edit"></i> Edit
       <% end %>
-      <button class="entity-btn entity-btn-delete"
+      <button class="btn btn-secondary flex entity-btn-delete"
               onclick="confirmArchive(<%= @student.id %>, '<%= @student.name %>', '/students')">
         <i class="fas fa-trash"></i> Archive
       </button>

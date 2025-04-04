@@ -47,17 +47,16 @@ async function initializeDataTable() {
     await waitForPageLoad();
 }
 
-// Function to apply consistent styling
 function styleDataTableElements() {
     // Style search input
     $("div.dt-container .dt-search input").css({
         "border": "1px solid #aaa",
-        "border-radius": "10px",
-        "padding": "5px",
+        "border-radius": "100px",
+        "padding": "8px",
         "background-color": "transparent",
         "color": "inherit",
         "margin-left": "3px",
-        "width": "400px",
+        "width": "300px",
     });
 
     // Style select dropdown
@@ -73,7 +72,7 @@ function styleDataTableElements() {
     $("div.dt-container .dt-paging-button").css({
         "border": "1px solid #aaa",
         "border-radius": "10px",
-        "padding": "10px",
+        "padding": "8px",
         "background-color": "transparent",
         "color": "inherit",
     });
@@ -82,10 +81,31 @@ function styleDataTableElements() {
     $("div.dt-container .dt-paging-button.current").css({
         "border": "1px solid #aaa",
         "border-radius": "10px",
-        "padding": "10px",
+        "padding": "8px",
         "background-color": "transparent",
         "color": "inherit"
     });
+
+    // ** Center-align column headers **
+    $("div.dt-container table.dataTable thead th").css({
+        "text-align": "left",
+        "padding": "12px",  // Adds better spacing
+        "white-space": "nowrap"  // Prevents header text from wrapping
+    });
+
+    // ** Left-align all table cell text (body) **
+    $("div.dt-container table.dataTable tbody td").css({
+        "text-align": "left",  // Center-aligns text
+        "padding": "10px",  // More balanced spacing
+        "white-space": "nowrap"  // Prevents text wrapping in cells
+    });
+
+    // Adjust overall table spacing
+    $("div.dt-container table.dataTable").css({
+        "width": "100%",  // Ensures the table takes up full width
+        "border-collapse": "collapse"  // Reduces unnecessary spacing
+    });
 }
+
 
 initializeDataTable().then(r => console.log("DataTable initialized!"));
