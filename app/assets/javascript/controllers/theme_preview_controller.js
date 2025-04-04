@@ -83,6 +83,12 @@ document.addEventListener("DOMContentLoaded", function () {
             slideSignin.style.backgroundImage = `linear-gradient(to right, ${accent}, ${primary})`;
         }
 
+        const navbarButton = document.getElementById("preview-navbar-button");
+        if (navbarButton) {
+            navbarButton.style.backgroundColor = primary;
+            navbarButton.style.color = primaryContent;
+        }
+
         // Card + form styling
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
@@ -210,4 +216,5 @@ document.addEventListener("DOMContentLoaded", function () {
         const theme = builtInThemes[initiallySelected];
         if (theme) applyThemeToPreview(theme);
     }
+
 });

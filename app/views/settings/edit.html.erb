@@ -109,67 +109,211 @@
                 </div>
               </div>
             </div>
-
             <!-- Slide 2: Table with normal base-100 background -->
             <div class="preview-slide w-1/2 flex-shrink-0 px-4" id="slide-table">
-              <div class="rounded-xl shadow-xl overflow-hidden w-full">
-                <div id="preview-navbar" class="h-12 flex items-center px-6 text-white font-bold" style="background-color: var(--primary)">
-                  SmartEDU > Manage Classrooms
+              <div class="rounded-xl shadow-xl overflow-hidden w-full bg-white">
+                <!-- Navbar -->
+                <div id="preview-navbar" class="h-12 flex items-center gap-3 px-6 text-black font-bold">
+                  <button id="preview-navbar-button" class="btn btn-ghost btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                  </button>
+                  <%= render "shared/logo_text" %> &nbsp;> Manage Classrooms
                 </div>
-                <table class="w-full text-left text-gray-800 bg-white">
-                  <thead id="preview-table-head">
-                  <tr>
-                    <th class="py-3 px-4">Class ID</th>
-                    <th class="py-3 px-4">Grade Level</th>
-                    <th class="py-3 px-4">Grade Classroom</th>
-                    <th class="py-3 px-4">Homeroom Teacher</th>
-                    <th class="py-3 px-4">Total Students</th>
-                    <th class="py-3 px-4">Actions</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr class="hover-row">
-                    <td class="py-3 px-4">10</td>
-                    <td class="py-3 px-4">Grade 5</td>
-                    <td class="py-3 px-4">5A</td>
-                    <td class="py-3 px-4">Not Assigned</td>
-                    <td class="py-3 px-4">12</td>
-                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
-                  </tr>
-                  <tr class="hover-row">
-                    <td class="py-3 px-4">10</td>
-                    <td class="py-3 px-4">Grade 5</td>
-                    <td class="py-3 px-4">5A</td>
-                    <td class="py-3 px-4">Not Assigned</td>
-                    <td class="py-3 px-4">12</td>
-                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
-                  </tr>
-                  <tr class="hover-row">
-                    <td class="py-3 px-4">10</td>
-                    <td class="py-3 px-4">Grade 5</td>
-                    <td class="py-3 px-4">5A</td>
-                    <td class="py-3 px-4">Not Assigned</td>
-                    <td class="py-3 px-4">12</td>
-                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
-                  </tr>
-                  <tr class="hover-row">
-                    <td class="py-3 px-4">10</td>
-                    <td class="py-3 px-4">Grade 5</td>
-                    <td class="py-3 px-4">5A</td>
-                    <td class="py-3 px-4">Not Assigned</td>
-                    <td class="py-3 px-4">12</td>
-                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
-                  </tr>
-                  <tr class="hover-row">
-                    <td class="py-3 px-4">10</td>
-                    <td class="py-3 px-4">Grade 5</td>
-                    <td class="py-3 px-4">5A</td>
-                    <td class="py-3 px-4">Not Assigned</td>
-                    <td class="py-3 px-4">12</td>
-                    <td class="py-3 px-4 text-blue-600">View | Edit</td>
-                  </tr>
-                  </tbody>
-                </table>
+
+                <!-- Top Controls -->
+                <div class="p-4 flex flex-col gap-4">
+                  <div class="flex flex-wrap justify-between items-center gap-4">
+                    <button class="btn btn-accent">New Classroom</button>
+
+                    <div class="flex items-center gap-4">
+                      <label class="text-sm">
+                        <select class="select select-bordered select-sm w-auto">
+                          <option selected>10</option>
+                          <option>25</option>
+                          <option>50</option>
+                        </select>
+                        entries per page
+                      </label>
+                      <input type="text" class="input input-bordered input-sm w-48" placeholder="Search by name..." />
+                    </div>
+                  </div>
+
+                  <!-- Table -->
+                  <div class="overflow-x-auto rounded-lg shadow">
+                    <table class="table w-full bg-white">
+                      <thead class="bg-secondary">
+                      <tr>
+                        <th class="py-3 px-4">Class ID</th>
+                        <th class="py-3 px-4">Grade Level</th>
+                        <th class="py-3 px-4">Grade Classroom</th>
+                        <th class="py-3 px-4">Homeroom Teacher</th>
+                        <th class="py-3 px-4">Total Students</th>
+                        <th class="py-3 px-4">Actions</th>
+                      </tr>
+                      </thead>
+                      <tr>
+                        <th class="py-3 px-4">Class ID</th>
+                        <th class="py-3 px-4">Grade Level</th>
+                        <th class="py-3 px-4">Grade Classroom</th>
+                        <th class="py-3 px-4">Homeroom Teacher</th>
+                        <th class="py-3 px-4">Total Students</th>
+                        <th class="py-3 px-4">Actions</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">10</td>
+                        <td class="py-3 px-4">Grade 5</td>
+                        <td class="py-3 px-4">5A</td>
+                        <td class="py-3 px-4">Mario Bro</td>
+                        <td class="py-3 px-4">18</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">11</td>
+                        <td class="py-3 px-4">Grade 5</td>
+                        <td class="py-3 px-4">5B</td>
+                        <td class="py-3 px-4">Luigi Bro</td>
+                        <td class="py-3 px-4">16</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">12</td>
+                        <td class="py-3 px-4">Grade 5</td>
+                        <td class="py-3 px-4">5C</td>
+                        <td class="py-3 px-4">Wario Noe</td>
+                        <td class="py-3 px-4">15</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">13</td>
+                        <td class="py-3 px-4">Grade 6</td>
+                        <td class="py-3 px-4">6A</td>
+                        <td class="py-3 px-4">Tim Tam</td>
+                        <td class="py-3 px-4">17</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">14</td>
+                        <td class="py-3 px-4">Grade 6</td>
+                        <td class="py-3 px-4">6B</td>
+                        <td class="py-3 px-4">Kit Kat</td>
+                        <td class="py-3 px-4">16</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">15</td>
+                        <td class="py-3 px-4">Grade 7</td>
+                        <td class="py-3 px-4">7A</td>
+                        <td class="py-3 px-4">Haagen D</td>
+                        <td class="py-3 px-4">14</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">16</td>
+                        <td class="py-3 px-4">Grade 8</td>
+                        <td class="py-3 px-4">8A</td>
+                        <td class="py-3 px-4">Swen Sen</td>
+                        <td class="py-3 px-4">18</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="hover-row">
+                        <td class="py-3 px-4">17</td>
+                        <td class="py-3 px-4">Grade 9</td>
+                        <td class="py-3 px-4">9A</td>
+                        <td class="py-3 px-4">Gus D Good</td>
+                        <td class="py-3 px-4">19</td>
+                        <td class="py-3 px-4">
+                          <div class="flex gap-4 items-center">
+                            <a href="#" class="flex items-center gap-1 text-blue-600 hover:text-blue-800">
+                              <i class="fa-solid fa-eye"></i> View
+                            </a>
+                            <a href="#" class="flex items-center gap-1 text-yellow-500 hover:text-yellow-700">
+                              <i class="fa-solid fa-pen"></i> Edit
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                      <tbody>
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <!-- Bottom Controls -->
+                  <div class="flex justify-between items-center text-sm mt-2 flex-col md:flex-row gap-2 md:gap-0 w-full">
+                    <p>Showing 1 to 5 of 5 entries</p>
+                    <div class="flex items-center space-x-2">
+                      <button class="btn btn-sm">«</button>
+                      <button class="btn btn-sm btn-active">1</button>
+                      <button class="btn btn-sm">»</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
