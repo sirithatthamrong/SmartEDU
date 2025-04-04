@@ -20,7 +20,7 @@
     .search {
         @apply rounded-full;
     }
-  
+
     select:focus {
         @apply ring-2 ring-primary;
     }
