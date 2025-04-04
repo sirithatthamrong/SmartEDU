@@ -51,8 +51,9 @@ class HomeController < ApplicationController
   private
   def reminder_subscription
     school = School.find_by(id: current_user.school_id)
-    if school && !session[:reminder_sent]
-      PaymentMailer.reminder_email(school).deliver_now
+    user = current_user
+    if school && current_user.role == "principal"
+      PaymentMailer.reminder_email(school, user).deliver_now
       session[:reminder_sent] = true
     end
   end
