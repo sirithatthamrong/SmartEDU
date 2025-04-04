@@ -89,6 +89,13 @@ document.addEventListener("DOMContentLoaded", function () {
             navbarButton.style.color = primaryContent;
         }
 
+        // thead
+        const tableHead = document.getElementById("preview-table-head");
+        if (tableHead) {
+            tableHead.style.backgroundColor = secondary;
+            tableHead.style.color = getContrastingTextColor(secondary);
+        }
+
         // Card + form styling
         previewCard.style.backgroundColor = base200;
         previewHeader.style.color = baseContent;
@@ -129,7 +136,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Navbar and table head
         const navbar = document.getElementById("preview-navbar");
-        const tableHead = document.getElementById("preview-table-head");
         const hoverRows = document.querySelectorAll(".hover-row");
 
         if (navbar) navbar.style.backgroundColor = primary;

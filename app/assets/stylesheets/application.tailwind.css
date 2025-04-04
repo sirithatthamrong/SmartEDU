@@ -21,6 +21,14 @@
         @apply rounded-full;
     }
 
+    select {
+        @apply border-none;
+    }
+
+    select:focus {
+        @apply ring-2 ring-primary;
+    }
+
     [data-theme="mytheme"] .btn-primary {
         background-color: var(--primary);
         color: var(--primary-content);
@@ -82,14 +90,6 @@
         outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 2px var(--primary);
-    }
-
-    select {
-        @apply border-none;
-    }
-
-    select:focus {
-        @apply ring-2 ring-primary;
     }
 
 }
