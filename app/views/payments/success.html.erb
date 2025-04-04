@@ -25,7 +25,7 @@
 </div>
 
 <!-- Payment Form Container -->
-<div class="flex-grow pt-32 pb-20">
+<div class="flex-grow pt-10">
 <div class="payment-form-container text-center max-w-lg w-full bg-white p-8 rounded-lg shadow-lg mx-auto flex flex-col items-center">
   <h1 class="text-3xl font-bold text-green-500 mb-6">🎉 Payment Successful! 🎉</h1>
   <p class="text-lg text-gray-700">Thank you for your payment. Your transaction has been completed successfully.</p>
@@ -88,39 +88,20 @@
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const downloadBtn = document.getElementById('download-receipt');
-        const captureSection = document.getElementById('receipt');
+    const payment_created = '<%= @payment&.created_at&.strftime("%B %d, %Y at %H:%M") || Time.now.strftime("%B %d, %Y at %H:%M") %>';
 
-        if (!downloadBtn || !captureSection) {
-            console.error("Elements not found!");
-            return;
-        }
+    const payment_id = '<%= @payment&.id %>';
+    const payment_first_name = '<%= @payment&.first_name || "N/A"%>';
+    const payment_last_name = '<%= @payment&.last_name || "N/A"%>' ;
+    const payment_email = '<%= @payment&.email || "N/A"%>';
+    const payment_amount = '<%= @payment&.amount || 0 %>';
+    const payment_subscription_start = '<%= @payment&.subscription_start&.strftime("%B %d, %Y") || "N/A" %>';
+    const payment_subscription_end = '<%= @payment&.subscription_end&.strftime("%B %d, %Y") || "N/A" %>';
 
-        downloadBtn.addEventListener('click', function () {
-            const docDefinition = {
-                content: [
-                    {text: 'Payment Receipt', style: 'header'},
-                    {text: `Date: ${new Date().toLocaleDateString()}`, style: 'subheader'},
-                    {text: 'Name: ' + '<%= @payment&.first_name %> <%= @payment&.last_name %>', style: 'content'},
-                    {text: 'Amount: $' + '<%= @payment&.amount || 0 %>', style: 'content'},
-                    {text: 'Transaction ID: ' + '<%= @payment&.stripe_payment_intent_id || "N/A" %>', style: 'content'},
-                    {
-                        text: 'Date: ' + '<%= @payment&.created_at&.strftime("%B %d, %Y at %H:%M") || Time.now.strftime("%B %d, %Y at %H:%M") %>',
-                        style: 'content'
-                    },
-                ],
-                styles: {
-                    header: {fontSize: 18, bold: true, marginBottom: 10},
-                    subheader: {fontSize: 14, marginBottom: 10},
-                    content: {fontSize: 12, marginBottom: 5}
-                }
-            };
-
-            pdfMake.createPdf(docDefinition).download('receipt.pdf');
-        });
-    });
 </script>
 
 </body>
+
+
 </html>
+<%= javascript_include_tag "controllers/receipt_pdf_gen_controller" %>

@@ -17,4 +17,10 @@ class PaymentMailer < ApplicationMailer
         Rails.logger.error("Cannot send receipt email: No valid email address for payment ##{payment.id}")
       end
     end
+  def reminder_email(school, user)
+    @school = school
+    @user = user
+    # Rails.logger.debug("Sending reminder email for #{@user.email_address}")
+    mail(to: @user.personal_email, subject: "Your subscription is ending soon")
+  end
 end
